@@ -26,6 +26,9 @@
   --purple:      #7B52AB;
   --purple-light:#A47CC8;
   --purple-pale: #F0EBF8;
+  --teal:        #0E8388;
+  --teal-light:  #4FB6BA;
+  --teal-pale:   #E6F6F6;
   --white:       #FFFFFF;
   --bg:          #F5F7FA;
   --text:        #1E2A38;
@@ -199,6 +202,10 @@ main { max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; }
 .btn-purple { border-color: var(--purple-light); }
 .btn-purple .icon  { background: var(--purple-pale); color: var(--purple); }
 .btn-purple:hover { background: var(--purple-pale); }
+
+.btn-teal   { border-color: var(--teal-light); }
+.btn-teal   .icon  { background: var(--teal-pale); color: var(--teal); }
+.btn-teal:hover   { background: var(--teal-pale); }
 
 .btn-lock {
   background: linear-gradient(135deg, var(--gold-pale) 0%, #fdf0c8 100%);
@@ -785,7 +792,7 @@ footer {
   border-radius: 8px; font-size: 0.84rem; color: var(--green); font-weight: 700;
 }
 
-/* ═══ PRAZO BANNER (Orientador/Aluno) ═══ */
+/* ═══ PRAZO BANNER (Avaliador ou Orientador/Aluno) ═══ */
 .prazo-banner {
   border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
   display: flex; align-items: center; justify-content: space-between;
@@ -948,6 +955,27 @@ footer {
 .cd-hero-blocks{display:flex;align-items:center;gap:6px}
 
 @media(max-width:600px){.dash-pub-inner{padding:10px 12px}.dash-pub-inner .header-logo img{height:52px}.user-id-card,.cd-hero{margin:10px 12px 0}.dash-pub-inner .header-center h1{font-size:.68rem}}
+
+/* ═══ BANNER DO CONCURSO — IMPRESSÃO ═══ */
+#bannerPrintArea{display:none}
+.banner-poster{width:1122px;min-height:793px;background:#fff;padding:40px 50px;box-sizing:border-box;font-family:'Nunito',sans-serif;border:1px solid var(--border);box-shadow:var(--shadow-lg);margin:0 auto}
+.banner-poster .bp-header{text-align:center;border-bottom:4px solid var(--gold);padding-bottom:16px;margin-bottom:20px}
+.banner-poster .bp-title{font-family:'Playfair Display',serif;font-size:1.7rem;color:#163352;font-weight:700;line-height:1.3;margin-bottom:10px}
+.banner-poster .bp-authors{font-size:1rem;color:var(--text);font-weight:700}
+.banner-poster .bp-inst{font-size:.82rem;color:var(--muted);margin-top:4px}
+.banner-poster .bp-cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:10px}
+.banner-poster .bp-block{margin-bottom:20px}
+.banner-poster .bp-block h4{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.05rem;border-bottom:2px solid var(--gold-light);padding-bottom:6px;margin-bottom:10px}
+.banner-poster .bp-block p{font-size:.92rem;line-height:1.6;color:var(--text);white-space:pre-wrap}
+.banner-poster .bp-kw{display:inline-block;background:var(--gold-pale);color:#7a5200;border:1px solid var(--gold-light);padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;margin:2px 4px 2px 0}
+.banner-poster .bp-footer{text-align:center;margin-top:24px;padding-top:14px;border-top:2px solid var(--border);font-size:.76rem;color:var(--muted)}
+@media print{
+  @page{ size: A3 landscape; margin: 10mm; }
+  body *{ visibility:hidden; }
+  #bannerPrintArea, #bannerPrintArea *{ visibility:visible; }
+  #bannerPrintArea{ display:block !important; position:absolute; left:0; top:0; width:100%; }
+  .banner-poster{ box-shadow:none; border:none; width:100%; }
+}
 </style>
 
 </head>
@@ -978,9 +1006,9 @@ footer {
       <div class="hm-line">
         <span class="badge-pilot">TESTE PILOTO</span>
         <span class="hm-sep">·</span>
-        <span class="badge-ver">V3</span>
+        <span class="badge-ver">V4</span>
         <span class="hm-sep">·</span>
-        <span>05/07/26 (NO MANUAL 3 HÁ O REGISTRO DAS ALTERAÇÕES DAS VERSÕES)</span>
+        <span>06/08/26 (JORNAIS CIENTÍFICOS E CONCURSO TCC1)</span>
       </div>
     </div>
   </div>
@@ -991,7 +1019,37 @@ footer {
 </header>
 </div><!-- ═══ MAIN ═══ -->
 <main>
-    <nav class="btn-grid">    <button class="nav-btn btn-green" onclick="openPanel('manual1')" data-tip="Orientações gerais sobre o TCC 1 – regras, prazos e deveres">
+    <nav class="btn-grid">    <button class="nav-btn btn-teal" onclick="openPanel('jornais')" data-tip="Plataforma de análise de jornais científicos – em construção">
+      <div class="icon">🔬</div>
+      <span class="lbl">Análise de Jornais Científicos</span>
+    </button>
+
+    <button class="nav-btn btn-lock" onclick="openAreaRestrita()" data-tip="Acesso exclusivo para Coordenador, Avaliadores ou Orientadores e Alunos">
+      <div class="icon">🔐</div>
+      <span class="lbl">Área Restrita</span>
+    </button>
+
+    <button class="nav-btn btn-blue" onclick="triggerDownload(FILES.ataDefesa)" data-tip="Baixar: Ata de Defesa (.doc)">
+      <div class="icon">📋</div>
+      <span class="lbl">Ata de Defesa</span>
+    </button>
+
+        <a class="nav-btn btn-green" href="https://form.typeform.com/to/yd4N31nI" target="_blank" rel="noopener" data-tip="Avaliar a qualidade da plataforma PGTCC 1">
+      <div class="icon">⭐</div>
+      <span class="lbl">Avalie o Serviço</span>
+    </a>
+
+    <button class="nav-btn btn-gold" onclick="openPanel('biblioteca')" data-tip="Artigos finalizados e aprovados pelos avaliadores ou orientadores">
+      <div class="icon">📚</div>
+      <span class="lbl">Biblioteca</span>
+    </button>
+
+    <a class="nav-btn btn-blue" href="https://form.typeform.com/to/PuvW2maB" target="_blank" rel="noopener" data-tip="Preencher formulário de levantamento de demanda">
+      <div class="icon">📊</div>
+      <span class="lbl">Levantamento de Demanda</span>
+    </a>
+
+    <button class="nav-btn btn-green" onclick="openPanel('manual1')" data-tip="Orientações gerais sobre o TCC 1 – regras, prazos e deveres">
       <div class="icon">📘</div>
       <span class="lbl">Manual 1</span>
     </button>
@@ -1010,33 +1068,6 @@ footer {
       <div class="icon">📝</div>
       <span class="lbl">Modelo de Artigo</span>
     </button>
-
-
-
-    <button class="nav-btn btn-gold" onclick="openPanel('biblioteca')" data-tip="Artigos finalizados e aprovados pelos orientadores">
-      <div class="icon">📚</div>
-      <span class="lbl">Biblioteca</span>
-    </button>
-
-    <a class="nav-btn btn-blue" href="https://form.typeform.com/to/PuvW2maB" target="_blank" rel="noopener" data-tip="Preencher formulário de levantamento de demanda">
-      <div class="icon">📊</div>
-      <span class="lbl">Levantamento de Demanda</span>
-    </a>
-
-    <button class="nav-btn btn-blue" onclick="triggerDownload(FILES.ataDefesa)" data-tip="Baixar: Ata de Defesa (.doc)">
-      <div class="icon">📋</div>
-      <span class="lbl">Ata de Defesa</span>
-    </button>
-
-        <a class="nav-btn btn-green" href="https://form.typeform.com/to/yd4N31nI" target="_blank" rel="noopener" data-tip="Avaliar a qualidade da plataforma PGTCC 1">
-      <div class="icon">⭐</div>
-      <span class="lbl">Avalie o Serviço</span>
-    </a>
-
-    <button class="nav-btn btn-lock" onclick="openAreaRestrita()" data-tip="Acesso exclusivo para Coordenador, Orientadores e Alunos">
-      <div class="icon">🔐</div>
-      <span class="lbl">Área Restrita</span>
-    </button>
 </nav>
 
   <!-- ── PANEL: MANUAL 1 ── -->
@@ -1054,12 +1085,12 @@ footer {
         <ul>
           <li><strong>Base legal:</strong> Resolução 002/2018-DEP/FT do PPC 2019 (Anexo 2).</li>
           <li><strong>Requisito para cursar:</strong> Ter concluído integralmente as disciplinas até o 7º período e a disciplina de Estágio Supervisionado (FTL124).</li>
-          <li><strong>Objetivo:</strong> Elaborar um artigo científico interdisciplinar, identificar e formular problemas de engenharia, planejar e/ou elaborar projetos e serviços na área de pesquisa definida pelo orientador.</li>
+          <li><strong>Objetivo:</strong> Elaborar um artigo científico interdisciplinar, identificar e formular problemas de engenharia, planejar e/ou elaborar projetos e serviços na área de pesquisa definida pelo avaliador ou orientador.</li>
           <li><strong>Ementa:</strong> Elaboração de artigo interdisciplinar teórico-prático da área de Engenharia de Produção, envolvendo estudo do problema, concepção, simulação e implementação, orientado por professor familiarizado com o tema.</li>
           <li><strong>Diferença TCC1 × TCC2 (Art. 4º):</strong> O TCC 1 resulta em artigo acadêmico defendido em banca. O TCC 2 é voltado à submissão em revistas Qualis Capes (A1–B3).</li>
           <li><strong>Carga horária (Art. 5º):</strong> 9º período, 30 horas, orientação designada pelo Colegiado.</li>
           <li><strong>Créditos:</strong> 2 créditos.</li>
-          <li><strong>Critérios de avaliação:</strong> Banca com 3 membros (orientador presidente + 2 titulares): relevância do tema, originalidade, qualidade técnica, ABNT 6022:2018, clareza, redação, apresentação/defesa.</li>
+          <li><strong>Critérios de avaliação:</strong> Banca com 3 membros (avaliador ou orientador presidente + 2 titulares): relevância do tema, originalidade, qualidade técnica, ABNT 6022:2018, clareza, redação, apresentação/defesa.</li>
           <li><strong>Acesso Digital:</strong> <a href="https://www.engproducao.ufam.edu.br/" target="_blank" style="color:var(--blue)">www.engproducao.ufam.edu.br</a></li>
         </ul>
       </div>
@@ -1073,12 +1104,12 @@ footer {
         <ol>
           <li>Aperfeiçoar o Manual para Elaboração de Artigos e formulários, propondo aprovação no Colegiado.</li>
           <li>Identificar previamente a demanda e definir o período e procedimento de inscrição dos alunos.</li>
-          <li>Receber inscrições, verificar requisitos (Art. 5º e 6º da Resolução) e aceite do orientador, gerando lista de pré-classificados.</li>
+          <li>Receber inscrições, verificar requisitos (Art. 5º e 6º da Resolução) e aceite do avaliador ou orientador, gerando lista de pré-classificados.</li>
           <li>Divulgar lista com nome, matrícula, tema, área e professor sugerido para análise do Colegiado.</li>
           <li>Após parecer do Colegiado, divulgar lista final e solicitar matrícula junto à PROEG.</li>
           <li>Realizar seminário introdutório (opcional) e sanar dúvidas dos alunos.</li>
-          <li>Definir prazo final de entrega do TCC e, com os orientadores, período, local, horário e ordem de defesa.</li>
-          <li>Solicitar e acompanhar o recebimento dos artigos finalizados pelos orientadores.</li>
+          <li>Definir prazo final de entrega do TCC e, com os avaliadores ou orientadores, período, local, horário e ordem de defesa.</li>
+          <li>Solicitar e acompanhar o recebimento dos artigos finalizados pelos avaliadores ou orientadores.</li>
           <li>Manter a Biblioteca Digital dos TCCs atualizada e disponível para a comunidade acadêmica.</li>
         </ol>
       </div>
@@ -1086,7 +1117,7 @@ footer {
 
     <div class="acc-item">
       <button class="acc-header" onclick="toggleAcc(this)">
-        👨‍🏫 Deveres do(a) Orientador(a) <span class="acc-arrow">▼</span>
+        👨‍🏫 Deveres do(a) Avaliador ou Orientador(a) <span class="acc-arrow">▼</span>
       </button>
       <div class="acc-body">
         <ol>
@@ -1112,12 +1143,12 @@ footer {
         <ol>
           <li>Conversar com antecedência com professor(es) da área de pesquisa desejada.</li>
           <li>Aguardar as instruções da coordenação (a partir da 1ª semana letiva de cada período).</li>
-          <li>Solicitar inscrição pelos procedimentos informados e aguardar confirmação da matrícula e definição do orientador.</li>
+          <li>Solicitar inscrição pelos procedimentos informados e aguardar confirmação da matrícula e definição do avaliador ou orientador.</li>
           <li>Após confirmação, comparecer assiduamente aos encontros de orientação.</li>
           <li>Estudar o Manual para Elaboração de Artigos, normas ABNT, o Modelo de Artigo e a Resolução 002/2018-DEP/FT do PPC 2019.</li>
-          <li>Elaborar o artigo em parceria com o orientador, considerando as correções e o prazo final.</li>
+          <li>Elaborar o artigo em parceria com o avaliador ou orientador, considerando as correções e o prazo final.</li>
           <li>Se considerado apto, defender o artigo perante a banca e fazer as correções sugeridas.</li>
-          <li>Após aprovação, enviar versão corrigida ao orientador e aguardar o envio da versão final.</li>
+          <li>Após aprovação, enviar versão corrigida ao avaliador ou orientador e aguardar o envio da versão final.</li>
         </ol>
       </div>
     </div>
@@ -1129,7 +1160,7 @@ footer {
       <div class="acc-body">
         <p>O(a) aluno(a) deve seguir o modelo disponibilizado pela Coordenação, estruturado com:</p>
         <ol style="margin-top:10px">
-          <li><strong>a)</strong> Título, informações do(a) aluno(a) e do(a) orientador(a), Resumo (PT/EN) e Palavras-chave</li>
+          <li><strong>a)</strong> Título, informações do(a) aluno(a) e do(a) avaliador ou orientador(a), Resumo (PT/EN) e Palavras-chave</li>
           <li><strong>b)</strong> Introdução</li>
           <li><strong>c)</strong> Desenvolvimento (Referencial Teórico e Metodologia)</li>
           <li><strong>d)</strong> Conclusões</li>
@@ -1176,6 +1207,20 @@ footer {
     </div>
   </div>
 
+  <!-- ── PANEL: ANÁLISE DE JORNAIS CIENTÍFICOS (EM CONSTRUÇÃO) ── -->
+  <div class="panel" id="panel-jornais" style="border-top-color:var(--teal);">
+    <div class="panel-title">
+      🔬 Plataforma de Análise de Jornais Científicos
+      <span class="badge-pilot" style="background:linear-gradient(90deg,var(--teal),var(--teal-light));box-shadow:0 2px 6px rgba(14,131,136,0.35);margin-left:8px">Em Construção</span>
+      <button class="close-panel" onclick="closePanel('jornais')">✕</button>
+    </div>
+    <div class="empty-box">
+      <div class="emo">🚧</div>
+      <p><strong>Esta seção está em construção.</strong></p>
+      <p style="margin-top:6px;font-size:0.82rem">Em breve, esta área trará ferramentas para análise de jornais científicos (indicadores, rankings e apoio à escolha de periódicos para publicação). Volte em breve para conferir as novidades.</p>
+    </div>
+  </div>
+
   <!-- ── PANEL: BIBLIOTECA ── -->
   <div class="panel" id="panel-biblioteca" style="border-top-color:var(--gold);">
     <div class="panel-title">
@@ -1185,7 +1230,7 @@ footer {
 
     <!-- Barra de busca e filtros -->
     <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;align-items:center">
-      <input id="bibBusca" type="text" placeholder="🔍 Buscar por aluno, tema ou orientador..."
+      <input id="bibBusca" type="text" placeholder="🔍 Buscar por aluno, tema ou avaliador ou orientador..."
         oninput="filtrarBiblioteca()"
         style="flex:1;min-width:200px;padding:9px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.85rem;outline:none"/>
       <select id="bibFiltroArea" onchange="filtrarBiblioteca()"
@@ -1274,9 +1319,9 @@ function toggleAcc(btn) {
 
 <div class="modal-lite" id="modal-orientador">
   <div class="modal-card">
-    <div class="modal-head"><h3 style="margin:0">Cadastrar Orientador</h3><button class="icon-btn" onclick="closeModalLite('modal-orientador')">✕</button></div>
+    <div class="modal-head"><h3 style="margin:0">Cadastrar Avaliador ou Orientador</h3><button class="icon-btn" onclick="closeModalLite('modal-orientador')">✕</button></div>
     <div class="grid-2">
-      <div class="field"><label>Nome</label><input type="text" placeholder="Nome do orientador"></div>
+      <div class="field"><label>Nome</label><input type="text" placeholder="Nome do avaliador ou orientador"></div>
       <div class="field"><label>E-mail</label><input type="email" placeholder="email@ufam.edu.br"></div>
       <div class="field"><label>Área</label><input type="text" placeholder="Área de atuação"></div>
       <div class="field"><label>Status</label><select><option>Ativo</option><option>Inativo</option></select></div>
@@ -1290,7 +1335,7 @@ function toggleAcc(btn) {
     <div class="grid-2">
       <div class="field"><label>Título</label><input type="text" placeholder="Título do artigo"></div>
       <div class="field"><label>Aluno</label><input type="text" placeholder="Nome do aluno"></div>
-      <div class="field"><label>Orientador</label><input type="text" placeholder="Nome do orientador"></div>
+      <div class="field"><label>Avaliador ou Orientador</label><input type="text" placeholder="Nome do avaliador ou orientador"></div>
       <div class="field"><label>Status</label><select><option>Pendente</option><option>Aprovado</option><option>Reprovado</option></select></div>
     </div>
     <div class="grid-1" style="margin-top:.8rem"><div class="field"><label>Observações</label><textarea placeholder="Observações do artigo"></textarea></div></div>
@@ -1308,7 +1353,7 @@ function toggleAcc(btn) {
 
     <div class="role-toggle">
       <button class="role-btn active" data-role="coordenador" onclick="setRole('coordenador',this)">👤 Coordenador</button>
-      <button class="role-btn" data-role="orientador" onclick="setRole('orientador',this)">🎓 Orientador</button>
+      <button class="role-btn" data-role="orientador" onclick="setRole('orientador',this)">🎓 Avaliador ou Orientador</button>
       <button class="role-btn" data-role="aluno" onclick="setRole('aluno',this)">📚 Aluno</button>
     </div>
 
@@ -1361,10 +1406,11 @@ function toggleAcc(btn) {
 
     <nav class="coord-nav">
       <button class="cnav-btn active" onclick="showCoordTab('dashboard',this)">📊 Dashboard</button>
-      <button class="cnav-btn" onclick="showCoordTab('orientadores',this)">🎓 Orientadores</button>
+      <button class="cnav-btn" onclick="showCoordTab('orientadores',this)">🎓 Avaliadores ou Orientadores</button>
       <button class="cnav-btn" onclick="showCoordTab('alunos',this)">📚 Alunos</button>
       <button class="cnav-btn" onclick="showCoordTab('artigos',this)">📄 Artigos</button>
       <button class="cnav-btn" onclick="showCoordTab('bancasCoord',this)">🏛️ Bancas</button>
+      <button class="cnav-btn" onclick="showCoordTab('concurso',this)">🏆 Concurso TCC1</button>
       <button class="cnav-btn" onclick="showCoordTab('config',this)">⚙️ Configurações</button>
     </nav>
 
@@ -1408,7 +1454,7 @@ function toggleAcc(btn) {
       </div>
       <div class="table-shell">
         <table>
-          <thead><tr><th>Aluno</th><th>Matrícula</th><th>Orientador</th><th>Status</th><th>Última Atividade</th><th>Alerta</th></tr></thead>
+          <thead><tr><th>Aluno</th><th>Matrícula</th><th>Avaliador ou Orientador</th><th>Status</th><th>Última Atividade</th><th>Alerta</th></tr></thead>
           <tbody id="tblVisaoGeral"></tbody>
         </table>
       </div>
@@ -1417,20 +1463,30 @@ function toggleAcc(btn) {
     <!-- ORIENTADORES TAB -->
     <div class="ct-content" id="ct-orientadores">
       <div class="panel" style="display:block;border-top-color:var(--blue-light)">
-        <div class="panel-title">🎓 Cadastrar / Editar Orientador</div>
+        <div class="panel-title">🎓 Cadastrar / Editar Avaliador ou Orientador</div>
         <div class="grid-2">
           <div class="field"><label>Nome Completo *</label><input id="oNome" type="text" placeholder="Prof. João Silva"/></div>
           <div class="field"><label>E-mail Institucional *</label><input id="oEmail" type="email" placeholder="joao@ufam.edu.br"/></div>
           <div class="field"><label>Turma * <small style="font-weight:400;text-transform:none">(máx. 4 caracteres)</small></label><input id="oTurma" type="text" maxlength="4" placeholder="EP01"/></div>
           <div class="field"><label>Senha de Acesso * <small style="font-weight:400;text-transform:none">(6–9 caracteres)</small></label><input id="oSenha" type="password" name="new-password" autocomplete="new-password" minlength="6" maxlength="9" placeholder="••••••••"/></div>
+          <div class="field" style="grid-column:1/-1"><label>Classe *</label>
+            <select id="oClasse">
+              <option value="">– Selecione –</option>
+              <option value="ORIENTADOR DO DEP">🏫 Orientador do DEP</option>
+              <option value="ORIENTADOR EXTERNO">🌐 Orientador Externo</option>
+              <option value="AVALIADOR DO TCC 1">📝 Avaliador do TCC 1</option>
+              <option value="AVALIADOR DE CONCURSO DE TCC 1">🏆 Avaliador de Concurso de TCC 1</option>
+              <option value="OUTRO TIPO DE AVALIADOR">🔹 Outro Tipo de Avaliador</option>
+            </select>
+          </div>
         </div>
         <div style="margin-top:14px;display:flex;gap:10px">
-          <button class="act-btn" onclick="salvarOrientador()">💾 Salvar Orientador</button>
+          <button class="act-btn" onclick="salvarOrientador()">💾 Salvar Avaliador ou Orientador</button>
           <button class="act-btn sec" onclick="limparOrientadorForm()" id="btnCancelarOrient" style="display:none">Cancelar Edição</button>
         </div>
         <input type="hidden" id="oEditId"/>
       </div>
-      <div class="sec-title">🎓 Orientadores Cadastrados</div>
+      <div class="sec-title">🎓 Avaliadores ou Orientadores Cadastrados</div>
       <div id="listaOrientadores"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
     </div>
 
@@ -1469,7 +1525,7 @@ function toggleAcc(btn) {
           <div class="field"><label>Matrícula *</label><input id="aMatricula" type="text" placeholder="22150001"/></div>
           <div class="field"><label>E-mail *</label><input id="aEmail" type="email" placeholder="maria@ufam.edu.br"/></div>
           <div class="field"><label>Senha *</label><input id="aSenha" type="text" placeholder="••••••••"/></div>
-          <div class="field"><label>Orientador</label>
+          <div class="field"><label>Avaliador ou Orientador</label>
             <select id="aOrientador"><option value="">– Selecione –</option></select>
           </div>
           <div class="field"><label>Período Letivo</label><input id="aPeriodo" type="text" placeholder="2026/1" readonly style="background:#f0f4f8;cursor:default"/></div>
@@ -1496,7 +1552,7 @@ function toggleAcc(btn) {
       </div>
       <div class="table-shell">
         <table>
-          <thead><tr><th>Aluno</th><th>Orientador</th><th>Status</th><th>Última Versão</th><th>Ações</th></tr></thead>
+          <thead><tr><th>Aluno</th><th>Avaliador ou Orientador</th><th>Status</th><th>Última Versão</th><th>Ações</th></tr></thead>
           <tbody id="tblArtigos"></tbody>
         </table>
       </div>
@@ -1505,7 +1561,7 @@ function toggleAcc(btn) {
     <!-- BANCAS TAB (Coordenador) -->
     <div class="ct-content" id="ct-bancasCoord">
       <div class="sec-title">🏛️ Bancas Agendadas</div>
-      <p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">Defesas enviadas pelos orientadores para avaliação em banca.</p>
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">Defesas enviadas pelos avaliadores ou orientadores para avaliação em banca.</p>
       <div id="listaBancasCoord"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
     </div>
 
@@ -1532,7 +1588,7 @@ function toggleAcc(btn) {
       </div>
       <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-top:16px">
         <div class="panel-title">🔔 Alertas de Troca de Senha</div>
-        <p style="font-size:.84rem;color:var(--muted);margin-bottom:12px">Registro de todas as senhas alteradas por alunos e orientadores.</p>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:12px">Registro de todas as senhas alteradas por alunos e avaliadores ou orientadores.</p>
         <div id="alertasSenhasLista"><p style="color:var(--muted);font-size:.84rem">Carregando...</p></div>
         <button onclick="marcarSenhasLidas()" style="margin-top:10px;padding:.5rem 1rem;background:transparent;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;color:var(--muted)">✅ Marcar todas como lidas</button>
       </div>
@@ -1554,6 +1610,45 @@ function toggleAcc(btn) {
       </div>
     </div>
 
+    <!-- ── CONCURSO MELHOR TCC1 ── -->
+    <div class="ct-content" id="ct-concurso">
+      <div class="panel" style="display:block;border-top-color:var(--gold-light)">
+        <div class="panel-title">🏆 Configurações do Concurso Melhor TCC1</div>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">O concurso ocorre semestralmente, aberto aos alunos que defenderam o TCC1 no semestre anterior. A Coordenação atua como Editor(a), os alunos como autores e os avaliadores como pareceristas cegos.</p>
+        <div class="grid-2">
+          <div class="field"><label>Período do Concurso</label><input id="ccPeriodo" type="text" placeholder="Ex: 2026/2"/></div>
+          <div class="field"><label>Inscrições</label>
+            <select id="ccStatusAberto"><option value="true">🟢 Abertas</option><option value="false">🔴 Fechadas</option></select>
+          </div>
+          <div class="field"><label>Prazo para Envio do Artigo</label><input id="ccPrazoArtigo" type="text" maxlength="16" placeholder="DD/MM/AAAA HH:MM" style="max-width:260px"/></div>
+          <div class="field"><label>Prazo para Concluir Banner Digital</label><input id="ccPrazoBannerDigital" type="text" maxlength="16" placeholder="DD/MM/AAAA HH:MM" style="max-width:260px"/></div>
+          <div class="field" style="grid-column:1/-1"><label>Prazo para Entregar Banner Impresso (A1) à Coordenação</label><input id="ccPrazoBannerImpresso" type="text" maxlength="16" placeholder="DD/MM/AAAA HH:MM" style="max-width:260px"/></div>
+          <div class="field"><label>Data da Defesa Pública</label><input id="ccDefesaData" type="text" maxlength="10" placeholder="DD/MM/AAAA" style="max-width:180px"/></div>
+          <div class="field"><label>Horário da Defesa Pública</label><input id="ccDefesaHorario" type="text" maxlength="5" placeholder="HH:MM" style="max-width:140px"/></div>
+          <div class="field" style="grid-column:1/-1"><label>Local da Defesa Pública</label><input id="ccDefesaLocal" type="text" placeholder="Ex: Auditório do Bloco X, FT/UFAM"/></div>
+          <div class="field" style="grid-column:1/-1"><label>Inserir o Edital do Concurso</label>
+            <input type="file" id="ccEditalFile" accept=".pdf,.doc,.docx" style="border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fff;font-size:.85rem;font-family:inherit"/>
+            <div style="font-size:.72rem;color:var(--muted);margin-top:4px">PDF ou DOCX · máx. 5 MB · ao salvar, ficará disponível para download na seção Concurso Melhor TCC1 de alunos, avaliadores/orientadores.</div>
+            <div id="ccEditalAtual" style="display:none;margin-top:8px;font-size:.82rem;color:var(--green);font-weight:700"></div>
+          </div>
+        </div>
+        <button class="act-btn" style="margin-top:14px" onclick="salvarConcursoConfig()">💾 Salvar Configurações</button>
+        <div id="ccConfigAtual" class="prazo-atual-box" style="display:none"></div>
+      </div>
+
+      <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-top:16px">
+        <div class="panel-title">📋 Inscrições Recebidas <span id="ccContagem" style="font-size:.72rem;color:var(--muted);font-weight:700"></span></div>
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Homologue os artigos recebidos, atribua até 3 avaliadores por artigo (revisão cega) e, após receber os pareceres, envie a devolutiva consolidada para cada aluno.</p>
+        <div id="listaConcursoCoord"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
+      </div>
+
+      <div class="panel" style="display:block;border-top-color:var(--border);margin-top:16px">
+        <div class="panel-title">🔸 Inscrições sem Envio <span id="ccContagemPendentes" style="font-size:.72rem;color:var(--muted);font-weight:700"></span></div>
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Alunos que clicaram em "Inscrever-se" mas ainda não enviaram o artigo. Você pode cancelar inscrições paradas/abandonadas.</p>
+        <div id="listaConcursoPendentes"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1569,10 +1664,10 @@ function toggleAcc(btn) {
       <div style="display:flex;align-items:center;gap:12px">
         <div style="width:44px;height:44px;border-radius:50%;background:var(--blue-pale);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;flex-shrink:0">🎓</div>
         <div style="text-align:center">
-          <div style="font-weight:800;font-size:.95rem" id="orientNomeTop">Orientador(a)</div>
+          <div style="font-weight:800;font-size:.95rem" id="orientNomeTop">Avaliador ou Orientador(a)</div>
           <div style="font-size:.78rem;color:var(--muted)" id="orientSubTop">Turma · E-mail</div>
         </div>
-        <span style="background:var(--blue-pale);color:var(--blue);font-size:.75rem;font-weight:800;padding:.3rem .9rem;border-radius:20px;border:1px solid var(--blue-light)">Orientador(a)</span>
+        <span style="background:var(--blue-pale);color:var(--blue);font-size:.75rem;font-weight:800;padding:.3rem .9rem;border-radius:20px;border:1px solid var(--blue-light)">Avaliador ou Orientador(a)</span>
       </div>
       <button class="logout-btn" onclick="doLogout()" style="position:absolute;right:20px">Sair ↩</button>
     </div>
@@ -1587,6 +1682,7 @@ function toggleAcc(btn) {
       <button class="cnav-btn" onclick="showOrientTab('orientArtigos',this)">📄 Artigos</button>
       <button class="cnav-btn" id="tabBancaBtn" onclick="showOrientTab('orientBancas',this)">🏛️ Bancas <span id="bancaBadge" style="display:none;background:#dc2626;color:#fff;border-radius:20px;padding:1px 7px;font-size:.7rem;margin-left:4px">!</span></button>
       <button class="cnav-btn" onclick="abrirAtaDefesa()">📋 Gerenciar a Ata de Defesa</button>
+      <button class="cnav-btn" id="tabConcursoOrientBtn" onclick="showOrientTab('orientConcurso',this)">🏆 Concurso TCC1 <span id="concursoBadgeOrient" style="display:none;background:#dc2626;color:#fff;border-radius:20px;padding:1px 7px;font-size:.7rem;margin-left:4px">!</span></button>
       <button class="cnav-btn" onclick="showOrientTab('orientPerfil',this)">👤 Perfil</button>
     </nav>
 
@@ -1632,8 +1728,8 @@ function toggleAcc(btn) {
       <div id="bancaAlertBanner"></div>
       <div class="sec-title">🏛️ Convites de Banca Recebidos</div>
       <p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">
-        Esta seção é dedicada apenas para cada membro de banca gerenciar artigos enviados por orientador (Presidente) para avaliação em banca. Leia o artigo, registre seu parecer e nota sugerida.
-        Se você deseja ser o Orientador Presidente de uma banca, então deve acessar <strong>Meus Alunos</strong>, em <strong>Ações</strong> do aluno vinculado, escolher <strong>Avaliar</strong>, e clicar no botão <strong>"Enviar para Banca"</strong>.
+        Esta seção é dedicada apenas para cada membro de banca gerenciar artigos enviados por avaliador ou orientador (Presidente) para avaliação em banca. Leia o artigo, registre seu parecer e nota sugerida.
+        Se você deseja ser o Avaliador ou Orientador Presidente de uma banca, então deve acessar <strong>Meus Alunos</strong>, em <strong>Ações</strong> do aluno vinculado, escolher <strong>Avaliar</strong>, e clicar no botão <strong>"Enviar para Banca"</strong>.
       </p>
       <div id="listaBancas"><p class="empty-box"><span class="emo">🔍</span><br>Verificando convites...</p></div>
     </div>
@@ -1641,7 +1737,7 @@ function toggleAcc(btn) {
     <div class="ct-content" id="ot-orientInstrucoes">
 
       <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
-        <div class="panel-title">💡 Instruções para o Orientador</div>
+        <div class="panel-title">💡 Instruções para o Avaliador ou Orientador</div>
         <div style="background:var(--gold-pale);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:18px;font-size:.84rem;color:#7a5200;font-weight:700">
           📌 Leia com atenção para garantir o correto fluxo de revisão dos artigos.
         </div>
@@ -1659,16 +1755,16 @@ function toggleAcc(btn) {
             <li>Abra no Word, <em>habilite a edição</em>, salve em uma pasta e faça suas correções e comentários</li>
             <li>Ao salvar, incremente o número da versão no nome do arquivo:<br>
               <code style="background:#f1f5f9;padding:2px 7px;border-radius:5px;font-size:.82rem">TCC1_NomeAluno_v1.docx → TCC1_NomeAluno_v2.docx</code><br>
-              <span style="font-size:.78rem;color:var(--muted)">(a versão do orientador é sempre par: v2, v4, v6…)</span>
+              <span style="font-size:.78rem;color:var(--muted)">(a versão do avaliador ou orientador é sempre par: v2, v4, v6…)</span>
             </li>
             <li>Na seção <strong>📩 Enviar Versão Corrigida</strong>, selecione a nova versão em <em>Choose File</em></li>
             <li>Adicione um comentário explicando as correções na seção <strong>Observações para o Aluno</strong></li>
             <li>Selecione <strong>Enviar a Versão Corrigida</strong> — o arquivo será automaticamente enviado ao aluno</li>
-            <li>O processo se repete até o orientador considerar o artigo adequado para ir à Banca ou à Versão Final</li>
-            <li>Quando considerar o artigo adequado para Banca, selecione a opção <strong>🏁 Versão Banca</strong> e envie o artigo para dois orientadores, conforme as orientações desta seção</li>
-            <li>Quando o aluno defender o artigo, o orientador deverá entrar na seção <strong>Gerenciar a Ata de Defesa</strong>, fazer o download do modelo, renomear para <code style="background:#f1f5f9;padding:2px 7px;border-radius:5px;font-size:.82rem">AtadeDefesaNomedoaluno</code>, preencher os campos, assinar e enviar por e-mail para o Membro 1 solicitando a assinatura, depois para o Membro 2, depois para o Aluno.</li>
-            <li>Quando todos assinarem a Ata de Defesa, o orientador (Presidente da Banca) deve enviar por e-mail a Ata de Defesa assinada para o Membro 1, Membro 2 e Aluno. <em>Este processo é externo à Plataforma PGTCC 1.</em></li>
-            <li>Quando o artigo estiver adequado para conclusão, após o orientador receber a revisão do aluno com base nas recomendações da banca, selecione a opção <strong>🏁 Versão Final</strong>, preencha os campos, faça o upload da Versão final e envie o artigo em formato PDF, conforme as orientações desta seção</li>
+            <li>O processo se repete até o avaliador ou orientador considerar o artigo adequado para ir à Banca ou à Versão Final</li>
+            <li>Quando considerar o artigo adequado para Banca, selecione a opção <strong>🏁 Versão Banca</strong> e envie o artigo para dois avaliadores ou orientadores, conforme as orientações desta seção</li>
+            <li>Quando o aluno defender o artigo, o avaliador ou orientador deverá entrar na seção <strong>Gerenciar a Ata de Defesa</strong>, fazer o download do modelo, renomear para <code style="background:#f1f5f9;padding:2px 7px;border-radius:5px;font-size:.82rem">AtadeDefesaNomedoaluno</code>, preencher os campos, assinar e enviar por e-mail para o Membro 1 solicitando a assinatura, depois para o Membro 2, depois para o Aluno.</li>
+            <li>Quando todos assinarem a Ata de Defesa, o avaliador ou orientador (Presidente da Banca) deve enviar por e-mail a Ata de Defesa assinada para o Membro 1, Membro 2 e Aluno. <em>Este processo é externo à Plataforma PGTCC 1.</em></li>
+            <li>Quando o artigo estiver adequado para conclusão, após o avaliador ou orientador receber a revisão do aluno com base nas recomendações da banca, selecione a opção <strong>🏁 Versão Final</strong>, preencha os campos, faça o upload da Versão final e envie o artigo em formato PDF, conforme as orientações desta seção</li>
           </ol>
         </div>
 
@@ -1680,11 +1776,11 @@ function toggleAcc(btn) {
           <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.82rem;font-weight:700">
             <span style="background:var(--blue-pale);color:var(--blue);padding:5px 12px;border-radius:20px;border:1px solid var(--blue-light)">Aluno v1</span>
             <span style="color:var(--muted)">→</span>
-            <span style="background:var(--purple-pale);color:var(--purple);padding:5px 12px;border-radius:20px;border:1px solid var(--purple-light)">Orientador corrige → v2</span>
+            <span style="background:var(--purple-pale);color:var(--purple);padding:5px 12px;border-radius:20px;border:1px solid var(--purple-light)">Avaliador ou Orientador corrige → v2</span>
             <span style="color:var(--muted)">→</span>
             <span style="background:var(--blue-pale);color:var(--blue);padding:5px 12px;border-radius:20px;border:1px solid var(--blue-light)">Aluno revisa → v3</span>
             <span style="color:var(--muted)">→</span>
-            <span style="background:var(--purple-pale);color:var(--purple);padding:5px 12px;border-radius:20px;border:1px solid var(--purple-light)">Orientador corrige → v4</span>
+            <span style="background:var(--purple-pale);color:var(--purple);padding:5px 12px;border-radius:20px;border:1px solid var(--purple-light)">Avaliador ou Orientador corrige → v4</span>
             <span style="color:var(--muted)">→</span>
             <span style="background:var(--blue-pale);color:var(--blue);padding:5px 12px;border-radius:20px;border:1px solid var(--blue-light)">Aluno → v5</span>
             <span style="color:var(--muted)">→ ... →</span>
@@ -1701,6 +1797,18 @@ function toggleAcc(btn) {
         </div>
       </div>
 
+    </div>
+
+    <!-- ── CONCURSO MELHOR TCC1 (revisão cega) ── -->
+    <div class="ct-content" id="ot-orientConcurso">
+      <div class="panel" style="display:block;border-top-color:var(--gold-light)">
+        <div class="panel-title">🏆 Concurso Melhor TCC1 — Avaliação Cega</div>
+        <div id="ccEditalBoxOrient" style="display:none;margin-bottom:14px"></div>
+        <div style="background:var(--gold-pale);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:16px;font-size:.84rem;color:#7a5200;font-weight:700">
+          🕶️ Revisão cega: os artigos abaixo não exibem nome, e-mail, turma ou avaliador/orientador do autor. Avalie apenas com base no conteúdo do artigo.
+        </div>
+        <div id="listaConcursoOrient"><p class="empty-box"><span class="emo">🔍</span><br>Verificando artigos designados a você...</p></div>
+      </div>
     </div>
 
   </div>
@@ -1733,6 +1841,7 @@ function toggleAcc(btn) {
     <nav class="coord-nav">
       <button class="cnav-btn active" onclick="showAlunoTab('meuArtigo',this)">📝 Meu Artigo</button>
       <button class="cnav-btn" onclick="showAlunoTab('ataDefesa',this)">📄 Recebimento da Ata de Defesa</button>
+      <button class="cnav-btn" onclick="showAlunoTab('alunoConcurso',this)">🏆 Concurso Melhor TCC1</button>
       <button class="cnav-btn" onclick="showAlunoTab('alunoPerfil',this)">👤 Meu Perfil</button>
     </nav>
 
@@ -1740,11 +1849,11 @@ function toggleAcc(btn) {
     <div class="ct-content active" id="at-meuArtigo">
       <div id="alunoAlertaBanner"></div>
 
-      <!-- Card: orientador + progresso -->
+      <!-- Card: avaliador ou orientador + progresso -->
       <div class="panel" style="display:block;border-top-color:var(--green-light);margin-bottom:16px">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px">
           <div>
-            <div style="font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px">Orientador(a)</div>
+            <div style="font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px">Avaliador ou Orientador(a)</div>
             <div style="font-weight:800;font-size:.95rem;margin-top:2px" id="alunoOrientadorNome">—</div>
             <div style="font-size:.78rem;color:var(--muted)" id="alunoOrientadorTurma"></div>
           </div>
@@ -1773,15 +1882,15 @@ function toggleAcc(btn) {
         <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
           <li><strong>📥 Download do modelo de artigo</strong><br>Clique em <strong>⬇ Baixar Modelo de Artigo (.docx)</strong>. O arquivo será baixado automaticamente com o nome: <code>TCC1_SeuNome_v1.docx</code>.</li>
           <li><strong>💻 Edição do arquivo no computador</strong><br>Abra o arquivo, clique em <em>Habilitar edição</em>, realize as modificações necessárias e salve-o em uma pasta no seu computador.</li>
-          <li><strong>📤 Envio da versão para o orientador</strong><br>Após concluir a versão 1, acesse a seção <strong>ENVIAR/SUBSTITUIR ARQUIVO</strong>, clique em <em>Upload do arquivo</em> e selecione o documento (<em>Choose File</em>).</li>
-          <li><strong>📝 Registro de observações ao orientador</strong><br>No campo apropriado, escreva as observações e comentários referentes à versão enviada (dúvidas, partes incompletas, pontos a serem revisados etc.).</li>
-          <li><strong>📩 Envio da versão parcial</strong><br>Clique em <strong>💾 Salvar</strong> e, em seguida, em <strong>📨 Enviar Versão Parcial</strong>. O arquivo será encaminhado automaticamente para o ambiente do seu orientador.</li>
-          <li><strong>🔁 Acompanhamento do retorno do orientador</strong><br>Aguarde a devolutiva do professor, que retornará o arquivo com o nome atualizado, por exemplo: <code>_v2</code>.</li>
+          <li><strong>📤 Envio da versão para o avaliador ou orientador</strong><br>Após concluir a versão 1, acesse a seção <strong>ENVIAR/SUBSTITUIR ARQUIVO</strong>, clique em <em>Upload do arquivo</em> e selecione o documento (<em>Choose File</em>).</li>
+          <li><strong>📝 Registro de observações ao avaliador ou orientador</strong><br>No campo apropriado, escreva as observações e comentários referentes à versão enviada (dúvidas, partes incompletas, pontos a serem revisados etc.).</li>
+          <li><strong>📩 Envio da versão parcial</strong><br>Clique em <strong>💾 Salvar</strong> e, em seguida, em <strong>📨 Enviar Versão Parcial</strong>. O arquivo será encaminhado automaticamente para o ambiente do seu avaliador ou orientador.</li>
+          <li><strong>🔁 Acompanhamento do retorno do avaliador ou orientador</strong><br>Aguarde a devolutiva do professor, que retornará o arquivo com o nome atualizado, por exemplo: <code>_v2</code>.</li>
           <li><strong>📚 Reenvio com nova versão</strong><br>Após as correções, repita o processo de envio, atualizando o número da versão no nome do arquivo: <code>_v3</code>, <code>_v4</code>, <code>_v5</code> etc.</li>
           <li><strong>🧾 Exemplo de nome de arquivo</strong><br><code>TCC1_MariaLima_v3.docx</code></li>
-          <li><strong>📊 Versão Banca e correções</strong><br>Quando o orientador considerar o texto adequado, ele enviará a <strong>Versão Banca</strong> para dois avaliadores. Você apresentará (defenderá) a proposta e, se aprovado(a), deverá realizar as alterações recomendadas pela banca. Em seguida, envie ao orientador o arquivo intitulado <code>TCC1_NomeDoAluno_VersaoBancaCorrigida.docx</code>.</li>
-          <li><strong>✅ Versão Final e envio à Biblioteca</strong><br>O orientador, após verificar as correções e a aprovação pela banca, enviará a <strong>Versão Final</strong> com a nota. Nessa etapa, o status será alterado para <em>Aprovado</em> e o artigo será enviado automaticamente para a Biblioteca.</li>
-          <li><strong>❌ Caso de reprovação</strong><br>Em caso de reprovação por falta ou por nota, o status do trabalho será atualizado e não será mais possível realizar alterações nem enviar novos arquivos ao orientador.</li>
+          <li><strong>📊 Versão Banca e correções</strong><br>Quando o avaliador ou orientador considerar o texto adequado, ele enviará a <strong>Versão Banca</strong> para dois avaliadores. Você apresentará (defenderá) a proposta e, se aprovado(a), deverá realizar as alterações recomendadas pela banca. Em seguida, envie ao avaliador ou orientador o arquivo intitulado <code>TCC1_NomeDoAluno_VersaoBancaCorrigida.docx</code>.</li>
+          <li><strong>✅ Versão Final e envio à Biblioteca</strong><br>O avaliador ou orientador, após verificar as correções e a aprovação pela banca, enviará a <strong>Versão Final</strong> com a nota. Nessa etapa, o status será alterado para <em>Aprovado</em> e o artigo será enviado automaticamente para a Biblioteca.</li>
+          <li><strong>❌ Caso de reprovação</strong><br>Em caso de reprovação por falta ou por nota, o status do trabalho será atualizado e não será mais possível realizar alterações nem enviar novos arquivos ao avaliador ou orientador.</li>
         </ol>
         <div style="margin-top:12px;padding:10px 14px;background:var(--gold-pale);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;font-size:.82rem;color:#7a5200">
           <strong>Obs:</strong> Versão parcial = ainda em desenvolvimento &nbsp;|&nbsp; Versão Final = artigo concluído
@@ -1807,10 +1916,10 @@ function toggleAcc(btn) {
           </div>
         </div>
 
-        <!-- Versão Corrigida do Orientador — aparece sempre que houver arquivo do orientador -->
+        <!-- Versão Corrigida do Avaliador ou Orientador — aparece sempre que houver arquivo do avaliador ou orientador -->
         <div id="versaoCorrigidaOrientadorCard" style="display:none;margin-top:14px;background:var(--blue-pale);border:1.5px solid var(--blue-light);border-radius:10px;padding:16px">
-          <div style="font-size:.78rem;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📥 Versão Corrigida do Orientador</div>
-          <div id="versaoCorrigidaOrientadorMsg" style="font-size:.84rem;color:var(--muted);margin-bottom:10px">Aguardando envio do orientador...</div>
+          <div style="font-size:.78rem;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📥 Versão Corrigida do Avaliador ou Orientador</div>
+          <div id="versaoCorrigidaOrientadorMsg" style="font-size:.84rem;color:var(--muted);margin-bottom:10px">Aguardando envio do avaliador ou orientador...</div>
           <div id="versaoCorrigidaOrientadorObs" style="display:none;font-size:.83rem;color:var(--text);background:#fff;border-radius:8px;padding:10px 12px;margin-bottom:10px;border:1px solid var(--blue-light)"></div>
           <button id="btnBaixarCorrigida" onclick="baixarVersaoCorrigidaOrientador()" style="display:none;width:100%;padding:.75rem;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.88rem;font-weight:800;cursor:pointer">
             ⬇ Baixar Versão Corrigida
@@ -1839,18 +1948,18 @@ function toggleAcc(btn) {
           </button>
         </div>
 
-        <!-- Versão do orientador (Aprovado/Final) — mantido para compatibilidade -->
+        <!-- Versão do avaliador ou orientador (Aprovado/Final) — mantido para compatibilidade -->
         <div id="versaoOrientadorBox" style="display:none;margin-top:14px;background:var(--blue-pale);border:1.5px solid var(--blue-light);border-radius:10px;padding:14px 16px">
-          <div style="font-size:.78rem;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">📥 Versão recebida do Orientador</div>
+          <div style="font-size:.78rem;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">📥 Versão recebida do Avaliador ou Orientador</div>
           <div id="versaoOrientadorInfo" style="font-size:.85rem;color:var(--text)"></div>
         </div>
       </div>
 
       <!-- Observações + botões -->
       <div class="panel" style="display:block;border-top-color:var(--green-light);margin-bottom:16px">
-        <div class="panel-title">💬 Observações para o Orientador</div>
+        <div class="panel-title">💬 Observações para o Avaliador ou Orientador</div>
         <div class="field" style="margin-bottom:14px">
-          <textarea id="artigoObs" placeholder="Descreva o que foi feito nesta versão, dúvidas ou comentários para o orientador..." style="min-height:110px"></textarea>
+          <textarea id="artigoObs" placeholder="Descreva o que foi feito nesta versão, dúvidas ou comentários para o avaliador ou orientador..." style="min-height:110px"></textarea>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="act-btn" onclick="enviarVersaoParcial()" id="btnParcial" style="background:linear-gradient(135deg,#27ae60,#52c48a);color:#fff">📨 Enviar Versão Parcial</button>
@@ -1864,10 +1973,10 @@ function toggleAcc(btn) {
           <div class="panel-title">📂 Assinar a Ata de Defesa</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
 
-            <!-- Coluna 1: Baixar Ata enviada pelo orientador -->
+            <!-- Coluna 1: Baixar Ata enviada pelo avaliador ou orientador -->
             <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:16px">
-              <div style="font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Baixar a Ata enviada pelo orientador</div>
-              <div id="alunoAtaDownloadMsg" style="font-size:.85rem;color:var(--muted);margin-bottom:10px">Aguarde o orientador Enviar a Ata!</div>
+              <div style="font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Baixar a Ata enviada pelo avaliador ou orientador</div>
+              <div id="alunoAtaDownloadMsg" style="font-size:.85rem;color:var(--muted);margin-bottom:10px">Aguarde o avaliador ou orientador Enviar a Ata!</div>
               <button id="alunoAtaBtnBaixar" onclick="alunoAtaBaixar()" style="display:none;width:100%;padding:.7rem;background:linear-gradient(135deg,#2563eb,#60a5fa);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:800;cursor:pointer">⬇️ Baixar Ata</button>
             </div>
 
@@ -1908,7 +2017,7 @@ function toggleAcc(btn) {
         <div class="panel-title">📄 Recebimento da Ata de Defesa</div>
         <div id="ataDefesaAlunoContent">
           <div style="background:#fef9c3;border:1.5px solid #fde047;border-radius:10px;padding:16px;font-size:.88rem;color:#713f12;line-height:1.7">
-            ⚠️ <strong>A Ata de Defesa</strong> é escrita após a defesa do(a) aluno(a) e enviada por e-mail para cada membro assinar. Se o seu orientador ainda não enviou a Ata de Defesa assinada por todos, aguarde a defesa ou entre em contato via e-mail com seu orientador. Este processo é externo à Plataforma PGTCC 1.
+            ⚠️ <strong>A Ata de Defesa</strong> é escrita após a defesa do(a) aluno(a) e enviada por e-mail para cada membro assinar. Se o seu avaliador ou orientador ainda não enviou a Ata de Defesa assinada por todos, aguarde a defesa ou entre em contato via e-mail com seu avaliador ou orientador. Este processo é externo à Plataforma PGTCC 1.
           </div>
         </div>
       </div>
@@ -1930,10 +2039,84 @@ function toggleAcc(btn) {
       </div>
     </div>
 
+    <!-- ── CONCURSO MELHOR TCC1 ── -->
+    <div class="ct-content" id="at-alunoConcurso">
+      <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
+        <div class="panel-title">🏆 Concurso Melhor TCC1</div>
+        <div id="ccEditalBoxAluno" style="display:none;margin-bottom:14px"></div>
+        <div id="concursoAlunoStatusBox"><p class="empty-box"><span class="emo">🔍</span><br>Verificando situação do concurso...</p></div>
+
+        <div id="concursoAlunoInscricaoBox" style="display:none;margin-top:14px">
+          <button class="act-btn" style="background:linear-gradient(135deg,#C9972B,#e8b840)" onclick="inscreverConcurso()">📝 Inscrever-se no Concurso</button>
+        </div>
+      </div>
+
+      <div id="concursoAlunoEnvioBox" style="display:none">
+        <div id="ccPrazosLembrete" style="background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:8px;padding:10px 14px;font-size:.8rem;color:#7a5200;margin-bottom:16px"></div>
+
+        <!-- Subseção: Instruções -->
+        <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
+          <div class="panel-title" onclick="toggleConcursoInstrucoes()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none">
+            <span>📋 Instruções</span>
+            <span id="concursoInstrucoesArrow" style="font-size:.8rem;color:var(--muted);transition:transform .2s">▼ Mostrar</span>
+          </div>
+          <div id="concursoInstrucoesBody" style="display:none">
+            <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
+              <li><strong>📥 Download do modelo de artigo</strong><br>Clique em <strong>⬇ Baixar Modelo de Artigo</strong>, na seção "Enviar e Receber o Artigo" abaixo.</li>
+              <li><strong>✂️ Remoção de identificação</strong><br>Edite seu artigo já revisado, em Word, e remova <strong>nome, e-mail e nome do avaliador/orientador</strong> de todo o documento — inclusive cabeçalho, rodapé e propriedades do arquivo. A avaliação é <strong>cega</strong>: os avaliadores não podem identificar o autor.</li>
+              <li><strong>📤 Upload do artigo</strong><br>Na seção "Enviar e Receber o Artigo", selecione o arquivo em Word e clique em <strong>💾 Salvar</strong> para guardar o progresso (você pode salvar quantas vezes quiser antes de enviar).</li>
+              <li><strong>📨 Envio para a Coordenação</strong><br>Quando o artigo estiver pronto, clique em <strong>Enviar sua Inscrição para a Coordenação</strong>. Após o envio, não será mais possível alterar o arquivo.</li>
+              <li><strong>🔎 Homologação</strong><br>A Coordenação avaliará se o artigo atende aos requisitos e poderá homologar ou rejeitar a inscrição (com justificativa).</li>
+              <li><strong>🕶️ Avaliação cega</strong><br>Se homologado, seu artigo será enviado, sem identificação, a até 3 avaliadores do concurso, que também não serão identificados para você.</li>
+              <li><strong>📬 Devolutiva</strong><br>Você acompanhará o andamento (homologação, em análise, revisado) e receberá o artigo com o parecer e as recomendações de melhoria dos avaliadores na seção "Receber o Artigo" abaixo — sem a nota.</li>
+              <li><strong>🖼️ Banner Digital</strong><br>Em construção — em breve você poderá preparar e imprimir seu banner por aqui.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Subseção: Enviar e Receber o Artigo -->
+        <div class="panel" style="display:block;border-top-color:var(--blue-light);margin-bottom:16px">
+          <div class="panel-title">📂 Enviar e Receber o Artigo</div>
+          <div id="ccPrazoAlertaArtigo" style="display:none;margin-bottom:14px;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:10px 14px;font-size:.84rem;font-weight:800;color:#991b1b;animation:pulse 1.1s infinite"></div>
+          <p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:8px">Baixe o modelo, edite seu artigo e <strong>remova nome, e-mail e nome do avaliador/orientador de todo o documento</strong> antes de enviar. A avaliação é cega.</p>
+          <p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:12px">⚠️ O artigo enviado deve seguir <strong>exatamente o formato do Modelo de Artigo da PGTCC1</strong> (estrutura, formatação e normas ABNT já aplicadas no modelo).</p>
+          <button onclick="triggerDownload(FILES.modeloArtigo)" style="margin-bottom:16px;display:flex;align-items:center;gap:8px;padding:.7rem 1.1rem;background:linear-gradient(135deg,#3A9BD5,#70C0E8);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer">⬇ Baixar Modelo de Artigo</button>
+
+          <div id="ccEnvioControles">
+            <div class="field" style="max-width:420px">
+              <label>Fazer Upload do Artigo (Word)</label>
+              <input type="file" id="ccArtigoFile" accept=".doc,.docx" style="border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fff;font-size:.82rem;font-family:inherit"/>
+              <div style="font-size:.75rem;color:var(--muted);margin-top:4px">DOCX · máx. 3 MB · sem nome/e-mail do aluno ou avaliador/orientador · no formato do Modelo de Artigo da PGTCC1</div>
+            </div>
+            <div id="ccArtigoAtual" style="margin-top:10px;font-size:.82rem;color:var(--green);font-weight:700;display:none"></div>
+            <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+              <button class="act-btn sec" onclick="salvarArtigoConcurso()">💾 Salvar</button>
+              <button class="act-btn" style="background:linear-gradient(135deg,#C9972B,#e8b840)" onclick="enviarInscricaoConcurso()">📨 Enviar sua Inscrição para a Coordenação</button>
+            </div>
+          </div>
+
+          <!-- Receber o Artigo (feedback da Coordenação) -->
+          <div id="ccReceberArtigoBox" style="display:none;margin-top:16px;background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:10px;padding:16px">
+            <div style="font-size:.78rem;font-weight:800;color:#7a5200;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📬 Receber o Artigo</div>
+            <div id="ccReceberArtigoConteudo" style="font-size:.85rem;line-height:1.8;color:#4a3200"></div>
+          </div>
+        </div>
+
+        <!-- Subseção: Banner Digital -->
+        <div class="panel" style="display:block;border-top-color:var(--gold-light)">
+          <div class="panel-title">🖼️ Banner Digital</div>
+          <p style="font-size:.85rem;color:var(--muted)">Em construção.</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- AVALIAÇÃO MODAL (Orientador → artigo do aluno) -->
+<!-- Área isolada de impressão do Banner (visível apenas ao imprimir) -->
+<div id="bannerPrintArea"></div>
+
+<!-- AVALIAÇÃO MODAL (Avaliador ou Orientador → artigo do aluno) -->
 <!-- ═══ MODAL VERSÃO FINAL ═══ -->
 <div class="ar-overlay" id="modalVersaoFinal" style="z-index:4000">
   <div class="ar-card" style="max-width:560px">
@@ -2057,9 +2240,9 @@ function toggleAcc(btn) {
       </div>
     </div>
 
-    <!-- GRID 3: Decisão do orientador -->
+    <!-- GRID 3: Decisão do avaliador ou orientador -->
     <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
-      <div class="panel-title">⚡ Ação do Orientador</div>
+      <div class="panel-title">⚡ Ação do Avaliador ou Orientador</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
         <button onclick="avalAcao('corrigida')"  style="padding:.8rem;border:2px solid var(--blue-light);border-radius:10px;background:var(--blue-pale);color:var(--blue);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">📩 Enviar Versão Corrigida</button>
         <button onclick="avalAcao('banca')"      style="padding:.8rem;border:2px solid var(--purple-light);border-radius:10px;background:var(--purple-pale);color:var(--purple);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Enviar para Banca</button>
@@ -2074,7 +2257,7 @@ function toggleAcc(btn) {
       <div id="subBanca" style="display:none;background:var(--purple-pale);border:1.5px solid var(--purple-light);border-radius:10px;padding:16px;margin-bottom:12px">
         <div style="font-weight:800;color:var(--purple);margin-bottom:12px;font-size:.95rem">🏁 Envio para Banca — preencha todos os campos</div>
 
-        <!-- Grid 1: Orientadores -->
+        <!-- Grid 1: Avaliadores ou Orientadores -->
         <div style="background:#fff;border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid var(--purple-light)">
           <div style="font-size:.75rem;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">👥 Membros da Banca</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -2149,6 +2332,36 @@ function toggleAcc(btn) {
   </div>
 </div>
 
+<!-- ═══ MODAL: ATRIBUIR AVALIADORES (Concurso) ═══ -->
+<div class="ar-overlay" id="modalConcursoAvaliadores" style="z-index:4000">
+  <div class="ar-card" style="max-width:560px">
+    <h2>👥 Atribuir Avaliadores (até 3)</h2>
+    <p class="sub">Selecione os avaliadores desta inscrição. A avaliação é cega: nenhum deles verá o nome do aluno.</p>
+    <div class="field" style="margin-bottom:12px"><label>Avaliador 1</label><select id="ccAval1"><option value="">— Nenhum —</option></select></div>
+    <div class="field" style="margin-bottom:12px"><label>Avaliador 2</label><select id="ccAval2"><option value="">— Nenhum —</option></select></div>
+    <div class="field" style="margin-bottom:16px"><label>Avaliador 3</label><select id="ccAval3"><option value="">— Nenhum —</option></select></div>
+    <input type="hidden" id="ccAvalInscricaoId"/>
+    <div style="text-align:right;display:flex;justify-content:flex-end;gap:10px">
+      <button onclick="closeModal('modalConcursoAvaliadores')" style="padding:.65rem 1.4rem;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer">Cancelar</button>
+      <button class="act-btn" onclick="salvarAvaliadoresConcurso()">💾 Salvar Avaliadores</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: PARECERES DO CONCURSO (Coord) ═══ -->
+<div class="ar-overlay" id="modalConcursoPareceres" style="z-index:4000">
+  <div class="ar-card" style="max-width:640px;max-height:85vh;overflow-y:auto">
+    <h2>📝 Pareceres Recebidos</h2>
+    <div id="ccPareceresConteudo" style="font-size:.85rem;line-height:1.7;color:var(--text)"></div>
+    <div class="field" style="margin-top:16px"><label>Nota Final (média ou ajustada pela Coordenação)</label><input type="text" inputmode="decimal" id="ccNotaFinal" placeholder="Ex: 8,5" style="max-width:160px"/></div>
+    <input type="hidden" id="ccPareceresInscricaoId"/>
+    <div style="margin-top:16px;text-align:right;display:flex;justify-content:flex-end;gap:10px">
+      <button onclick="closeModal('modalConcursoPareceres')" style="padding:.65rem 1.4rem;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer">Fechar</button>
+      <button class="act-btn" style="background:linear-gradient(135deg,#C9972B,#e8b840)" onclick="enviarRevisaoConcursoAluno()">📨 Salvar Nota e Enviar ao Aluno</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ MODAL: ALTERAR STATUS (Coord) ═══ -->
 <div class="ar-overlay" id="modalAlterarStatus" style="z-index:4000">
   <div class="ar-card" style="max-width:500px">
@@ -2168,7 +2381,7 @@ function toggleAcc(btn) {
       </select>
     </div>
     <div class="field" style="margin-bottom:16px">
-      <label>Mensagem ao Orientador (opcional)</label>
+      <label>Mensagem ao Avaliador ou Orientador (opcional)</label>
       <textarea id="msgOrientador" placeholder="Ex: Por favor, verifique o status deste aluno e entre em contato..." style="width:100%;min-height:80px;border:1.5px solid var(--border);border-radius:9px;padding:.65rem .9rem;font-family:inherit;font-size:.85rem;resize:vertical"></textarea>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -2202,7 +2415,7 @@ function toggleAcc(btn) {
         <li>Histórico de atividades</li>
         <li>Notificações</li>
         <li>Registro na Biblioteca Digital (se houver)</li>
-        <li>Histórico nos registros do orientador</li>
+        <li>Histórico nos registros do avaliador ou orientador</li>
         <li>Registros de banca agendada</li>
       </ul>
     </div>
@@ -2282,7 +2495,7 @@ let artigosFiltro = 'todos';
 let orientListeners = [];
 let alunoListeners = [];
 
-// ── Helpers Realtime Database para orientadores ──
+// ── Helpers Realtime Database para avaliadores ou orientadores ──
 async function getOrientadores(){
   const snap = await rtdb.ref('orientadores').get();
   if(!snap.exists()) return [];
@@ -2295,7 +2508,7 @@ async function getOrientadoresMap(){
   return map;
 }
 
-// Helper to get orientador name from _oMap (supports both string and object)
+// Helper to get avaliador ou orientador name from _oMap (supports both string and object)
 function oNome(id){ const v=_oMap[id]; return v ? (v.nome||v) : '—'; }
 
 // ── Helpers Realtime Database para alunos ──
@@ -2319,7 +2532,7 @@ async function getAlunosByOrientador(orientadorId){
 // ══════════════════════════════════════
 const ROLE_HINTS = {
   coordenador: 'Coordenador(a): acesso com e-mail e senha cadastrados no sistema.',
-  orientador:  'Orientador(a): acesso com e-mail e senha fornecidos pela Coordenação.',
+  orientador:  'Avaliador ou Orientador(a): acesso com e-mail e senha fornecidos pela Coordenação.',
   aluno:       'Aluno(a): preencha e-mail OU matrícula + senha. Não é necessário preencher os dois.'
 };
 let selectedRole = 'coordenador';
@@ -2477,7 +2690,7 @@ function enterDashboard(user){
     document.getElementById('dashCoord').classList.add('open');
     loadCoordDashboard();
   } else if(user.role==='orientador'){
-    // Orientador: mesmos 5 botões do aluno
+    // Avaliador ou Orientador: mesmos 5 botões do aluno
     clonePublicHeader('orientPubHeader', ['Manual 2','Manual 3','Modelo de artigo','Ata de defesa','Avalie']);
     document.getElementById('orientNomeTop').textContent = user.nome;
     document.getElementById('orientSubTop').textContent  = (user.turma ? 'Turma '+user.turma+' · ' : '') + user.email;
@@ -2524,6 +2737,7 @@ function showCoordTab(tab, btn){
   if(tab==='alunos'){ loadAlunosList(); loadOrientadoresSelect(); carregarPeriodoCadastro(); }
   if(tab==='artigos') loadArtigosCoord();
   if(tab==='bancasCoord') loadBancasCoord();
+  if(tab==='concurso'){ loadConcursoConfig(); loadConcursoInscricoes(); loadConcursoPendentes(); }
   if(tab==='config'){ loadConfig(); carregarGestao(); }
 }
 function showOrientTab(tab, btn){
@@ -2532,9 +2746,10 @@ function showOrientTab(tab, btn){
   btn.classList.add('active');
   document.getElementById('ot-'+tab).classList.add('active');
   if(tab==='orientBancas') loadBancas();
+  if(tab==='orientConcurso') loadConcursoAvaliacoesOrient();
 }
 
-// ── Carrega convites de banca para o orientador ──
+// ── Carrega convites de banca para o avaliador ou orientador ──
 // Cache global dos convites de banca
 window._bancaConvites = {};
 window._bancaArquivos = {};
@@ -2563,7 +2778,7 @@ async function loadBancas(){
 
   el.innerHTML = `<div class="table-shell"><table>
     <thead><tr>
-      <th>#</th><th>Aluno</th><th>Orientador</th><th>Data da Defesa</th>
+      <th>#</th><th>Aluno</th><th>Avaliador ou Orientador</th><th>Data da Defesa</th>
       <th>Recebido em</th><th>Status</th><th style="min-width:180px">Ações</th>
     </tr></thead>
     <tbody>${convites.map((c,i)=>{
@@ -2707,8 +2922,8 @@ function abrirModalJustificativa(cid, acao){
     acao === 'rejeitar' ? '❌ Justificativa para Rejeição do Convite' : '🗑 Justificativa para Remoção do Convite';
   document.getElementById('justBancaDescricao').textContent =
     acao === 'rejeitar'
-      ? 'Explique o motivo da rejeição. Esta mensagem será enviada ao orientador responsável e ao coordenador.'
-      : 'Explique o motivo da remoção. Esta mensagem será enviada ao orientador responsável e ao coordenador.';
+      ? 'Explique o motivo da rejeição. Esta mensagem será enviada ao avaliador ou orientador responsável e ao coordenador.'
+      : 'Explique o motivo da remoção. Esta mensagem será enviada ao avaliador ou orientador responsável e ao coordenador.';
   document.getElementById('justBancaTexto').value = '';
   modal.classList.add('open');
 }
@@ -2725,7 +2940,7 @@ async function confirmarJustBanca(){
 
   const msg = `${currentUser.nome} ${acao==='rejeitar'?'rejeitou':'removeu'} o convite de banca do aluno ${c.alunoNome||'—'}.\n\nJustificativa: ${texto}`;
 
-  // Notifica o orientador responsável pelo convite
+  // Notifica o avaliador ou orientador responsável pelo convite
   if(c.orientadorId){
     await rtdb.ref('notificacoes/'+c.orientadorId).push({
       tipo: acao==='rejeitar' ? 'Convite de Banca Rejeitado' : 'Convite de Banca Removido',
@@ -2743,7 +2958,7 @@ async function confirmarJustBanca(){
   const statusHist = 'Versão Banca';
   const comentHist = `${currentUser.nome} ${acao==='rejeitar'?'rejeitou':'removeu'} o convite de banca. Justificativa: ${texto}`;
 
-  // Registra no histórico do aluno (para o orientador responsável ver)
+  // Registra no histórico do aluno (para o avaliador ou orientador responsável ver)
   if(c.alunoId){
     await rtdb.ref('historico/'+c.alunoId).push({
       tipo:tipoHist, status:statusHist,
@@ -2756,10 +2971,10 @@ async function confirmarJustBanca(){
     await rtdb.ref('convitesBanca/'+currentUser.id+'/'+cid).update({
       status:'Rejeitado', parecer:'Rejeitado', justificativa:texto, dataResposta:Date.now()
     });
-    toast('Convite rejeitado. Orientador e coordenador foram notificados.');
+    toast('Convite rejeitado. Avaliador ou Orientador e coordenador foram notificados.');
   } else {
     await rtdb.ref('convitesBanca/'+currentUser.id+'/'+cid).remove();
-    toast('Convite removido. Orientador e coordenador foram notificados.');
+    toast('Convite removido. Avaliador ou Orientador e coordenador foram notificados.');
   }
 
   modal.classList.remove('open');
@@ -2822,7 +3037,7 @@ async function enviarParecerDetalhe(){
       if(Object.keys(upd).length) await rtdb.ref('bancasAgendadas').update(upd);
     }
 
-    toast('✅ Parecer enviado! Aluno e orientador notificados.');
+    toast('✅ Parecer enviado! Aluno e avaliador ou orientador notificados.');
     fecharBancaDetalhe();
     loadBancas();
   } catch(e){
@@ -2911,7 +3126,7 @@ async function confirmarVersaoFinal(){
       };
 
       console.log('[BIB] Salvando metadados na Biblioteca. alunoId=', id,
-        '| orientador=', currentUser.nome,
+        '| avaliador ou orientador=', currentUser.nome,
         '| nota=', nota,
         '| arquivo=', file.name);
 
@@ -2939,7 +3154,7 @@ async function confirmarVersaoFinal(){
       data:now, autor:currentUser.nome, arquivoNome:file.name
     });
 
-    // 5. Histórico do orientador
+    // 5. Histórico do avaliador ou orientador
     // CORREÇÃO: usa currentUser.uid OU currentUser.id (qualquer um que existir)
     const orientHistId = currentUser.uid || currentUser.id || null;
     if(currentUser && orientHistId){
@@ -2956,7 +3171,7 @@ async function confirmarVersaoFinal(){
       tipo:'Versão Final',
       mensagem: status==='Aprovado'
         ? `✅ Parabéns! Seu TCC foi APROVADO com nota ${nota.toFixed(1)}. A versão final está disponível para download.`
-        : `❌ Seu TCC foi encerrado com nota ${nota.toFixed(1)} (${status}). Consulte seu orientador.`,
+        : `❌ Seu TCC foi encerrado com nota ${nota.toFixed(1)} (${status}). Consulte seu avaliador ou orientador.`,
       arquivoNome: file.name,
       data: now,
       lida: false,
@@ -3022,7 +3237,7 @@ async function alunoEnviarAtaAssinada(){
         tipo: 'ataAssinadaAluno'
       };
       const writes = [];
-      // Notify orientador
+      // Notify avaliador ou orientador
       if(orientadorId){
         writes.push(rtdb.ref('notificacoes/'+orientadorId+'/ataDefesa/'+ts)
           .set(Object.assign({},payload,{destinatario:'orientador',alerta:true})));
@@ -3093,9 +3308,9 @@ async function loadAbaAtaDefesaAluno(){
 
   const ALERT_HTML = '<div style="background:#fef9c3;border:1.5px solid #fde047;border-radius:10px;padding:16px;font-size:.88rem;color:#713f12;line-height:1.7">'
     + '⚠️ <strong>A Ata de Defesa</strong> é escrita após a defesa do(a) aluno(a) e enviada por e-mail para cada membro assinar. '
-    + 'Se o seu orientador ainda não enviou a Ata de Defesa assinada por todos, aguarde a defesa ou entre em contato via e-mail com seu orientador. Este processo é externo à Plataforma PGTCC 1.</div>';
+    + 'Se o seu avaliador ou orientador ainda não enviou a Ata de Defesa assinada por todos, aguarde a defesa ou entre em contato via e-mail com seu avaliador ou orientador. Este processo é externo à Plataforma PGTCC 1.</div>';
 
-  // Check notificacoes/uid/ataDefesa for a file sent by the orientador
+  // Check notificacoes/uid/ataDefesa for a file sent by the avaliador ou orientador
   try{
     const snap = await rtdb.ref('notificacoes/'+uid+'/ataDefesa').orderByChild('timestamp').limitToLast(1).get();
     let entry = null;
@@ -3128,6 +3343,7 @@ function showAlunoTab(tab, btn){
   document.getElementById('at-'+tab).classList.add('active');
   if(tab==='meuArtigo'){ loadHistorico(); loadAlunoAtaGrid(); }
   if(tab==='ataDefesa') loadAbaAtaDefesaAluno();
+  if(tab==='alunoConcurso') loadConcursoAluno();
 }
 
 // ══════════════════════════════════════
@@ -3216,7 +3432,7 @@ async function loadCoordDashboard(){
   // Busca sempre dados frescos do Firebase
   const [alunosLista, orientLista] = await Promise.all([getAlunos(), getOrientadores()]);
 
-  // Reconstrói o mapa de orientadores
+  // Reconstrói o mapa de avaliadores ou orientadores
   _oMap = {};
   orientLista.forEach(o=>{ _oMap[o.id] = o; });
 
@@ -3265,7 +3481,7 @@ async function loadCoordDashboard(){
       const on  = (_oMap[a.orientadorId]&&_oMap[a.orientadorId].nome)||_oMap[a.orientadorId]||'—';
       return`<div class="alert-banner alert-warn" style="flex-direction:column;align-items:flex-start;gap:2px">
         <span>⚠️ <b>${a.nome}</b></span>
-        <small>Orientador: ${on} · Status: ${a.status||'Pendente'} · Última ativ.: ${ult}</small>
+        <small>Avaliador ou Orientador: ${on} · Status: ${a.status||'Pendente'} · Última ativ.: ${ult}</small>
       </div>`;
     }).join('');
 
@@ -3274,7 +3490,7 @@ async function loadCoordDashboard(){
       const on  = (_oMap[a.orientadorId]&&_oMap[a.orientadorId].nome)||_oMap[a.orientadorId]||'—';
       return`<div class="alert-banner alert-info" style="flex-direction:column;align-items:flex-start;gap:2px">
         <span>✅ <b>${a.nome}</b></span>
-        <small>Orientador: ${on} · Status: ${a.status||'Pendente'} · Última ativ.: ${ult}</small>
+        <small>Avaliador ou Orientador: ${on} · Status: ${a.status||'Pendente'} · Última ativ.: ${ult}</small>
       </div>`;
     }).join('');
 
@@ -3332,30 +3548,32 @@ function filtrarVisaoGeral(){
   renderVisaoGeral(lista);
 }
 
-// ─── Orientadores CRUD (Realtime Database) ───
+// ─── Avaliadores ou Orientadores CRUD (Realtime Database) ───
 async function salvarOrientador(){
-  const id    = document.getElementById('oEditId').value;
-  const nome  = document.getElementById('oNome').value.trim();
-  const email = document.getElementById('oEmail').value.trim();
-  const turma = document.getElementById('oTurma').value.trim().toUpperCase();
-  const senha = document.getElementById('oSenha').value.trim();
+  const id     = document.getElementById('oEditId').value;
+  const nome   = document.getElementById('oNome').value.trim();
+  const email  = document.getElementById('oEmail').value.trim();
+  const turma  = document.getElementById('oTurma').value.trim().toUpperCase();
+  const senha  = document.getElementById('oSenha').value.trim();
+  const classe = document.getElementById('oClasse').value;
 
   if(!nome||!email||!turma){ toast('Preencha nome, e-mail e turma.','err'); return; }
+  if(!classe){ toast('Selecione a classe.','err'); return; }
   if(turma.length>4){ toast('Turma deve ter no máximo 4 caracteres.','err'); return; }
-  if(!id && !senha){ toast('Senha obrigatória para novo orientador.','err'); return; }
+  if(!id && !senha){ toast('Senha obrigatória para novo avaliador ou orientador.','err'); return; }
   if(senha && (senha.length<6||senha.length>9)){ toast('Senha deve ter entre 6 e 9 caracteres.','err'); return; }
 
-  const data = { nome, email, turma };
+  const data = { nome, email, turma, classe };
   if(senha) data.senha = senha;
 
   try{
     if(id){
       await rtdb.ref('orientadores/'+id).update(data);
-      toast('Orientador atualizado!');
+      toast('Avaliador ou Orientador atualizado!');
     } else {
       data.criadoEm = Date.now();
       await rtdb.ref('orientadores').push(data);
-      toast('Orientador cadastrado!');
+      toast('Avaliador ou Orientador cadastrado!');
     }
     limparOrientadorForm();
     loadOrientadoresList();
@@ -3367,18 +3585,19 @@ function editarOrientador(id, d){
   document.getElementById('oNome').value   = d.nome||'';
   document.getElementById('oEmail').value  = d.email||'';
   document.getElementById('oTurma').value  = d.turma||'';
+  document.getElementById('oClasse').value = d.classe||'';
   document.getElementById('oSenha').value  = '';
   document.getElementById('btnCancelarOrient').style.display='inline-flex';
   document.querySelector('#ct-orientadores .panel-title').scrollIntoView({behavior:'smooth'});
 }
 function limparOrientadorForm(){
-  ['oNome','oEmail','oTurma','oSenha','oEditId'].forEach(id=>document.getElementById(id).value='');
+  ['oNome','oEmail','oTurma','oSenha','oEditId','oClasse'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('btnCancelarOrient').style.display='none';
 }
 async function excluirOrientador(id,nome){
-  if(!confirm(`Excluir orientador "${nome}"?`)) return;
+  if(!confirm(`Excluir avaliador ou orientador "${nome}"?`)) return;
   await rtdb.ref('orientadores/'+id).remove();
-  toast('Orientador removido.');
+  toast('Avaliador ou Orientador removido.');
   loadOrientadoresList();
 }
 async function definirSenhaOrientador(id, nomeOrient){
@@ -3388,17 +3607,30 @@ async function definirSenhaOrientador(id, nomeOrient){
   await rtdb.ref('orientadores/'+id).update({senha:nova});
   toast('Senha redefinida!');
 }
+const CLASSE_INFO = {
+  'ORIENTADOR DO DEP':              { icon:'🏫', label:'Orientador do DEP',              bg:'var(--blue-pale)',   fg:'var(--blue)',   bd:'var(--blue-light)' },
+  'ORIENTADOR EXTERNO':             { icon:'🌐', label:'Orientador Externo',             bg:'var(--purple-pale)', fg:'var(--purple)', bd:'var(--purple-light)' },
+  'AVALIADOR DO TCC 1':             { icon:'📝', label:'Avaliador do TCC 1',             bg:'var(--green-pale)',  fg:'var(--green)',  bd:'var(--green-light)' },
+  'AVALIADOR DE CONCURSO DE TCC 1': { icon:'🏆', label:'Avaliador de Concurso de TCC 1', bg:'var(--gold-pale)',   fg:'var(--gold)',   bd:'var(--gold-light)' },
+  'OUTRO TIPO DE AVALIADOR':        { icon:'🔹', label:'Outro Tipo de Avaliador',        bg:'var(--teal-pale)',   fg:'var(--teal)',   bd:'var(--teal-light)' }
+};
+function classeBadge(classe){
+  const c = CLASSE_INFO[classe];
+  if(!c) return '<span style="color:var(--muted);font-size:.8rem">—</span>';
+  return `<span style="display:inline-flex;align-items:center;gap:5px;background:${c.bg};color:${c.fg};border:1px solid ${c.bd};padding:4px 10px;border-radius:20px;font-size:.76rem;font-weight:800;white-space:nowrap">${c.icon} ${c.label}</span>`;
+}
 async function loadOrientadoresList(){
   const lista = await getOrientadores();
   const el = document.getElementById('listaOrientadores');
-  if(!lista.length){ el.innerHTML='<p class="empty-box"><span class="emo">🎓</span><br>Nenhum orientador cadastrado.</p>'; return; }
+  if(!lista.length){ el.innerHTML='<p class="empty-box"><span class="emo">🎓</span><br>Nenhum avaliador ou orientador cadastrado.</p>'; return; }
   el.innerHTML=`<div class="table-shell"><table>
-    <thead><tr><th>Nome</th><th>E-mail</th><th>Turma</th><th>Senha</th><th>Ações</th></tr></thead>
+    <thead><tr><th>Nome</th><th>E-mail</th><th>Turma</th><th>Classe</th><th>Senha</th><th>Ações</th></tr></thead>
     <tbody>${lista.map(o=>`<tr>
       <td>${o.nome}</td><td>${o.email}</td><td>${o.turma||'—'}</td>
+      <td>${classeBadge(o.classe)}</td>
       <td><span style="letter-spacing:2px;color:var(--muted)">••••••</span></td>
       <td class="tbl-actions">
-        <button class="tbl-btn tbl-edit" onclick='editarOrientador("${o.id}",${JSON.stringify({nome:o.nome,email:o.email,turma:o.turma})})'>✏️ Editar</button>
+        <button class="tbl-btn tbl-edit" onclick='editarOrientador("${o.id}",${JSON.stringify({nome:o.nome,email:o.email,turma:o.turma,classe:o.classe||''})})'>✏️ Editar</button>
         <button class="tbl-btn tbl-viz" onclick='definirSenhaOrientador("${o.id}","${o.nome}")'>🔑 Senha</button>
         <button class="tbl-btn tbl-del" onclick='excluirOrientador("${o.id}","${o.nome}")'>🗑 Deletar</button>
       </td>
@@ -3439,7 +3671,7 @@ async function definirPeriodoVigente(){
   await rtdb.ref('config/periodoVigente').set({ periodo:p, atualizadoEm:Date.now() });
   const box = document.getElementById('periodoVigenteBox');
   box.style.display='block';
-  box.textContent = `⭐ Período Vigente definido como: ${p} — alunos e orientadores verão este período.`;
+  box.textContent = `⭐ Período Vigente definido como: ${p} — alunos e avaliadores ou orientadores verão este período.`;
   toast(`Período vigente definido: ${p}`);
 }
 
@@ -3631,7 +3863,7 @@ async function confirmarExclusaoAluno(){
     if(matricula !== id)
       await rtdb.ref('notificacoes/' + matricula).remove().catch(()=>{});
 
-    // 7. Históricos de orientadores
+    // 7. Históricos de avaliadores ou orientadores
     const histOrientSnap = await rtdb.ref('historico_orientador').get().catch(()=>null);
     if(histOrientSnap && histOrientSnap.exists()){
       const hoWrites = [];
@@ -3679,7 +3911,7 @@ async function loadAlunosList(){
   if(!lista.length){ el.innerHTML='<p class="empty-box"><span class="emo">📚</span><br>Nenhum aluno cadastrado.</p>'; return; }
   const oMap = await getOrientadoresMap();
   el.innerHTML=`<div class="table-shell"><table>
-    <thead><tr><th>Nome</th><th>Matrícula</th><th>E-mail</th><th>Orientador</th><th>Status</th><th>Ações</th></tr></thead>
+    <thead><tr><th>Nome</th><th>Matrícula</th><th>E-mail</th><th>Avaliador ou Orientador</th><th>Status</th><th>Ações</th></tr></thead>
     <tbody>${lista.map(a=>{const d=a; return`<tr>
       <td>${d.nome}</td><td>${d.matricula}</td><td>${d.email}</td>
       <td>${oMap[d.orientadorId]||'—'}</td>
@@ -3727,12 +3959,12 @@ async function verArtigo(alunoId, nome){
   document.getElementById('verArtigoConteudo').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
       <div class="perfil-item"><label>Status</label><p><span class="sb ${statusClass(d.status)}">${d.status||'Pendente'}</span></p></div>
-      <div class="perfil-item"><label>Orientador</label><p>${oMap[d.orientadorId]||'—'}</p></div>
+      <div class="perfil-item"><label>Avaliador ou Orientador</label><p>${oMap[d.orientadorId]||'—'}</p></div>
       <div class="perfil-item"><label>Última Atividade</label><p>${d.ultimaAtualizacao?fmtDate(d.ultimaAtualizacao):'—'}</p></div>
       <div class="perfil-item"><label>Nota</label><p>${d.nota!==undefined?parseFloat(d.nota).toFixed(1):'—'}</p></div>
     </div>
     ${d.artigoObs?`<div style="background:var(--bg);border-radius:8px;padding:12px;margin-bottom:10px"><strong>Observações do Aluno:</strong><br>${d.artigoObs}</div>`:''}
-    ${d.comentarioOrientador?`<div style="background:var(--blue-pale);border-radius:8px;padding:12px;margin-bottom:10px"><strong>Observações do Orientador:</strong><br>${d.comentarioOrientador}</div>`:''}
+    ${d.comentarioOrientador?`<div style="background:var(--blue-pale);border-radius:8px;padding:12px;margin-bottom:10px"><strong>Observações do Avaliador ou Orientador:</strong><br>${d.comentarioOrientador}</div>`:''}
     ${d.comentarioBanca?`<div style="background:var(--purple-pale);border-radius:8px;padding:12px;margin-bottom:10px"><strong>Parecer da Banca:</strong><br>${d.comentarioBanca}</div>`:''}
     ${d.ultimoArquivoNome?`<div style="background:var(--green-pale);border-radius:8px;padding:12px"><strong>Último Arquivo do Aluno:</strong> 📎 ${d.ultimoArquivoNome}</div>`:'<div style="color:var(--muted);font-size:.84rem">Nenhum arquivo enviado ainda.</div>'}
   `;
@@ -3921,7 +4153,7 @@ async function loadBancasCoord(){
 
   el.innerHTML = `<div class="table-shell"><table>
     <thead><tr>
-      <th>Aluno</th><th>Orientador</th><th>Data da Defesa</th>
+      <th>Aluno</th><th>Avaliador ou Orientador</th><th>Data da Defesa</th>
       <th>Horário</th><th>Local</th><th>Membros da Banca</th><th>Status</th>
     </tr></thead>
     <tbody>${bancas.map(b=>{
@@ -3969,13 +4201,13 @@ async function carregarAlertasSenhas(){
       return;
     }
     // Filtra APENAS registros reais de troca de senha:
-    // deve ter novaSenha preenchida e tipo Aluno ou Orientador
+    // deve ter novaSenha preenchida e tipo Aluno ou Avaliador ou Orientador
     const todos = Object.entries(snap.val()).map(([id,v])=>({id,...v}));
     const alertas = todos
       .filter(a =>
         a.novaSenha && String(a.novaSenha).trim() !== '' &&
         a.nome      && String(a.nome).trim()      !== '' &&
-        (a.tipo === 'Aluno' || a.tipo === 'Orientador')
+        (a.tipo === 'Aluno' || a.tipo === 'Avaliador ou Orientador')
       )
       .sort((a,b)=>(b.data||0)-(a.data||0));
 
@@ -3994,7 +4226,7 @@ async function carregarAlertasSenhas(){
       alertas.map(a =>
         '<tr style="' + (a.lida ? '' : 'background:#fffbeb') + '">' +
         '<td><span class="sb ' + (a.tipo==='Aluno'?'sb-andamento':'sb-final') + '">' +
-          (a.tipo==='Aluno' ? '\uD83C\uDF93 Aluno' : '\uD83C\uDF93 Orientador') +
+          (a.tipo==='Aluno' ? '\uD83C\uDF93 Aluno' : '\uD83C\uDF93 Avaliador ou Orientador') +
         '</span></td>' +
         '<td><strong>' + (a.nome||'\u2014') + '</strong></td>' +
         '<td><code style="background:#f1f5f9;padding:2px 8px;border-radius:5px;font-size:.88rem;letter-spacing:.5px">' + (a.novaSenha||'\u2014') + '</code></td>' +
@@ -4127,7 +4359,7 @@ async function notificarCoordSenha(tipo, nome, novaSenha){
   // na seção Alertas de Troca de Senha do coordenador
   await rtdb.ref('alertasSenha').push({
     evento: 'trocaSenha',
-    tipo,        // 'Aluno' ou 'Orientador'
+    tipo,        // 'Aluno' ou 'Avaliador ou Orientador'
     nome,
     novaSenha,
     data: Date.now(),
@@ -4306,7 +4538,7 @@ async function openAvaliacao(alunoId, nome){
   // Histórico
   await carregarHistoricoAval(alunoId);
 
-  // Pareceres da Banca (orientador)
+  // Pareceres da Banca (avaliador ou orientador)
   await carregarPareceresBanca(alunoId, 'aval');
 
   cancelarSubPanel();
@@ -4396,7 +4628,7 @@ function cancelarSubPanel(){
 async function confirmarEncerramento(){
   const statusMap = {rejeitar:'Rejeitado', falta:'Reprovado por Falta', nota:'Reprovado por Nota'};
   const status = statusMap[_acaoAtual]||'Reprovado';
-  const coment = document.getElementById('avalComentario').value.trim() || 'Processo encerrado pelo orientador.';
+  const coment = document.getElementById('avalComentario').value.trim() || 'Processo encerrado pelo avaliador ou orientador.';
   const id = document.getElementById('avalAlunoId').value;
   await rtdb.ref('alunos/'+id).update({ status, comentarioOrientador:coment, ultimaAtualizacao:Date.now() });
   await rtdb.ref('historico/'+id).push({ tipo:status, status, comentario:coment, data:Date.now(), autor:currentUser.nome });
@@ -4414,8 +4646,8 @@ async function confirmarBanca(){
   const local= document.getElementById('bancaLocalDefesa').value.trim();
   const msg  = document.getElementById('bancaMsgBanca').value.trim();
 
-  if(!b1||!b2){ toast('Selecione dois orientadores.','err'); return; }
-  if(b1===b2) { toast('Selecione orientadores diferentes.','err'); return; }
+  if(!b1||!b2){ toast('Selecione dois avaliadores ou orientadores.','err'); return; }
+  if(b1===b2) { toast('Selecione avaliadores ou orientadores diferentes.','err'); return; }
   if(!tituloArtigo){ toast('Informe o título do artigo.','err'); return; }
   if(!data||!hora||!local){ toast('Informe data, horário e local da defesa.','err'); return; }
 
@@ -4423,8 +4655,8 @@ async function confirmarBanca(){
   const aluno = snapAluno.val()||{};
 
   // ── Prioridade de arquivo para a banca ──
-  // 1. Arquivo selecionado agora pelo orientador no campo de upload (Grid 2)
-  // 2. Última versão corrigida enviada pelo orientador ao aluno
+  // 1. Arquivo selecionado agora pelo avaliador ou orientador no campo de upload (Grid 2)
+  // 2. Última versão corrigida enviada pelo avaliador ou orientador ao aluno
   // 3. Última versão enviada pelo aluno (fallback)
   let arquivoNome = '—';
   let arquivoBase64 = '';
@@ -4437,7 +4669,7 @@ async function confirmarBanca(){
     arquivoBase64 = await fileToBase64(fileNow);
     arquivoNome   = fileNow.name;
   } else {
-    // Tenta a versão corrigida do orientador já salva
+    // Tenta a versão corrigida do avaliador ou orientador já salva
     const snapOrient = await rtdb.ref('alunos/'+id+'/arquivoOrientador').get();
     if(snapOrient.exists() && snapOrient.val().base64){
       arquivoBase64 = snapOrient.val().base64;
@@ -4495,7 +4727,7 @@ async function confirmarBanca(){
     data:Date.now(), de:currentUser.nome
   }).catch(()=>{});
 
-  toast('✅ Banca enviada com o arquivo correto! Orientadores notificados.');
+  toast('✅ Banca enviada com o arquivo correto! Avaliadores ou Orientadores notificados.');
   fecharAvalPanel();
 }
 
@@ -4513,7 +4745,7 @@ async function executarAcao(){
   const status = statusMap[_acaoAtual]||'Correção Solicitada';
 
   const update = { status, comentarioOrientador:coment, ultimaAtualizacao:Date.now() };
-  const hist   = { tipo:'Versão do Orientador', status, comentario:coment, data:Date.now(), autor:currentUser.nome };
+  const hist   = { tipo:'Versão do Avaliador ou Orientador', status, comentario:coment, data:Date.now(), autor:currentUser.nome };
 
   if(file){
     const b64 = await fileToBase64(file);
@@ -4620,7 +4852,7 @@ async function alterarSenhaOrient(){
   if(!n||n!==c){ toast('Senhas não coincidem.','err'); return; }
   if(n.length<6||n.length>9){ toast('Senha deve ter entre 6 e 9 caracteres.','err'); return; }
   await rtdb.ref('orientadores/'+currentUser.id).update({senha:n});
-  await notificarCoordSenha('Orientador', currentUser.nome, n);
+  await notificarCoordSenha('Avaliador ou Orientador', currentUser.nome, n);
   // Atualiza currentUser para refletir nova senha
   currentUser.senha = n;
   toast('Senha alterada! Coordenador foi notificado.');
@@ -4651,7 +4883,7 @@ async function loadAlunoDashboard(){
     'versaoOrientadorBox':           { display:'none' },
     'versaoOrientadorInfo':          { html:'' },
     'versaoCorrigidaOrientadorCard': { display:'none' },
-    'versaoCorrigidaOrientadorMsg':  { html:'Aguardando envio do orientador...' },
+    'versaoCorrigidaOrientadorMsg':  { html:'Aguardando envio do avaliador ou orientador...' },
     'versaoCorrigidaOrientadorObs':  { display:'none', html:'' },
     'btnBaixarCorrigida':            { display:'none' },
     'versaoBancaMembro1Card':        { display:'none' },
@@ -4687,7 +4919,7 @@ async function loadAlunoDashboard(){
   const orientNome  = (orientObj && orientObj.nome) ? orientObj.nome : (typeof orientObj==='string' ? orientObj : '—');
   const orientTurma = (orientObj && orientObj.turma) ? 'Turma '+orientObj.turma : '';
 
-  // Orientador + turma
+  // Avaliador ou Orientador + turma
   document.getElementById('alunoOrientadorNome').textContent  = orientNome;
   document.getElementById('alunoOrientadorTurma').textContent = orientTurma;
 
@@ -4733,7 +4965,7 @@ async function loadAlunoDashboard(){
   const obs = document.getElementById('artigoObs');
   if(obs) obs.value = d.artigoObs||'';
 
-  // ── Versão Corrigida do Orientador ──
+  // ── Versão Corrigida do Avaliador ou Orientador ──
   // Aparece sempre que o campo arquivoOrientadorNome existir e o status não for Final/Aprovado
   // (nesses casos o card de Versão Final já cobre o conteúdo)
   const cardCorrigida = document.getElementById('versaoCorrigidaOrientadorCard');
@@ -4752,7 +4984,7 @@ async function loadAlunoDashboard(){
       if(obsCorrigida){
         if(d.comentarioOrientador){
           obsCorrigida.style.display = 'block';
-          obsCorrigida.innerHTML = '<strong>💬 Observações do orientador:</strong><br>' + d.comentarioOrientador;
+          obsCorrigida.innerHTML = '<strong>💬 Observações do avaliador ou orientador:</strong><br>' + d.comentarioOrientador;
         } else {
           obsCorrigida.style.display = 'none';
         }
@@ -4776,10 +5008,10 @@ async function loadAlunoDashboard(){
     }
   }
 
-  // Carrega cards dos membros da banca — SEMPRE, independente do status ou arquivo do orientador
+  // Carrega cards dos membros da banca — SEMPRE, independente do status ou arquivo do avaliador ou orientador
   carregarVersoesBancaAluno(currentUser.id);
 
-  // Notificações do orientador e banca
+  // Notificações do avaliador ou orientador e banca
   const box  = document.getElementById('versaoOrientadorBox');
   const info = document.getElementById('versaoOrientadorInfo');
 
@@ -4828,13 +5060,13 @@ async function loadAlunoDashboard(){
     carregarPareceresBanca(currentUser.id, 'bancaAluno');
   }
 
-  // Badge pulsante quando há resposta do orientador/banca
+  // Badge pulsante quando há resposta do avaliador ou orientador/banca
   const temResposta = d.arquivoOrientadorNome || d.comentarioBanca ||
     d.status==='Parecer de Banca Recebido' || d.status==='Correção Solicitada';
   if(temResposta){
     const artigoBtn = document.querySelector('#dashAluno .cnav-btn[onclick*="meuArtigo"]');
     if(artigoBtn && !artigoBtn.querySelector('.badge-alert')){
-      artigoBtn.insertAdjacentHTML('beforeend','<span class="badge-alert" title="Nova mensagem do orientador">!</span>');
+      artigoBtn.insertAdjacentHTML('beforeend','<span class="badge-alert" title="Nova mensagem do avaliador ou orientador">!</span>');
     }
   }
 
@@ -4843,7 +5075,7 @@ async function loadAlunoDashboard(){
     const t = typeof d.ultimaAtualizacao==='number' ? d.ultimaAtualizacao : new Date(d.ultimaAtualizacao).getTime();
     if(Date.now()-t > 7*86400000){
       document.getElementById('alunoAlertaBanner').innerHTML=
-        `<div class="alert-banner alert-warn">🔴 Seu orientador enviou uma correção há mais de 7 dias. Por favor, responda!</div>`;
+        `<div class="alert-banner alert-warn">🔴 Seu avaliador ou orientador enviou uma correção há mais de 7 dias. Por favor, responda!</div>`;
     }
   }
 
@@ -4852,7 +5084,7 @@ async function loadAlunoDashboard(){
   if(pg) pg.innerHTML=[
     {l:'Nome',v:d.nome},{l:'Matrícula',v:d.matricula},
     {l:'E-mail',v:d.email},{l:'Período Letivo',v:d.periodoLetivo},
-    {l:'Orientador',v:orientNome},{l:'Turma',v:orientTurma||'—'},
+    {l:'Avaliador ou Orientador',v:orientNome},{l:'Turma',v:orientTurma||'—'},
     {l:'Senha de Acesso',v:d.senha}
   ].map(i=>`<div class="perfil-item"><label>${i.l}</label><p>${i.v||'—'}</p></div>`).join('');
 
@@ -4924,7 +5156,7 @@ async function enviarVersaoParcial(){
       data:Date.now(), autor:currentUser.nome, comentario:obs, arquivoNome:nome
     });
 
-    toast('Versão parcial enviada ao orientador!');
+    toast('Versão parcial enviada ao avaliador ou orientador!');
     fileInp.value='';
     loadAlunoDashboard();
   } catch(e){
@@ -5206,7 +5438,7 @@ async function loadBiblioteca(){
       el.innerHTML = '<div style="text-align:center;padding:40px 20px">' +
         '<div style="font-size:2.5rem;margin-bottom:12px">\uD83D\uDCC2</div>' +
         '<p style="font-weight:800;font-size:.95rem;color:var(--text)">Nenhum artigo publicado ainda.</p>' +
-        '<p style="font-size:.82rem;color:var(--muted);margin-top:6px">Os artigos aprovados pelos orientadores aparecer\xe3o aqui.</p>' +
+        '<p style="font-size:.82rem;color:var(--muted);margin-top:6px">Os artigos aprovados pelos avaliadores ou orientadores aparecer\xe3o aqui.</p>' +
         '</div>';
       return;
     }
@@ -5324,7 +5556,7 @@ function renderBiblioteca(itens){
         <div>
           <div style="font-weight:800;font-size:1rem;color:var(--text)">${v.alunoNome || '—'}</div>
           <div style="font-size:.77rem;color:var(--muted);margin-top:3px">
-            🎓 Orientador(a): <strong>${v.orientadorNome || '—'}</strong>
+            🎓 Avaliador ou Orientador(a): <strong>${v.orientadorNome || '—'}</strong>
             ${v.periodoLetivo && v.periodoLetivo !== '—' ? `&nbsp;·&nbsp; 📅 ${v.periodoLetivo}` : ''}
           </div>
         </div>
@@ -5451,11 +5683,11 @@ function toast(msg,type='ok'){
     <div class="panel" style="display:block;border-top-color:var(--purple-light);margin-bottom:16px">
       <div class="panel-title">📋 Informações do Convite</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-        <div class="perfil-item"><label>Orientador Responsável</label><p id="bancaDetalheEnviado">—</p></div>
+        <div class="perfil-item"><label>Avaliador ou Orientador Responsável</label><p id="bancaDetalheEnviado">—</p></div>
         <div class="perfil-item"><label>Data, Hora e Local da Defesa</label><p id="bancaDetalheDefesa" style="font-weight:800;color:var(--purple)">—</p></div>
       </div>
       <div style="background:var(--bg);border-radius:8px;padding:10px 14px;font-size:.84rem;margin-bottom:12px">
-        <strong>Mensagem do orientador:</strong><br>
+        <strong>Mensagem do avaliador ou orientador:</strong><br>
         <span id="bancaDetalheMensagem" style="color:var(--text)"></span>
       </div>
       <button id="bancaDetalheBtnDl" style="display:none;padding:.6rem 1.2rem;background:linear-gradient(135deg,#3A9BD5,#70C0E8);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer"></button>
@@ -5493,9 +5725,9 @@ function toast(msg,type='ok'){
         <div class="field" style="margin-bottom:16px">
           <label>📎 Artigo Revisado com Anotações (opcional – PDF ou DOCX, máx. 3 MB)</label>
           <input type="file" id="bancaFileInput" accept=".pdf,.doc,.docx" style="width:100%;border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fafafa;font-family:inherit;font-size:.82rem"/>
-          <div style="font-size:.73rem;color:var(--muted);margin-top:4px">Se anexar, o aluno e o orientador responsável receberão o arquivo revisado.</div>
+          <div style="font-size:.73rem;color:var(--muted);margin-top:4px">Se anexar, o aluno e o avaliador ou orientador responsável receberão o arquivo revisado.</div>
         </div>
-        <button onclick="enviarParecerDetalhe()" style="padding:.8rem 1.8rem;background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none;border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer;font-size:.9rem">📨 Enviar Parecer ao Aluno e Orientador</button>
+        <button onclick="enviarParecerDetalhe()" style="padding:.8rem 1.8rem;background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none;border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer;font-size:.9rem">📨 Enviar Parecer ao Aluno e Avaliador ou Orientador</button>
       </div>
     </div>
 
@@ -5553,7 +5785,7 @@ function toast(msg,type='ok'){
         <label style="font-size:.78rem;font-weight:800;color:#475569">Nota Final<input id="ataNotaAtual" type="number" min="0" max="10" step="0.1" style="width:100%;margin-top:6px;padding:.75rem;border:1.5px solid #cbd5e1;border-radius:10px;font-family:inherit"></label>
         <label style="font-size:.78rem;font-weight:800;color:#475569">Resultado<select id="ataStatusAtual" style="width:100%;margin-top:6px;padding:.75rem;border:1.5px solid #cbd5e1;border-radius:10px;font-family:inherit;background:#fff"><option value="Aprovado">Aprovado</option><option value="Reprovado">Reprovado</option></select></label>
       </div>
-      <div style="margin-top:12px;font-size:.78rem;color:#64748b">O orientador informa apenas a nota final e o resultado. O sistema monta automaticamente a ata com os dados da banca e libera a assinatura digital para todos os envolvidos.</div>
+      <div style="margin-top:12px;font-size:.78rem;color:#64748b">O avaliador ou orientador informa apenas a nota final e o resultado. O sistema monta automaticamente a ata com os dados da banca e libera a assinatura digital para todos os envolvidos.</div>
     </div>
     <div id="ataPreviewAtual" style="padding:28px 26px;background:#fff"></div>
   </div>
@@ -5617,7 +5849,7 @@ function htmlEscape(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c
   function papelFromRole(role){
     const user = window.currentUser || {};
     const nome = (user.nome || '').trim();
-    if(role === 'orientador') return 'Orientador';
+    if(role === 'orientador') return 'Avaliador ou Orientador';
     if(role === 'aluno') return 'Aluno';
     if(role === 'membro1') return 'Membro da banca 1';
     if(role === 'membro2') return 'Membro da banca 2';
@@ -5677,7 +5909,7 @@ function htmlEscape(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c
       '</div>' +
       '<p>Aos <strong>' + htmlEscape(formatDateExtenso(dataVal)) + '</strong>, às <strong>' + htmlEscape(horaVal) + '</strong>, no local <strong>' + htmlEscape(localVal) + '</strong>, realizou-se a defesa do Trabalho de Conclusão de Curso do(a) discente <strong>' + htmlEscape(aluno.nome || '—') + '</strong>.</p>' +
       '<p><strong>Título do artigo:</strong> ' + htmlEscape(tituloAta) + '</p>' +
-      '<p><strong>Orientador(a):</strong> ' + htmlEscape(banca.orientadorNome || aluno.orientadorNome || '—') + '<br>' +
+      '<p><strong>Avaliador ou Orientador(a):</strong> ' + htmlEscape(banca.orientadorNome || aluno.orientadorNome || '—') + '<br>' +
       '<strong>Membro 1 da banca:</strong> ' + htmlEscape(banca.membro1Nome || banca.membro1 || '—') + '<br>' +
       '<strong>Membro 2 da banca:</strong> ' + htmlEscape(banca.membro2Nome || banca.membro2 || '—') + '</p>' +
       '<p>Após arguição e avaliação do trabalho, a banca deliberou o resultado <strong>' + htmlEscape(statusVal) + '</strong>' + (notaVal !== '' ? ' com nota <strong>' + htmlEscape(notaVal) + '</strong>' : '') + '.</p>' +
@@ -5715,7 +5947,7 @@ function htmlEscape(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c
     const banca = (ctx && ctx.banca) || {};
     const aluno = (ctx && ctx.aluno) || {};
     const fluxo = [
-      { role:'orientador', key:'orientador', papel:'Orientador(a)', nome:banca.orientadorNome || aluno.orientadorNome || 'Orientador(a)', userId:banca.orientadorId || aluno.orientadorId || null },
+      { role:'orientador', key:'orientador', papel:'Avaliador ou Orientador(a)', nome:banca.orientadorNome || aluno.orientadorNome || 'Avaliador ou Orientador(a)', userId:banca.orientadorId || aluno.orientadorId || null },
       { role:'aluno', key:'aluno', papel:'Aluno(a)', nome:aluno.nome || 'Aluno(a)', userId:aluno.id || ctx.alunoId || null },
       { role:'membro1', key:'membro1', papel:'Membro 1 da banca', nome:banca.membro1Nome || banca.membro1 || 'Membro 1', userId:banca.membro1Id || banca.membro1 || null },
       { role:'membro2', key:'membro2', papel:'Membro 2 da banca', nome:banca.membro2Nome || banca.membro2 || 'Membro 2', userId:banca.membro2Id || banca.membro2 || null }
@@ -5955,13 +6187,13 @@ const legacySign = window.assinarAtaDefesaV1;
         <div style="font-weight:900;color:#b45309;font-size:1rem;margin-bottom:14px">📌 Instruções para criar a Ata de Defesa</div>
         <ol style="margin:0;padding-left:20px;color:#78350f;font-size:.88rem;line-height:1.9">
           <li><b>Baixe</b> o modelo abaixo, preencha os campos, assine e envie para o <b>Membro 1</b>.</li>
-          <li>O <b>Membro 1</b> assinará a Ata e a devolverá ao Orientador.</li>
-          <li>O Orientador enviará a Ata assinada para o <b>Membro 2</b>.</li>
-          <li>O <b>Membro 2</b> assinará a Ata e a devolverá ao Orientador.</li>
-          <li>O Orientador enviará a Ata (agora com 2 assinaturas) para o <b>Aluno</b>.</li>
-          <li>O <b>Aluno</b> assinará a Ata e a devolverá ao Orientador.</li>
-          <li>O Orientador receberá a Ata com todas as assinaturas e a enviará para os <b>Membros 1 e 2</b>.</li>
-          <li>O Orientador <b>finalizará</b> a Ata de Defesa na plataforma.</li>
+          <li>O <b>Membro 1</b> assinará a Ata e a devolverá ao Avaliador ou Orientador.</li>
+          <li>O Avaliador ou Orientador enviará a Ata assinada para o <b>Membro 2</b>.</li>
+          <li>O <b>Membro 2</b> assinará a Ata e a devolverá ao Avaliador ou Orientador.</li>
+          <li>O Avaliador ou Orientador enviará a Ata (agora com 2 assinaturas) para o <b>Aluno</b>.</li>
+          <li>O <b>Aluno</b> assinará a Ata e a devolverá ao Avaliador ou Orientador.</li>
+          <li>O Avaliador ou Orientador receberá a Ata com todas as assinaturas e a enviará para os <b>Membros 1 e 2</b>.</li>
+          <li>O Avaliador ou Orientador <b>finalizará</b> a Ata de Defesa na plataforma.</li>
         </ol>
         <div style="margin-top:16px">
           <button onclick="baixarAtaModelo()" style="padding:.75rem 1.4rem;background:#b45309;color:#fff;border:none;border-radius:10px;font-weight:900;font-size:.9rem;cursor:pointer;box-shadow:0 2px 8px rgba(180,83,9,.3)">⬇️ Baixar Modelo da Ata de Defesa</button>
@@ -6046,7 +6278,7 @@ document.getElementById('modalCriarAta').addEventListener('click', function(e){
 
       <!-- SEC 1: Instrucoes -->
       <div style="background:#fffbeb;border:1.5px solid #fcd34d;border-radius:14px;padding:16px">
-        <div style="font-weight:900;color:#b45309;font-size:.97rem;margin-bottom:10px">&#x1F4CC; Instru&#231;&#245;es para o Orientador (Presidente da Banca)</div>
+        <div style="font-weight:900;color:#b45309;font-size:.97rem;margin-bottom:10px">&#x1F4CC; Instru&#231;&#245;es para o Avaliador ou Orientador (Presidente da Banca)</div>
         <ol style="margin:0;padding-left:20px;color:#78350f;font-size:.85rem;line-height:2">
           <li>Baixe o modelo, preencha e assine.</li>
           <li>Envie a Ata por e-mail ao <b>Membro 1</b> para assinar e devolver.</li>
@@ -6111,7 +6343,7 @@ async function ataCarregarSelects(){
 
     const membros1 = {}, membros2 = {}, alunos = {};
 
-    // Source 1: bancasAgendadas filtradas pelo orientador
+    // Source 1: bancasAgendadas filtradas pelo avaliador ou orientador
     if(snapBancas.exists()){
       Object.values(snapBancas.val()).forEach(function(b){
         const oid = b.orientadorId || b.orientId || '';
@@ -6125,7 +6357,7 @@ async function ataCarregarSelects(){
       });
     }
 
-    // Source 2: convitesBanca aceitos pelo orientador (membros que aceitaram)
+    // Source 2: convitesBanca aceitos pelo avaliador ou orientador (membros que aceitaram)
     if(snapConvites.exists()){
       Object.values(snapConvites.val()).forEach(function(c){
         const mid = c.remetenteId || c.de || '';
@@ -6139,7 +6371,7 @@ async function ataCarregarSelects(){
       });
     }
 
-    // Source 3: alunos diretamente vinculados ao orientador
+    // Source 3: alunos diretamente vinculados ao avaliador ou orientador
     Object.entries(alunosMap).forEach(function(e){
       const id = e[0]; const a = e[1];
       if((a.orientadorId || a.orientId || '') === uid){
@@ -6221,7 +6453,7 @@ async function enviarAta(destino){
     }
   } catch(err){ return showStatus(false, 'Erro ao buscar dados: ' + err.message); }
 
-  // membro1 and membro2 are the UIDs saved directly when the orientador clicks "Enviar para Banca"
+  // membro1 and membro2 are the UIDs saved directly when the avaliador ou orientador clicks "Enviar para Banca"
   const membro1Id = banca.membro1 || null;
   const membro2Id = banca.membro2 || null;
   const alunoUid  = aluno.uid || aluno.id || alunoId;
@@ -6241,7 +6473,7 @@ async function enviarAta(destino){
       let binary = ''; for(var i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
       const fileB64 = btoa(binary);
       const ts = Date.now();
-      const remetente = (window.currentUser && (window.currentUser.nome || window.currentUser.email)) || 'Orientador';
+      const remetente = (window.currentUser && (window.currentUser.nome || window.currentUser.email)) || 'Avaliador ou Orientador';
 
       const payload = {
         arquivoB64: fileB64, arquivoNome: file.name, mensagem: mensagem,
@@ -6324,6 +6556,618 @@ function enviarAtaSelecionado(){
   window._ataMembro2IdAtual = m2 || null;
   window._ataAlunoIdAtual   = al || null;
   enviarAta('todos');
+}
+
+// ══════════════════════════════════════════════════════════
+// CONCURSO MELHOR TCC1
+// ══════════════════════════════════════════════════════════
+
+// ─── util ───
+function renderEditalBox(cfg, elId){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  const temEdital = cfg && cfg.editalNome;
+  const temDefesa = cfg && (cfg.defesaData || cfg.defesaHorario || cfg.defesaLocal);
+  if(!temEdital && !temDefesa){ el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  let html = '';
+  if(temEdital){
+    html += `<div style="background:var(--blue-pale);border:1.5px solid var(--blue-light);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:${temDefesa?'10px':'0'}">
+      <div style="font-size:.84rem;color:var(--blue);font-weight:800">📜 Edital do Concurso: ${cfg.editalNome}</div>
+      <button class="tbl-btn tbl-viz" onclick='baixarBase64(${JSON.stringify(cfg.editalUrl)},${JSON.stringify(cfg.editalNome)},${JSON.stringify(cfg.editalMime||"application/pdf")})'>⬇ Baixar Edital</button>
+    </div>`;
+  }
+  if(temDefesa){
+    html += `<div style="background:var(--purple-pale);border:1.5px solid var(--purple-light);border-radius:10px;padding:12px 16px;font-size:.84rem;color:var(--purple);font-weight:800">
+      🎤 Defesa Pública: ${cfg.defesaData||'—'} ${cfg.defesaHorario?'às '+cfg.defesaHorario:''} ${cfg.defesaLocal?'· '+cfg.defesaLocal:''}
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+function toggleConcursoInstrucoes(){
+  const body  = document.getElementById('concursoInstrucoesBody');
+  const arrow = document.getElementById('concursoInstrucoesArrow');
+  if(!body) return;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  arrow.textContent   = open ? '▼ Mostrar' : '▲ Fechar';
+  arrow.style.color   = open ? 'var(--muted)' : 'var(--gold)';
+}
+function statusBadgeConcurso(status){
+  const map = {
+    'Inscrito':      {bg:'var(--blue-pale)',  fg:'var(--blue)',   bd:'var(--blue-light)'},
+    'Enviado':       {bg:'#fff7ed',           fg:'#b45309',       bd:'#fed7aa'},
+    'Homologado':    {bg:'var(--green-pale)', fg:'var(--green)',  bd:'var(--green-light)'},
+    'Rejeitado':     {bg:'#fee2e2',           fg:'#991b1b',       bd:'#fca5a5'},
+    'Em Avaliação':  {bg:'var(--purple-pale)',fg:'var(--purple)', bd:'var(--purple-light)'},
+    'Avaliado':      {bg:'var(--gold-pale)',  fg:'var(--gold)',   bd:'var(--gold-light)'},
+    'Concluído':     {bg:'var(--teal-pale)',  fg:'var(--teal)',   bd:'var(--teal-light)'}
+  };
+  const c = map[status] || {bg:'#f1f5f9',fg:'#64748b',bd:'#cbd5e1'};
+  return `<span style="display:inline-flex;align-items:center;background:${c.bg};color:${c.fg};border:1px solid ${c.bd};padding:4px 10px;border-radius:20px;font-size:.76rem;font-weight:800;white-space:nowrap">${status||'—'}</span>`;
+}
+function contarAvaliadoresConcurso(i){
+  const av = i.avaliadores || {};
+  return [1,2,3].filter(n=>av[n] && av[n].id).length;
+}
+function contarPareceresConcurso(i){
+  const p = i.pareceres || {};
+  return [1,2,3].filter(n=>p[n] && p[n].parecer).length;
+}
+function temAlgumParecerConcurso(i){ return contarPareceresConcurso(i) > 0; }
+
+// ─── Coordenação: configuração ───
+async function loadConcursoConfig(){
+  try{
+  const snap = await rtdb.ref('concurso/config').get();
+  const cfg = snap.exists() ? snap.val() : {};
+  document.getElementById('ccPeriodo').value              = cfg.periodo || '';
+  document.getElementById('ccStatusAberto').value         = cfg.aberto === false ? 'false' : 'true';
+  document.getElementById('ccPrazoArtigo').value          = cfg.prazoArtigo || '';
+  document.getElementById('ccPrazoBannerDigital').value   = cfg.prazoBannerDigital || '';
+  document.getElementById('ccPrazoBannerImpresso').value  = cfg.prazoBannerImpresso || '';
+  document.getElementById('ccDefesaData').value            = cfg.defesaData || '';
+  document.getElementById('ccDefesaHorario').value         = cfg.defesaHorario || '';
+  document.getElementById('ccDefesaLocal').value           = cfg.defesaLocal || '';
+  const editalBox = document.getElementById('ccEditalAtual');
+  if(cfg.editalNome){
+    editalBox.style.display = 'block';
+    editalBox.innerHTML = `✅ Edital atual: ${cfg.editalNome} &nbsp; <button class="tbl-btn tbl-viz" onclick='baixarBase64(${JSON.stringify(cfg.editalUrl)},${JSON.stringify(cfg.editalNome)},${JSON.stringify(cfg.editalMime||"application/pdf")})'>⬇ Baixar</button>`;
+  } else {
+    editalBox.style.display = 'none';
+  }
+  const box = document.getElementById('ccConfigAtual');
+  if(cfg.periodo){
+    box.style.display = 'block';
+    box.innerHTML = `🏆 Concurso ${cfg.periodo} · ${cfg.aberto===false?'🔴 Inscrições fechadas':'🟢 Inscrições abertas'}<br>
+      📄 Artigo: ${cfg.prazoArtigo||'—'} &nbsp;·&nbsp; 🖼️ Banner Digital: ${cfg.prazoBannerDigital||'—'} &nbsp;·&nbsp; 🖨️ Banner Impresso (A1): ${cfg.prazoBannerImpresso||'—'}
+      ${(cfg.defesaData||cfg.defesaHorario||cfg.defesaLocal)?`<br>🎤 Defesa Pública: ${cfg.defesaData||'—'} ${cfg.defesaHorario||''} ${cfg.defesaLocal?'· '+cfg.defesaLocal:''}`:''}`;
+  } else {
+    box.style.display = 'none';
+  }
+  } catch(e){
+    console.error('loadConcursoConfig:', e);
+    toast('Erro ao carregar configuração do concurso: '+e.message,'err');
+  }
+}
+async function salvarConcursoConfig(){
+  const periodo             = document.getElementById('ccPeriodo').value.trim();
+  const aberto              = document.getElementById('ccStatusAberto').value === 'true';
+  const prazoArtigo         = document.getElementById('ccPrazoArtigo').value.trim();
+  const prazoBannerDigital  = document.getElementById('ccPrazoBannerDigital').value.trim();
+  const prazoBannerImpresso = document.getElementById('ccPrazoBannerImpresso').value.trim();
+  const defesaData          = document.getElementById('ccDefesaData').value.trim();
+  const defesaHorario       = document.getElementById('ccDefesaHorario').value.trim();
+  const defesaLocal         = document.getElementById('ccDefesaLocal').value.trim();
+  const editalInp           = document.getElementById('ccEditalFile');
+  const editalFile          = editalInp && editalInp.files[0];
+  if(!periodo){ toast('Informe o período do concurso.','err'); return; }
+  if(editalFile && editalFile.size > 5*1024*1024){ toast('Edital muito grande. Máximo 5 MB.','err'); return; }
+  try{
+    const snapAtual = await rtdb.ref('concurso/config').get();
+    const atual = snapAtual.exists() ? snapAtual.val() : {};
+    const data = { periodo, aberto, prazoArtigo, prazoBannerDigital, prazoBannerImpresso, defesaData, defesaHorario, defesaLocal, atualizadoEm:Date.now() };
+    if(editalFile){
+      data.editalNome = editalFile.name;
+      data.editalMime = editalFile.type || 'application/octet-stream';
+      data.editalUrl  = await fileToBase64(editalFile);
+    } else if(atual.editalNome){
+      data.editalNome = atual.editalNome;
+      data.editalMime = atual.editalMime;
+      data.editalUrl  = atual.editalUrl;
+    }
+    await rtdb.ref('concurso/config').set(data);
+    toast('Configurações do concurso salvas!');
+    loadConcursoConfig();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+
+// ─── Coordenação: lista de inscrições ───
+window._concursoCache = {};
+async function loadConcursoInscricoes(){
+  const el = document.getElementById('listaConcursoCoord');
+  const contEl = document.getElementById('ccContagem');
+  try{
+  const snap = await rtdb.ref('concurso/inscricoes').get();
+  if(!snap.exists()){
+    el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo enviado ao concurso ainda.</p>';
+    if(contEl) contEl.textContent = '';
+    return;
+  }
+  const lista = Object.entries(snap.val())
+    .map(([id,d])=>({id,...d}))
+    .filter(i=>i.status && i.status!=='Inscrito') // só quem já enviou o artigo
+    .sort((a,b)=>(b.dataEnvio||b.dataInscricao||0)-(a.dataEnvio||a.dataInscricao||0));
+  window._concursoCache = {};
+  lista.forEach(i=>window._concursoCache[i.id]=i);
+  if(contEl) contEl.textContent = `(${lista.length})`;
+  if(!lista.length){
+    el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo enviado ao concurso ainda.</p>';
+    return;
+  }
+  el.innerHTML = `<div class="table-shell"><table>
+    <thead><tr><th>Aluno</th><th>Turma</th><th>Status</th><th>Avaliadores</th><th>Pareceres</th><th>Nota Final</th><th>Ações</th></tr></thead>
+    <tbody>${lista.map(i=>`<tr>
+      <td>${i.alunoNome||'—'}</td>
+      <td>${i.turma||'—'}</td>
+      <td>${statusBadgeConcurso(i.status)}</td>
+      <td>${contarAvaliadoresConcurso(i)}/3</td>
+      <td>${contarPareceresConcurso(i)}/${contarAvaliadoresConcurso(i)||3}</td>
+      <td>${i.notaFinal!=null ? i.notaFinal : '—'}</td>
+      <td class="tbl-actions">
+        ${i.artigoUrl?`<button class="tbl-btn tbl-viz" onclick='baixarBase64(${JSON.stringify(i.artigoUrl)},${JSON.stringify(i.artigoNome||"artigo.pdf")},${JSON.stringify(i.artigoMime||"application/pdf")})'>⬇ Artigo</button>`:''}
+        ${i.status==='Enviado'?`<button class="tbl-btn tbl-edit" onclick="homologarConcurso('${i.id}')">✅ Homologar</button><button class="tbl-btn tbl-del" onclick="rejeitarConcurso('${i.id}')">❌ Rejeitar</button>`:''}
+        ${(i.status==='Homologado'||i.status==='Em Avaliação')?`<button class="tbl-btn tbl-edit" onclick="abrirModalAvaliadoresConcurso('${i.id}')">👥 Avaliadores</button>`:''}
+        ${temAlgumParecerConcurso(i)?`<button class="tbl-btn tbl-viz" onclick="abrirModalPareceresConcurso('${i.id}')">📝 Pareceres</button>`:''}
+      </td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+  } catch(e){
+    console.error('loadConcursoInscricoes:', e);
+    el.innerHTML = `<p class="empty-box" style="color:#991b1b"><span class="emo">⚠️</span><br>Erro ao carregar inscrições do concurso.<br><span style="font-size:.72rem;font-weight:400">${e.message}</span></p>`;
+  }
+}
+
+async function loadConcursoPendentes(){
+  const el = document.getElementById('listaConcursoPendentes');
+  const contEl = document.getElementById('ccContagemPendentes');
+  try{
+    const snap = await rtdb.ref('concurso/inscricoes').get();
+    const lista = snap.exists()
+      ? Object.entries(snap.val()).map(([id,d])=>({id,...d})).filter(i=>i.status==='Inscrito').sort((a,b)=>(b.dataInscricao||0)-(a.dataInscricao||0))
+      : [];
+    window._concursoPendentesCache = {};
+    lista.forEach(i=>window._concursoPendentesCache[i.id]=i);
+    if(contEl) contEl.textContent = lista.length ? `(${lista.length})` : '';
+    if(!lista.length){
+      el.innerHTML = '<p class="empty-box"><span class="emo">🔸</span><br>Nenhuma inscrição parada no momento.</p>';
+      return;
+    }
+    el.innerHTML = `<div class="table-shell"><table>
+      <thead><tr><th>Aluno</th><th>Turma</th><th>Inscrito em</th><th>Ações</th></tr></thead>
+      <tbody>${lista.map(i=>`<tr>
+        <td>${i.alunoNome||'—'}</td>
+        <td>${i.turma||'—'}</td>
+        <td>${i.dataInscricao?new Date(i.dataInscricao).toLocaleDateString('pt-BR'):'—'}</td>
+        <td class="tbl-actions"><button class="tbl-btn tbl-del" onclick="cancelarInscricaoConcurso('${i.id}')">🗑 Cancelar Inscrição</button></td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  } catch(e){
+    console.error('loadConcursoPendentes:', e);
+    el.innerHTML = `<p class="empty-box" style="color:#991b1b"><span class="emo">⚠️</span><br>Erro ao carregar inscrições sem envio.<br><span style="font-size:.72rem;font-weight:400">${e.message}</span></p>`;
+  }
+}
+async function cancelarInscricaoConcurso(id){
+  const i = (window._concursoPendentesCache && window._concursoPendentesCache[id]) || {};
+  if(!confirm(`Cancelar a inscrição de "${i.alunoNome||'este aluno'}" no concurso? Como o artigo ainda não foi enviado, esta ação apenas remove o registro de inscrição.`)) return;
+  try{
+    await rtdb.ref('concurso/inscricoes/'+id).remove();
+    toast('Inscrição cancelada.');
+    loadConcursoPendentes();
+    loadConcursoInscricoes();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+
+async function homologarConcurso(id){
+  if(!confirm('Homologar este artigo para avaliação em banca do concurso?')) return;
+  try{
+    await rtdb.ref('concurso/inscricoes/'+id).update({ status:'Homologado', dataHomologacao:Date.now() });
+    const i = window._concursoCache[id] || {};
+    if(i.alunoId) await rtdb.ref('notificacoes/'+i.alunoId).push({ tipo:'Concurso Melhor TCC1', mensagem:'Seu artigo foi homologado e seguirá para avaliação cega pelos avaliadores do concurso.', data:Date.now(), lida:false, de:'Coordenação' });
+    toast('Artigo homologado!');
+    loadConcursoInscricoes();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+async function rejeitarConcurso(id){
+  const motivo = prompt('Justifique o motivo da rejeição (será enviado ao aluno):');
+  if(!motivo) return;
+  try{
+    await rtdb.ref('concurso/inscricoes/'+id).update({ status:'Rejeitado', motivoRejeicao:motivo, dataHomologacao:Date.now() });
+    const i = window._concursoCache[id] || {};
+    if(i.alunoId) await rtdb.ref('notificacoes/'+i.alunoId).push({ tipo:'Concurso Melhor TCC1', mensagem:'Seu artigo não foi homologado para o Concurso Melhor TCC1.\n\nMotivo: '+motivo, data:Date.now(), lida:false, de:'Coordenação' });
+    toast('Inscrição rejeitada.');
+    loadConcursoInscricoes();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+
+// ─── Coordenação: atribuir avaliadores ───
+async function abrirModalAvaliadoresConcurso(id){
+  const i = window._concursoCache[id];
+  if(!i) return;
+  document.getElementById('ccAvalInscricaoId').value = id;
+  const todos = await getOrientadores();
+  let pool = todos.filter(o=>o.classe==='AVALIADOR DE CONCURSO DE TCC 1');
+  if(!pool.length) pool = todos; // fallback: se ninguém com essa classe, permite escolher entre todos
+  const av = i.avaliadores || {};
+  [1,2,3].forEach(n=>{
+    const sel = document.getElementById('ccAval'+n);
+    sel.innerHTML = '<option value="">— Nenhum —</option>' + pool.map(o=>`<option value="${o.id}"${(av[n]&&av[n].id===o.id)?' selected':''}>${o.nome}${o.classe?' — '+CLASSE_INFO[o.classe]?.icon+' '+CLASSE_INFO[o.classe]?.label:''}</option>`).join('');
+  });
+  document.getElementById('modalConcursoAvaliadores').classList.add('open');
+}
+async function salvarAvaliadoresConcurso(){
+  const id = document.getElementById('ccAvalInscricaoId').value;
+  if(!id) return;
+  const todos = await getOrientadores();
+  const map = {}; todos.forEach(o=>map[o.id]=o);
+  const avaliadores = {};
+  const idsEscolhidos = [];
+  [1,2,3].forEach(n=>{
+    const val = document.getElementById('ccAval'+n).value;
+    if(val){
+      idsEscolhidos.push(val);
+      avaliadores[n] = { id: val, nome: (map[val]&&map[val].nome) || '—' };
+    }
+  });
+  if(new Set(idsEscolhidos).size !== idsEscolhidos.length){ toast('Não repita o mesmo avaliador em mais de um campo.','err'); return; }
+  try{
+    await rtdb.ref('concurso/inscricoes/'+id).update({ avaliadores, status:'Em Avaliação' });
+    const i = window._concursoCache[id] || {};
+    for(const n of [1,2,3]){
+      if(avaliadores[n]) await rtdb.ref('notificacoes/'+avaliadores[n].id).push({ tipo:'Concurso Melhor TCC1', mensagem:'Um novo artigo do Concurso Melhor TCC1 foi designado para sua avaliação cega.', data:Date.now(), lida:false, de:'Coordenação' });
+    }
+    toast('Avaliadores atribuídos!');
+    closeModal('modalConcursoAvaliadores');
+    loadConcursoInscricoes();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+
+// ─── Coordenação: visualizar pareceres e enviar devolutiva ───
+async function abrirModalPareceresConcurso(id){
+  const i = window._concursoCache[id];
+  if(!i) return;
+  document.getElementById('ccPareceresInscricaoId').value = id;
+  const pareceres = i.pareceres || {};
+  let notasValidas = [];
+  let html = '';
+  [1,2,3].forEach(n=>{
+    const p = pareceres[n];
+    if(!p) return;
+    if(p.nota!=null && p.nota!=='') notasValidas.push(parseFloat(String(p.nota).replace(',','.')));
+    html += `<div style="border:1.5px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="font-weight:800;color:var(--gold);margin-bottom:6px">Avaliador ${n} ${i.avaliadores&&i.avaliadores[n]?'— '+i.avaliadores[n].nome:''}</div>
+      <div style="margin-bottom:6px"><strong>Parecer:</strong> ${p.parecer||'—'}</div>
+      <div style="margin-bottom:6px"><strong>Nota sugerida:</strong> ${p.nota!=null?p.nota:'—'}</div>
+      <div style="margin-bottom:6px"><strong>Comentários:</strong><br>${(p.comentarios||'—').replace(/\n/g,'<br>')}</div>
+      <div style="margin-bottom:6px"><strong>Sugestões de revistas para submissão:</strong><br>${(p.revistas||'—').replace(/\n/g,'<br>')}</div>
+      ${p.arquivoRevisadoUrl?`<button class="tbl-btn tbl-viz" onclick='baixarBase64(${JSON.stringify(p.arquivoRevisadoUrl)},${JSON.stringify(p.arquivoRevisadoNome||("artigo_revisado_"+n+".pdf"))},${JSON.stringify(p.arquivoRevisadoMime||"application/pdf")})'>⬇ Artigo Revisado</button>`:''}
+    </div>`;
+  });
+  if(!html) html = '<p class="empty-box">Nenhum parecer recebido ainda.</p>';
+  document.getElementById('ccPareceresConteudo').innerHTML = html;
+  const notaSugerida = notasValidas.length ? (notasValidas.reduce((a,b)=>a+b,0)/notasValidas.length).toFixed(1).replace('.',',') : '';
+  document.getElementById('ccNotaFinal').value = (i.notaFinal!=null ? i.notaFinal : notaSugerida);
+  document.getElementById('modalConcursoPareceres').classList.add('open');
+}
+async function enviarRevisaoConcursoAluno(){
+  const id = document.getElementById('ccPareceresInscricaoId').value;
+  if(!id) return;
+  const notaFinal = document.getElementById('ccNotaFinal').value.trim();
+  if(!notaFinal){ toast('Informe a nota final.','err'); return; }
+  const i = window._concursoCache[id];
+  if(!i) return;
+  const pareceres = i.pareceres || {};
+  let recomendacao = `Nota final do Concurso Melhor TCC1: ${notaFinal}\n\n`;
+  [1,2,3].forEach(n=>{
+    const p = pareceres[n];
+    if(!p) return;
+    recomendacao += `— Avaliador ${n} —\nParecer: ${p.parecer||'—'}\nComentários: ${p.comentarios||'—'}\nSugestões de revistas: ${p.revistas||'—'}\n\n`;
+  });
+  try{
+    await rtdb.ref('concurso/inscricoes/'+id).update({ status:'Concluído', notaFinal, recomendacaoFinal:recomendacao, dataConclusao:Date.now() });
+    if(i.alunoId) await rtdb.ref('notificacoes/'+i.alunoId).push({ tipo:'Concurso Melhor TCC1', mensagem:'A devolutiva do Concurso Melhor TCC1 está disponível na sua área.', data:Date.now(), lida:false, de:'Coordenação' });
+    toast('Devolutiva enviada ao aluno!');
+    closeModal('modalConcursoPareceres');
+    loadConcursoInscricoes();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+
+// ─── Avaliador/Orientador: revisão cega ───
+async function loadConcursoAvaliacoesOrient(){
+  const el = document.getElementById('listaConcursoOrient');
+  const badge = document.getElementById('concursoBadgeOrient');
+  const uid = currentUser && currentUser.id;
+  if(!uid){ el.innerHTML = '<p class="empty-box">Não foi possível identificar seu usuário.</p>'; return; }
+  try{
+  const cfgSnapO = await rtdb.ref('concurso/config').get();
+  renderEditalBox(cfgSnapO.exists() ? cfgSnapO.val() : null, 'ccEditalBoxOrient');
+  const snap = await rtdb.ref('concurso/inscricoes').get();
+  if(!snap.exists()){ el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo designado a você no momento.</p>'; if(badge) badge.style.display='none'; return; }
+  const todas = Object.entries(snap.val()).map(([id,d])=>({id,...d}));
+  const minhas = todas.filter(i=>{
+    const av = i.avaliadores || {};
+    return [1,2,3].some(n=>av[n] && av[n].id === uid);
+  });
+  if(!minhas.length){ el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo designado a você no momento.</p>'; if(badge) badge.style.display='none'; return; }
+  window._concursoOrientCache = {};
+  minhas.forEach(i=>window._concursoOrientCache[i.id]=i);
+  const pendentes = minhas.filter(i=>{
+    const av = i.avaliadores || {}; const p = i.pareceres || {};
+    const meuSlot = [1,2,3].find(n=>av[n] && av[n].id === uid);
+    return meuSlot && !(p[meuSlot] && p[meuSlot].parecer);
+  });
+  if(badge){ badge.style.display = pendentes.length ? 'inline-block' : 'none'; badge.textContent = pendentes.length || ''; }
+  el.innerHTML = minhas.map(i=>{
+    const av = i.avaliadores || {}; const p = i.pareceres || {};
+    const meuSlot = [1,2,3].find(n=>av[n] && av[n].id === uid);
+    const meuParecer = p[meuSlot];
+    return `<div style="border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;background:${meuParecer?'#f8fafc':'#fff'}">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div style="font-weight:800;color:#163352">📄 Inscrição Anônima #${i.id.slice(-6).toUpperCase()}</div>
+        ${statusBadgeConcurso(i.status)}
+      </div>
+      ${i.artigoUrl?`<button class="tbl-btn tbl-viz" onclick='baixarBase64(${JSON.stringify(i.artigoUrl)},${JSON.stringify(i.artigoNome||"artigo.pdf")},${JSON.stringify(i.artigoMime||"application/pdf")})'>⬇ Baixar Artigo (anônimo)</button>`:'<p style="font-size:.82rem;color:var(--muted)">Artigo indisponível.</p>'}
+      ${meuParecer ? `
+        <div style="margin-top:12px;background:var(--green-pale);border:1.5px solid var(--green-light);border-radius:8px;padding:10px 14px;font-size:.84rem;color:var(--green);font-weight:700">✅ Parecer já enviado em ${new Date(meuParecer.data).toLocaleDateString('pt-BR')}.</div>
+      ` : `
+        <div style="margin-top:14px">
+          <div class="field" style="margin-bottom:10px"><label>Parecer</label>
+            <select id="cvParecer_${i.id}"><option value="">— Selecione —</option><option>Aprovado</option><option>Aprovado com ressalvas</option><option>Reprovado</option></select>
+          </div>
+          <div class="field" style="margin-bottom:10px"><label>Nota Sugerida (0 a 10)</label><input type="text" inputmode="decimal" id="cvNota_${i.id}" placeholder="Ex: 8,5" style="max-width:160px"/></div>
+          <div class="field" style="margin-bottom:10px"><label>Comentários e Recomendações</label><textarea id="cvComentarios_${i.id}" placeholder="Comentários sobre o artigo..." style="min-height:90px"></textarea></div>
+          <div class="field" style="margin-bottom:10px"><label>Sugestões de Revistas para Submissão</label><textarea id="cvRevistas_${i.id}" placeholder="Ex: Revista X, Revista Y..." style="min-height:70px"></textarea></div>
+          <div class="field" style="margin-bottom:10px"><label>Artigo Revisado com Anotações (opcional — PDF ou DOCX, máx. 3 MB)</label>
+            <input type="file" id="cvArquivo_${i.id}" accept=".pdf,.doc,.docx" style="border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fff;font-family:inherit;font-size:.85rem"/>
+          </div>
+          <button class="act-btn" onclick="enviarParecerConcurso('${i.id}',${meuSlot})">📨 Enviar Parecer</button>
+        </div>
+      `}
+    </div>`;
+  }).join('');
+  } catch(e){
+    console.error('loadConcursoAvaliacoesOrient:', e);
+    el.innerHTML = `<p class="empty-box" style="color:#991b1b"><span class="emo">⚠️</span><br>Erro ao carregar avaliações do concurso.<br><span style="font-size:.72rem;font-weight:400">${e.message}</span></p>`;
+  }
+}
+async function enviarParecerConcurso(inscricaoId, slot){
+  const parecer     = document.getElementById('cvParecer_'+inscricaoId).value;
+  const nota        = document.getElementById('cvNota_'+inscricaoId).value.trim();
+  const comentarios = document.getElementById('cvComentarios_'+inscricaoId).value.trim();
+  const revistas    = document.getElementById('cvRevistas_'+inscricaoId).value.trim();
+  const fileInp      = document.getElementById('cvArquivo_'+inscricaoId);
+  const file         = fileInp && fileInp.files[0];
+  if(!parecer){ toast('Selecione o parecer.','err'); return; }
+  if(!nota){ toast('Informe a nota sugerida.','err'); return; }
+  if(!comentarios){ toast('Escreva os comentários.','err'); return; }
+  if(file && file.size > 3*1024*1024){ toast('Arquivo muito grande. Máximo 3 MB.','err'); return; }
+  try{
+    const data = { parecer, nota, comentarios, revistas, data:Date.now() };
+    if(file){
+      data.arquivoRevisadoNome = file.name;
+      data.arquivoRevisadoMime = file.type || 'application/octet-stream';
+      data.arquivoRevisadoUrl  = await fileToBase64(file);
+    }
+    await rtdb.ref('concurso/inscricoes/'+inscricaoId+'/pareceres/'+slot).set(data);
+    toast('Parecer enviado!');
+    loadConcursoAvaliacoesOrient();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+
+// ─── Aluno: inscrição, envio, banner ───
+window._concursoAlunoInscricao = null;
+async function loadConcursoAluno(){
+  const statusBox     = document.getElementById('concursoAlunoStatusBox');
+  const inscricaoBox  = document.getElementById('concursoAlunoInscricaoBox');
+  const envioBox       = document.getElementById('concursoAlunoEnvioBox');
+  const envioControles = document.getElementById('ccEnvioControles');
+  const receberBox     = document.getElementById('ccReceberArtigoBox');
+  inscricaoBox.style.display  = 'none';
+  envioBox.style.display      = 'none';
+  envioControles.style.display = 'none';
+  receberBox.style.display    = 'none';
+
+  try{
+  const cfgSnap = await rtdb.ref('concurso/config').get();
+  const cfg = cfgSnap.exists() ? cfgSnap.val() : {};
+  renderEditalBox(cfg, 'ccEditalBoxAluno');
+
+  if(!cfg.periodo){
+    statusBox.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>O Concurso Melhor TCC1 ainda não foi configurado pela Coordenação.</p>';
+    return;
+  }
+
+  const snap = await rtdb.ref('concurso/inscricoes').get();
+  let inscricao = null, inscricaoId = null;
+  if(snap.exists()){
+    const entries = Object.entries(snap.val()).filter(([,v])=>v.alunoId===currentUser.id);
+    // pega a inscrição do período vigente do concurso, se houver mais de uma
+    const doPeriodo = entries.find(([,v])=>v.periodo===cfg.periodo);
+    const escolhida = doPeriodo || entries[entries.length-1];
+    if(escolhida){ inscricaoId = escolhida[0]; inscricao = escolhida[1]; }
+  }
+  window._concursoAlunoInscricao = inscricao ? {id:inscricaoId, ...inscricao} : null;
+
+  if(!inscricao){
+    if(cfg.aberto === false){
+      statusBox.innerHTML = `<p class="empty-box"><span class="emo">🔒</span><br>As inscrições do Concurso Melhor TCC1 (${cfg.periodo}) estão fechadas no momento.</p>`;
+    } else {
+      statusBox.innerHTML = `<div style="background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:10px;padding:14px 18px;font-size:.86rem;color:#7a5200;line-height:1.8">
+        🏆 <strong>Concurso Melhor TCC1 — ${cfg.periodo}</strong> está com inscrições abertas!<br>
+        ${cfg.prazoArtigo?`📄 Prazo para envio do artigo: <strong>${cfg.prazoArtigo}</strong><br>`:''}
+        ${cfg.prazoBannerDigital?`🖼️ Prazo para concluir o banner digital: <strong>${cfg.prazoBannerDigital}</strong><br>`:''}
+        ${cfg.prazoBannerImpresso?`🖨️ Prazo para entregar o banner impresso (A1) à Coordenação: <strong>${cfg.prazoBannerImpresso}</strong><br>`:''}
+        Se você já defendeu seu TCC1 no semestre anterior, inscreva-se abaixo.
+      </div>`;
+      inscricaoBox.style.display = 'block';
+    }
+    return;
+  }
+
+  // Já inscrito — Instruções + Enviar/Receber Artigo ficam visíveis em qualquer status
+  envioBox.style.display = 'block';
+  statusBox.innerHTML = `<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="font-weight:800;color:#163352">Sua inscrição (${cfg.periodo}):</span> ${statusBadgeConcurso(inscricao.status)}
+  </div>` + (inscricao.status==='Rejeitado' && inscricao.motivoRejeicao ? `<div style="margin-top:10px;background:#fee2e2;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 14px;font-size:.84rem;color:#991b1b"><strong>Motivo:</strong> ${inscricao.motivoRejeicao}</div>` : '');
+
+  const prazosBox = document.getElementById('ccPrazosLembrete');
+  if(prazosBox){
+    prazosBox.innerHTML = `${cfg.prazoArtigo?`📄 Prazo do artigo: <strong>${cfg.prazoArtigo}</strong> &nbsp;·&nbsp; `:''}${cfg.prazoBannerDigital?`🖼️ Prazo do banner digital: <strong>${cfg.prazoBannerDigital}</strong> &nbsp;·&nbsp; `:''}${cfg.prazoBannerImpresso?`🖨️ Prazo do banner impresso (A1): <strong>${cfg.prazoBannerImpresso}</strong>`:''}`;
+  }
+  const prazoAlerta = document.getElementById('ccPrazoAlertaArtigo');
+  if(prazoAlerta){
+    if(cfg.prazoArtigo && inscricao.status==='Inscrito'){
+      prazoAlerta.style.display = 'block';
+      prazoAlerta.innerHTML = `⏰ Atenção: prazo para envio do artigo — <strong>${cfg.prazoArtigo}</strong>`;
+    } else {
+      prazoAlerta.style.display = 'none';
+    }
+  }
+  if(inscricao.artigoNome){
+    const a = document.getElementById('ccArtigoAtual');
+    a.style.display='block'; a.textContent = '✅ Artigo salvo: '+inscricao.artigoNome;
+  }
+
+  if(inscricao.status==='Inscrito'){
+    // Upload/Salvar/Enviar ainda disponíveis
+    envioControles.style.display = 'block';
+  } else {
+    receberBox.style.display = 'block';
+    const conteudo = document.getElementById('ccReceberArtigoConteudo');
+    if(inscricao.status==='Enviado'){
+      conteudo.innerHTML = '⏳ Seu artigo foi enviado e aguarda <strong>homologação da Coordenação</strong>.';
+    } else if(inscricao.status==='Rejeitado'){
+      conteudo.innerHTML = `❌ Seu artigo foi <strong>rejeitado pela Coordenação</strong>.${inscricao.motivoRejeicao?`<br><strong>Motivo:</strong> ${inscricao.motivoRejeicao}`:''}`;
+    } else if(inscricao.status==='Homologado' || inscricao.status==='Em Avaliação'){
+      conteudo.innerHTML = '🔎 Sua inscrição foi <strong>homologada</strong> e o artigo está <strong>em análise de revisão</strong> pelos avaliadores do concurso.';
+    } else if(inscricao.status==='Avaliado' || inscricao.status==='Concluído'){
+      const pareceres = inscricao.pareceres || {};
+      const itens = [1,2,3].filter(n=>pareceres[n] && pareceres[n].parecer);
+      if(!itens.length){
+        conteudo.innerHTML = '🔎 Seu artigo está em análise de revisão pelos avaliadores do concurso.';
+      } else {
+        conteudo.innerHTML = '✅ Seu artigo foi <strong>revisado</strong>. Confira abaixo o parecer e as recomendações de melhoria (a nota não é exibida nesta seção):<br><br>' +
+          itens.map(n=>{
+            const p = pareceres[n];
+            return `<div style="border:1.5px solid var(--gold-light);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:#fff">
+              <div style="font-weight:800;color:var(--gold);margin-bottom:6px">Avaliador ${n}</div>
+              <div style="margin-bottom:6px"><strong>Parecer:</strong> ${p.parecer}</div>
+              <div style="margin-bottom:6px"><strong>Recomendações de melhoria:</strong><br>${(p.comentarios||'—').replace(/\n/g,'<br>')}</div>
+              ${p.arquivoRevisadoUrl?`<button class="tbl-btn tbl-viz" style="margin-top:6px" onclick='baixarBase64(${JSON.stringify(p.arquivoRevisadoUrl)},${JSON.stringify(p.arquivoRevisadoNome||("artigo_revisado_"+n+".docx"))},${JSON.stringify(p.arquivoRevisadoMime||"application/octet-stream")})'>⬇ Baixar Artigo Revisado</button>`:''}
+            </div>`;
+          }).join('');
+      }
+    }
+  }
+  } catch(e){
+    console.error('loadConcursoAluno:', e);
+    statusBox.innerHTML = `<p class="empty-box" style="color:#991b1b"><span class="emo">⚠️</span><br>Erro ao carregar o Concurso Melhor TCC1.<br><span style="font-size:.72rem;font-weight:400">${e.message}</span></p>`;
+  }
+}
+async function inscreverConcurso(){
+  const cfgSnap = await rtdb.ref('concurso/config').get();
+  const cfg = cfgSnap.exists() ? cfgSnap.val() : {};
+  if(!cfg.periodo || cfg.aberto===false){ toast('As inscrições não estão abertas.','err'); return; }
+  const d = await getAlunoById(currentUser.id);
+  if(!d){ toast('Não foi possível carregar seus dados.','err'); return; }
+  try{
+    await rtdb.ref('concurso/inscricoes').push({
+      alunoId: currentUser.id, alunoNome: d.nome, alunoEmail: d.email, turma: d.turma||'',
+      orientadorId: d.orientadorId||'', periodo: cfg.periodo,
+      status: 'Inscrito', dataInscricao: Date.now()
+    });
+    toast('Inscrição realizada! Agora envie seu artigo.');
+    loadConcursoAluno();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+async function salvarArtigoConcurso(){
+  const insc = window._concursoAlunoInscricao;
+  if(!insc){ toast('Inscrição não encontrada.','err'); return; }
+  const fileInp = document.getElementById('ccArtigoFile');
+  const file = fileInp && fileInp.files[0];
+  if(!file){ toast('Selecione o arquivo do artigo antes de salvar.','err'); return; }
+  if(file.size > 3*1024*1024){ toast('Arquivo muito grande. Máximo 3 MB.','err'); return; }
+  try{
+    const artigoUrl = await fileToBase64(file);
+    await rtdb.ref('concurso/inscricoes/'+insc.id).update({
+      artigoNome: file.name,
+      artigoMime: file.type || 'application/octet-stream',
+      artigoUrl
+    });
+    toast('Artigo salvo! Você ainda pode substituí-lo até enviar a inscrição.');
+    loadConcursoAluno();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+async function enviarInscricaoConcurso(){
+  const insc = window._concursoAlunoInscricao;
+  if(!insc){ toast('Inscrição não encontrada.','err'); return; }
+  const fileInp = document.getElementById('ccArtigoFile');
+  const file = fileInp && fileInp.files[0];
+  const jaTemArtigo = !!insc.artigoNome;
+  if(!file && !jaTemArtigo){ toast('Selecione (ou salve) o arquivo do artigo antes de enviar.','err'); return; }
+  if(file && file.size > 3*1024*1024){ toast('Arquivo muito grande. Máximo 3 MB.','err'); return; }
+  if(!confirm('Após o envio, não será possível alterar o artigo. Confirmar envio da inscrição para a Coordenação?')) return;
+  try{
+    const data = { status:'Enviado', dataEnvio:Date.now() };
+    if(file){
+      data.artigoNome = file.name;
+      data.artigoMime = file.type || 'application/octet-stream';
+      data.artigoUrl  = await fileToBase64(file);
+    }
+    await rtdb.ref('concurso/inscricoes/'+insc.id).update(data);
+    toast('Inscrição enviada com sucesso!');
+    loadConcursoAluno();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+
+// ─── Banner ───
+function gerarBannerHtml(){
+  const titulo      = (document.getElementById('bnTitulo').value.trim()) || 'Título do Artigo';
+  const autor       = (document.getElementById('bnAutor').value.trim()) || 'Autor(a)';
+  const orientador  = (document.getElementById('bnOrientador').value.trim());
+  const instituicao = (document.getElementById('bnInstituicao').value.trim());
+  const resumo      = (document.getElementById('bnResumo').value.trim()) || '—';
+  const palavras    = (document.getElementById('bnPalavras').value.trim());
+  const resultados  = (document.getElementById('bnResultados').value.trim()) || '—';
+  const kwHtml = palavras ? palavras.split(',').map(k=>`<span class="bp-kw">${k.trim()}</span>`).join('') : '—';
+  return `<div class="banner-poster">
+    <div class="bp-header">
+      <div class="bp-title">${titulo}</div>
+      <div class="bp-authors">${autor}${orientador?' · Orientação: '+orientador:''}</div>
+      ${instituicao?`<div class="bp-inst">${instituicao}</div>`:''}
+    </div>
+    <div class="bp-cols">
+      <div>
+        <div class="bp-block"><h4>Resumo</h4><p>${resumo}</p></div>
+        <div class="bp-block"><h4>Palavras-chave</h4><p>${kwHtml}</p></div>
+      </div>
+      <div>
+        <div class="bp-block"><h4>Principais Resultados / Considerações Finais</h4><p>${resultados}</p></div>
+      </div>
+    </div>
+    <div class="bp-footer">Concurso Melhor TCC1 · PGTCC 1 · Engenharia de Produção · FT/UFAM</div>
+  </div>`;
+}
+function atualizarBannerPreview(){
+  const html = gerarBannerHtml();
+  document.getElementById('bannerPreviewWrap').innerHTML = html;
+  document.getElementById('bannerPrintArea').innerHTML = html;
+}
+function imprimirBanner(){
+  const titulo = document.getElementById('bnTitulo').value.trim();
+  if(!titulo){ toast('Preencha ao menos o título do banner.','err'); return; }
+  atualizarBannerPreview();
+  setTimeout(()=>window.print(), 150);
 }
 </script>
 
