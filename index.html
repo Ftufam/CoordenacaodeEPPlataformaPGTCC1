@@ -1386,6 +1386,7 @@ function toggleAcc(btn) {
 <!-- COORDENADOR DASHBOARD                               -->
 <!-- ═══════════════════════════════════════════════════ -->
 <div class="dash-overlay" id="dashCoord">
+  <div id="coordHeaderClone"></div>
   <div style="background:linear-gradient(160deg,#dceffe 0%,#eef7ff 45%,#fdf4e0 100%);border-bottom:3px solid var(--gold);box-shadow:0 4px 18px rgba(201,151,43,0.18);position:sticky;top:0;z-index:10;overflow:hidden">
     <div style="position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 28px,rgba(201,151,43,0.06) 28px,rgba(201,151,43,0.06) 29px);pointer-events:none"></div>
     <div style="max-width:1100px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:center;position:relative">
@@ -1646,6 +1647,14 @@ function toggleAcc(btn) {
         <div class="panel-title">🔸 Inscrições sem Envio <span id="ccContagemPendentes" style="font-size:.72rem;color:var(--muted);font-weight:700"></span></div>
         <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Alunos que salvaram um rascunho do artigo mas ainda não enviaram a inscrição. Você pode cancelar inscrições paradas/abandonadas.</p>
         <div id="listaConcursoPendentes"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
+      </div>
+
+      <div style="margin-top:22px;text-align:right">
+        <span onclick="toggleZonaTeste()" style="cursor:pointer;font-size:.74rem;color:var(--muted);text-decoration:underline dotted;user-select:none">🧹 Zona de teste <span id="zonaTesteArrow">▾</span></span>
+        <div id="zonaTesteBody" style="display:none;margin-top:8px;text-align:left;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+          <p style="font-size:.74rem;color:var(--muted);margin-bottom:10px">Remove as inscrições do concurso apenas de alunos cadastrados na turma <strong>TEST</strong> ou <strong>TES</strong>. Alunos de outras turmas nunca são afetados por esta ação. Reinicia o protocolo para 001 somente se não restar nenhuma inscrição de outras turmas.</p>
+          <button class="tbl-btn tbl-del" style="padding:.5rem .9rem;font-size:.74rem" onclick="abrirLimparTesteConcurso()">🧹 Limpar Inscrições de Teste (turma TEST/TES)</button>
+        </div>
       </div>
     </div>
 
@@ -2060,7 +2069,10 @@ function toggleAcc(btn) {
             <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
               <li><strong>📥 Download do modelo de artigo</strong> <em>(apenas se seu artigo foi feito fora do padrão do Modelo de Artigo disponível na PGTCC, caso contrário iniciar com seu artigo)</em><br>Clique em <strong>⬇ Baixar Modelo de Artigo</strong>, na seção "Enviar e Receber o Artigo" abaixo.</li>
               <li><strong>✂️ Remoção de identificação</strong><br>Edite seu artigo já revisado, em Word, e remova <strong>nome, e-mail e nome do avaliador/orientador</strong> de todo o documento. A avaliação é <strong>cega</strong>: os avaliadores não podem identificar o autor.</li>
-              <li><strong>📤 Upload do artigo</strong><br>Na seção "Enviar e Receber o Artigo", selecione o arquivo em Word e clique em <strong>💾 Salvar</strong> para guardar o progresso (você pode salvar quantas vezes quiser antes de enviar).</li>
+              <li><strong>🔖 Número de inscrição</strong><br>Ao iniciar seu preenchimento, um número de 3 dígitos (ex: 001) e um código de protocolo são gerados automaticamente, na ordem de envio.</li>
+              <li><strong>📝 Tema e Área</strong><br>Informe o tema do artigo e selecione a principal área da Engenharia de Produção, na seção "Enviar e Receber o Artigo".</li>
+              <li><strong>📤 Upload do artigo</strong><br>Na seção "Enviar e Receber o Artigo", selecione o arquivo em Word — nomeado como <strong>ArtigoConcursoMelhorTCC1_XXX.docx</strong> (XXX = seu número de inscrição) — e clique em <strong>💾 Salvar</strong> para guardar o progresso (você pode salvar quantas vezes quiser antes de enviar).</li>
+              <li><strong>🕘 Histórico</strong><br>Acompanhe todas as etapas da sua inscrição na lista de histórico e status, que aparece assim que o primeiro salvamento é feito.</li>
               <li><strong>📨 Envio para a Coordenação</strong><br>Quando o artigo estiver pronto, clique em <strong>Enviar sua Inscrição para a Coordenação</strong>. Após o envio, não será mais possível alterar o arquivo.</li>
               <li><strong>🔎 Homologação</strong><br>A Coordenação avaliará se o artigo atende aos requisitos e poderá homologar ou rejeitar a inscrição (com justificativa).</li>
               <li><strong>🕶️ Avaliação cega</strong><br>Se homologado, seu artigo será enviado, sem identificação, a até 3 avaliadores do concurso, que também não serão identificados para você.</li>
@@ -2074,15 +2086,38 @@ function toggleAcc(btn) {
         <div class="panel" style="display:block;border-top-color:var(--blue-light);margin-bottom:16px">
           <div class="panel-title">📂 Enviar e Receber o Artigo</div>
           <div id="ccPrazoAlertaArtigo" style="display:none;margin-bottom:14px;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:10px 14px;font-size:.84rem;font-weight:800;color:#991b1b;animation:pulse 1.1s infinite"></div>
+          <div id="ccProtocoloBox" style="display:none;margin-bottom:14px;background:var(--blue-pale);border:1.5px solid var(--blue-light);border-radius:10px;padding:12px 16px;font-size:.85rem;color:var(--blue);font-weight:800">
+            🔖 Nº de Inscrição: <span id="ccProtocoloNumero">—</span> &nbsp;·&nbsp; Protocolo: <span id="ccProtocoloCodigo">—</span>
+          </div>
           <p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:8px">Baixe o modelo, edite seu artigo e <strong>remova nome, e-mail e nome do avaliador/orientador de todo o documento</strong> antes de enviar. A avaliação é cega.</p>
           <p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:12px">⚠️ O artigo enviado deve seguir <strong>exatamente o formato do Modelo de Artigo da PGTCC1</strong> (estrutura, formatação e normas ABNT já aplicadas no modelo).</p>
           <button onclick="triggerDownload(FILES.modeloArtigo)" style="margin-bottom:16px;display:flex;align-items:center;gap:8px;padding:.7rem 1.1rem;background:linear-gradient(135deg,#3A9BD5,#70C0E8);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer">⬇ Baixar Modelo de Artigo</button>
 
           <div id="ccEnvioControles">
-            <div class="field" style="max-width:420px">
+            <div class="grid-2">
+              <div class="field"><label>Tema do Artigo</label><input type="text" id="ccTema" placeholder="Ex: Otimização de rotas logísticas em..."/></div>
+              <div class="field"><label>Principal Área da Engenharia de Produção</label>
+                <select id="ccArea">
+                  <option value="">— Selecione a área —</option>
+                  <option>Engenharia de Operações e Processos da Produção</option>
+                  <option>Cadeia de Suprimentos</option>
+                  <option>Pesquisa Operacional</option>
+                  <option>Engenharia da Qualidade</option>
+                  <option>Engenharia do Produto</option>
+                  <option>Engenharia Organizacional</option>
+                  <option>Engenharia Econômica</option>
+                  <option>Engenharia do Trabalho</option>
+                  <option>Engenharia da Sustentabilidade</option>
+                  <option>Educação em Engenharia de Produção</option>
+                  <option>Outra</option>
+                </select>
+              </div>
+            </div>
+            <div class="field" style="max-width:420px;margin-top:14px">
               <label>Fazer Upload do Artigo (Word)</label>
               <input type="file" id="ccArtigoFile" accept=".doc,.docx" style="border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fff;font-size:.82rem;font-family:inherit"/>
               <div style="font-size:.75rem;color:var(--muted);margin-top:4px">DOCX · máx. 3 MB · sem nome/e-mail do aluno ou avaliador/orientador · no formato do Modelo de Artigo da PGTCC1</div>
+              <div style="font-size:.75rem;color:var(--blue);margin-top:6px">📎 Nomeie o arquivo como: <strong id="ccNomeArquivoSugerido">ArtigoConcursoMelhorTCC1_XXX.docx</strong> (XXX = seu número de inscrição)</div>
             </div>
             <div id="ccArtigoAtual" style="margin-top:10px;font-size:.82rem;color:var(--green);font-weight:700;display:none"></div>
             <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
@@ -2095,6 +2130,12 @@ function toggleAcc(btn) {
           <div id="ccReceberArtigoBox" style="display:none;margin-top:16px;background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:10px;padding:16px">
             <div style="font-size:.78rem;font-weight:800;color:#7a5200;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📬 Receber o Artigo</div>
             <div id="ccReceberArtigoConteudo" style="font-size:.85rem;line-height:1.8;color:#4a3200"></div>
+          </div>
+
+          <!-- Histórico e Status -->
+          <div id="ccHistoricoBox" style="display:none;margin-top:16px">
+            <div style="font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🕘 Histórico e Status da Inscrição</div>
+            <div id="ccHistoricoConteudo" style="font-size:.82rem;line-height:1.9;color:var(--text)"></div>
           </div>
         </div>
 
@@ -2358,6 +2399,51 @@ function toggleAcc(btn) {
   </div>
 </div>
 
+<!-- ═══ MODAL: DELETAR INSCRIÇÃO DO CONCURSO (Coord) ═══ -->
+<div class="ar-overlay" id="modalConcursoDeletar" style="z-index:4500">
+  <div class="ar-card" style="max-width:440px">
+    <h2>🗑 Deletar Inscrição</h2>
+    <p class="sub" id="ccDeletarSub" style="margin:4px 0 0;font-size:.82rem;color:var(--muted)"></p>
+    <p style="font-size:.82rem;color:#991b1b;background:#fee2e2;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-top:12px">
+      ⚠️ Ação irreversível — o registro será removido definitivamente e sumirá do ambiente do aluno. Uso recomendado apenas para testes da plataforma.
+    </p>
+    <div class="field" style="margin-top:14px">
+      <label>Confirme sua senha de acesso (Coordenação)</label>
+      <input type="password" id="ccDeletarSenha" name="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter') confirmarDeletarConcurso()"/>
+      <div id="ccDeletarErr" style="display:none;color:#dc2626;font-size:.75rem;margin-top:4px">⚠️ Senha incorreta.</div>
+    </div>
+    <input type="hidden" id="ccDeletarId"/>
+    <div style="margin-top:16px;text-align:right;display:flex;justify-content:flex-end;gap:10px">
+      <button onclick="closeModal('modalConcursoDeletar')" style="padding:.65rem 1.4rem;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer">Cancelar</button>
+      <button class="tbl-btn tbl-del" style="padding:.65rem 1.4rem" onclick="confirmarDeletarConcurso()">🗑 Confirmar Exclusão</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: LIMPAR TODOS OS DADOS DE TESTE DO CONCURSO ═══ -->
+<div class="ar-overlay" id="modalLimparTesteConcurso" style="z-index:4500">
+  <div class="ar-card" style="max-width:460px">
+    <h2>🧹 Limpar Inscrições de Teste</h2>
+    <p style="font-size:.82rem;color:#991b1b;background:#fee2e2;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-top:12px">
+      ⚠️ Isto apaga as inscrições do Concurso Melhor TCC1 <strong>apenas de alunos da turma TEST ou TES</strong>. Alunos de outras turmas não são afetados. O protocolo só é reiniciado para 001 se não restar nenhuma inscrição de outra turma. Ação irreversível.
+    </p>
+    <div class="field" style="margin-top:14px">
+      <label>Digite CONFIRMAR para prosseguir</label>
+      <input type="text" id="ccLimparConfirm" placeholder="CONFIRMAR"/>
+      <div id="ccLimparConfirmErr" style="display:none;color:#dc2626;font-size:.75rem;margin-top:4px">⚠️ Digite exatamente CONFIRMAR.</div>
+    </div>
+    <div class="field" style="margin-top:12px">
+      <label>Confirme sua senha de acesso (Coordenação)</label>
+      <input type="password" id="ccLimparSenha" name="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter') confirmarLimparTesteConcurso()"/>
+      <div id="ccLimparErr" style="display:none;color:#dc2626;font-size:.75rem;margin-top:4px">⚠️ Senha incorreta.</div>
+    </div>
+    <div style="margin-top:16px;text-align:right;display:flex;justify-content:flex-end;gap:10px">
+      <button onclick="closeModal('modalLimparTesteConcurso')" style="padding:.65rem 1.4rem;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer">Cancelar</button>
+      <button class="tbl-btn tbl-del" style="padding:.65rem 1.4rem" onclick="confirmarLimparTesteConcurso()">🧹 Limpar Inscrições de Teste</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ MODAL: ALTERAR STATUS (Coord) ═══ -->
 <div class="ar-overlay" id="modalAlterarStatus" style="z-index:4000">
   <div class="ar-card" style="max-width:500px">
@@ -2616,6 +2702,12 @@ async function doLogin(){
 }
 
 // ── Clona o cabeçalho público + grid de botões para os dashboards ──
+function cloneHeaderOnly(targetId){
+  const el = document.getElementById(targetId);
+  if(!el) return;
+  const header = document.querySelector('.header-strip');
+  el.innerHTML = header ? header.outerHTML : '';
+}
 function clonePublicHeader(targetId, allowedKeys){
   const el = document.getElementById(targetId);
   if(!el) return;
@@ -2683,6 +2775,7 @@ function enterDashboard(user){
     }).catch(()=>{
       document.getElementById('coordNomeTop').textContent = '';
     });
+    cloneHeaderOnly('coordHeaderClone');
     document.getElementById('dashCoord').classList.add('open');
     loadCoordDashboard();
   } else if(user.role==='orientador'){
@@ -6580,6 +6673,14 @@ function renderEditalBox(cfg, elId){
   }
   el.innerHTML = html;
 }
+function toggleZonaTeste(){
+  const body  = document.getElementById('zonaTesteBody');
+  const arrow = document.getElementById('zonaTesteArrow');
+  if(!body) return;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  arrow.textContent  = open ? '▾' : '▴';
+}
 function toggleConcursoInstrucoes(){
   const body  = document.getElementById('concursoInstrucoesBody');
   const arrow = document.getElementById('concursoInstrucoesArrow');
@@ -6595,6 +6696,7 @@ function statusBadgeConcurso(status){
     'Enviado':       {bg:'#fff7ed',           fg:'#b45309',       bd:'#fed7aa'},
     'Homologado':    {bg:'var(--green-pale)', fg:'var(--green)',  bd:'var(--green-light)'},
     'Rejeitado':     {bg:'#fee2e2',           fg:'#991b1b',       bd:'#fca5a5'},
+    'Devolvido':     {bg:'#fff7ed',           fg:'#9a3412',       bd:'#fdba74'},
     'Em Avaliação':  {bg:'var(--purple-pale)',fg:'var(--purple)', bd:'var(--purple-light)'},
     'Avaliado':      {bg:'var(--gold-pale)',  fg:'var(--gold)',   bd:'var(--gold-light)'},
     'Concluído':     {bg:'var(--teal-pale)',  fg:'var(--teal)',   bd:'var(--teal-light)'}
@@ -6702,19 +6804,23 @@ async function loadConcursoInscricoes(){
     return;
   }
   el.innerHTML = `<div class="table-shell"><table>
-    <thead><tr><th>Aluno</th><th>Turma</th><th>Status</th><th>Avaliadores</th><th>Pareceres</th><th>Nota Final</th><th>Ações</th></tr></thead>
+    <thead><tr><th>Protocolo</th><th>Aluno</th><th>Turma</th><th>Tema</th><th>Área</th><th>Status</th><th>Avaliadores</th><th>Pareceres</th><th>Nota Final</th><th>Ações</th></tr></thead>
     <tbody>${lista.map(i=>`<tr>
+      <td>${i.numeroProtocolo?`<strong>${i.numeroProtocolo}</strong>`:'—'}</td>
       <td>${i.alunoNome||'—'}</td>
       <td>${i.turma||'—'}</td>
+      <td style="max-width:200px;white-space:normal">${i.tema||'—'}</td>
+      <td style="max-width:160px;white-space:normal">${i.area||'—'}</td>
       <td>${statusBadgeConcurso(i.status)}</td>
       <td>${contarAvaliadoresConcurso(i)}/3</td>
       <td>${contarPareceresConcurso(i)}/${contarAvaliadoresConcurso(i)||3}</td>
       <td>${i.notaFinal!=null ? i.notaFinal : '—'}</td>
       <td class="tbl-actions">
         ${i.artigoUrl?`<button class="tbl-btn tbl-viz" onclick='baixarBase64(${JSON.stringify(i.artigoUrl)},${JSON.stringify(i.artigoNome||"artigo.pdf")},${JSON.stringify(i.artigoMime||"application/pdf")})'>⬇ Artigo</button>`:''}
-        ${i.status==='Enviado'?`<button class="tbl-btn tbl-edit" onclick="homologarConcurso('${i.id}')">✅ Homologar</button><button class="tbl-btn tbl-del" onclick="rejeitarConcurso('${i.id}')">❌ Rejeitar</button>`:''}
+        ${i.status==='Enviado'?`<button class="tbl-btn tbl-edit" onclick="homologarConcurso('${i.id}')">✅ Homologar</button><button class="tbl-btn tbl-edit" onclick="devolverConcurso('${i.id}')">🔁 Devolver p/ Consertar</button><button class="tbl-btn tbl-del" onclick="rejeitarConcurso('${i.id}')">❌ Rejeitar</button>`:''}
         ${(i.status==='Homologado'||i.status==='Em Avaliação')?`<button class="tbl-btn tbl-edit" onclick="abrirModalAvaliadoresConcurso('${i.id}')">👥 Avaliadores</button>`:''}
         ${temAlgumParecerConcurso(i)?`<button class="tbl-btn tbl-viz" onclick="abrirModalPareceresConcurso('${i.id}')">📝 Pareceres</button>`:''}
+        <button class="tbl-btn tbl-del" onclick="abrirDeletarConcurso('${i.id}')">🗑 Deletar</button>
       </td>
     </tr>`).join('')}</tbody>
   </table></div>`;
@@ -6764,13 +6870,111 @@ async function cancelarInscricaoConcurso(id){
   } catch(e){ toast('Erro: '+e.message,'err'); }
 }
 
+function abrirDeletarConcurso(id){
+  const i = window._concursoCache[id] || {};
+  if(!confirm(`Tem certeza que deseja deletar a inscrição de "${i.alunoNome||'este aluno'}" no Concurso Melhor TCC1?\n\nEsta ação é IRREVERSÍVEL e o registro sumirá do ambiente do aluno.`)) return;
+  document.getElementById('ccDeletarId').value = id;
+  document.getElementById('ccDeletarSub').textContent = `Aluno: ${i.alunoNome||'—'}`;
+  document.getElementById('ccDeletarSenha').value = '';
+  document.getElementById('ccDeletarErr').style.display = 'none';
+  document.getElementById('modalConcursoDeletar').classList.add('open');
+  setTimeout(()=>document.getElementById('ccDeletarSenha').focus(), 100);
+}
+async function confirmarDeletarConcurso(){
+  const id = document.getElementById('ccDeletarId').value;
+  const senhaDigitada = document.getElementById('ccDeletarSenha').value;
+  const errEl = document.getElementById('ccDeletarErr');
+  errEl.style.display = 'none';
+  if(!senhaDigitada){ errEl.textContent = '⚠️ Digite sua senha de acesso.'; errEl.style.display = 'block'; return; }
+  try{
+    const snap = await rtdb.ref('config').get();
+    const d = snap.exists() ? snap.val() : {};
+    const senhaCorreta = d.coordSenha || d.senha;
+    if(senhaDigitada !== senhaCorreta){
+      errEl.textContent = '⚠️ Senha incorreta.';
+      errEl.style.display = 'block';
+      return;
+    }
+    await rtdb.ref('concurso/inscricoes/'+id).remove();
+    toast('Inscrição deletada.');
+    closeModal('modalConcursoDeletar');
+    loadConcursoInscricoes();
+    loadConcursoPendentes();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+function abrirLimparTesteConcurso(){
+  document.getElementById('ccLimparConfirm').value = '';
+  document.getElementById('ccLimparSenha').value = '';
+  document.getElementById('ccLimparConfirmErr').style.display = 'none';
+  document.getElementById('ccLimparErr').style.display = 'none';
+  document.getElementById('modalLimparTesteConcurso').classList.add('open');
+}
+async function confirmarLimparTesteConcurso(){
+  const conf = document.getElementById('ccLimparConfirm').value.trim().toUpperCase();
+  const senhaDigitada = document.getElementById('ccLimparSenha').value;
+  const confErrEl = document.getElementById('ccLimparConfirmErr');
+  const errEl = document.getElementById('ccLimparErr');
+  confErrEl.style.display = 'none';
+  errEl.style.display = 'none';
+  if(conf !== 'CONFIRMAR'){ confErrEl.style.display = 'block'; return; }
+  if(!senhaDigitada){ errEl.textContent = '⚠️ Digite sua senha de acesso.'; errEl.style.display = 'block'; return; }
+  try{
+    const snap = await rtdb.ref('config').get();
+    const d = snap.exists() ? snap.val() : {};
+    const senhaCorreta = d.coordSenha || d.senha;
+    if(senhaDigitada !== senhaCorreta){
+      errEl.textContent = '⚠️ Senha incorreta.';
+      errEl.style.display = 'block';
+      return;
+    }
+    const insSnap = await rtdb.ref('concurso/inscricoes').get();
+    if(!insSnap.exists()){
+      toast('Nenhuma inscrição para remover.');
+      closeModal('modalLimparTesteConcurso');
+      return;
+    }
+    const TURMAS_TESTE = ['TEST','TES'];
+    const todas = Object.entries(insSnap.val()).map(([id,v])=>({id,...v}));
+    const deTeste = todas.filter(i => TURMAS_TESTE.includes(String(i.turma||'').trim().toUpperCase()));
+    const outras  = todas.filter(i => !TURMAS_TESTE.includes(String(i.turma||'').trim().toUpperCase()));
+    if(!deTeste.length){
+      toast('Nenhuma inscrição de turma TEST/TES encontrada. Nada foi removido.');
+      closeModal('modalLimparTesteConcurso');
+      return;
+    }
+    await Promise.all(deTeste.map(i => rtdb.ref('concurso/inscricoes/'+i.id).remove()));
+    if(!outras.length){
+      // Só é seguro reiniciar o protocolo se não restar nenhuma inscrição de outra turma
+      await rtdb.ref('concurso/contador').set(0);
+      toast(`${deTeste.length} inscrição(ões) de teste removida(s). Protocolo reiniciado em 001.`);
+    } else {
+      toast(`${deTeste.length} inscrição(ões) de teste removida(s). Protocolo mantido (há ${outras.length} inscrição(ões) de outras turmas).`);
+    }
+    closeModal('modalLimparTesteConcurso');
+    loadConcursoInscricoes();
+    loadConcursoPendentes();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
 async function homologarConcurso(id){
   if(!confirm('Homologar este artigo para avaliação em banca do concurso?')) return;
   try{
     await rtdb.ref('concurso/inscricoes/'+id).update({ status:'Homologado', dataHomologacao:Date.now() });
+    await pushHistoricoConcurso(id, 'Inscrição homologada pela Coordenação.');
     const i = window._concursoCache[id] || {};
     if(i.alunoId) await rtdb.ref('notificacoes/'+i.alunoId).push({ tipo:'Concurso Melhor TCC1', mensagem:'Seu artigo foi homologado e seguirá para avaliação cega pelos avaliadores do concurso.', data:Date.now(), lida:false, de:'Coordenação' });
     toast('Artigo homologado!');
+    loadConcursoInscricoes();
+  } catch(e){ toast('Erro: '+e.message,'err'); }
+}
+async function devolverConcurso(id){
+  const motivo = prompt('Descreva o que precisa ser corrigido (será enviado ao aluno, que poderá reenviar o artigo):');
+  if(!motivo) return;
+  try{
+    await rtdb.ref('concurso/inscricoes/'+id).update({ status:'Devolvido', motivoDevolucao:motivo, dataHomologacao:Date.now() });
+    await pushHistoricoConcurso(id, 'Devolvido pela Coordenação para correção: '+motivo);
+    const i = window._concursoCache[id] || {};
+    if(i.alunoId) await rtdb.ref('notificacoes/'+i.alunoId).push({ tipo:'Concurso Melhor TCC1', mensagem:'Sua inscrição foi devolvida para correção.\n\nObservação: '+motivo, data:Date.now(), lida:false, de:'Coordenação' });
+    toast('Inscrição devolvida ao aluno para correção.');
     loadConcursoInscricoes();
   } catch(e){ toast('Erro: '+e.message,'err'); }
 }
@@ -6779,6 +6983,7 @@ async function rejeitarConcurso(id){
   if(!motivo) return;
   try{
     await rtdb.ref('concurso/inscricoes/'+id).update({ status:'Rejeitado', motivoRejeicao:motivo, dataHomologacao:Date.now() });
+    await pushHistoricoConcurso(id, 'Inscrição rejeitada pela Coordenação: '+motivo);
     const i = window._concursoCache[id] || {};
     if(i.alunoId) await rtdb.ref('notificacoes/'+i.alunoId).push({ tipo:'Concurso Melhor TCC1', mensagem:'Seu artigo não foi homologado para o Concurso Melhor TCC1.\n\nMotivo: '+motivo, data:Date.now(), lida:false, de:'Coordenação' });
     toast('Inscrição rejeitada.');
@@ -6871,6 +7076,7 @@ async function enviarRevisaoConcursoAluno(){
   });
   try{
     await rtdb.ref('concurso/inscricoes/'+id).update({ status:'Concluído', notaFinal, recomendacaoFinal:recomendacao, dataConclusao:Date.now() });
+    await pushHistoricoConcurso(id, 'Devolutiva final e nota registradas pela Coordenação.');
     if(i.alunoId) await rtdb.ref('notificacoes/'+i.alunoId).push({ tipo:'Concurso Melhor TCC1', mensagem:'A devolutiva do Concurso Melhor TCC1 está disponível na sua área.', data:Date.now(), lida:false, de:'Coordenação' });
     toast('Devolutiva enviada ao aluno!');
     closeModal('modalConcursoPareceres');
@@ -6962,14 +7168,46 @@ async function enviarParecerConcurso(inscricaoId, slot){
 
 // ─── Aluno: inscrição, envio, banner ───
 window._concursoAlunoInscricao = null;
+async function reservarNumeroProtocolo(){
+  // Transação atômica no contador global: garante um número único e sequencial,
+  // mesmo se dois alunos salvarem/enviarem ao mesmo tempo. Sem leitura de fallback
+  // (que poderia gerar números duplicados em caso de conflito).
+  const res = await rtdb.ref('concurso/contador').transaction(cur => (cur||0)+1);
+  if(!res || !res.committed || !res.snapshot){
+    throw new Error('Não foi possível gerar o número de protocolo. Tente novamente.');
+  }
+  return String(res.snapshot.val()).padStart(3,'0');
+}
+async function previaProximoNumeroProtocolo(){
+  // Apenas LEITURA — não incrementa o contador. Usado só para exibir uma prévia ao aluno.
+  const snap = await rtdb.ref('concurso/contador').get();
+  const atual = snap.exists() ? snap.val() : 0;
+  return String(atual+1).padStart(3,'0');
+}
+async function pushHistoricoConcurso(id, evento){
+  try{ await rtdb.ref('concurso/inscricoes/'+id+'/historico').push({ evento, data: Date.now() }); }
+  catch(e){ console.error('pushHistoricoConcurso:', e); }
+}
+function renderHistoricoConcurso(inscricao){
+  const box = document.getElementById('ccHistoricoBox');
+  const el  = document.getElementById('ccHistoricoConteudo');
+  const hist = inscricao.historico ? Object.values(inscricao.historico).sort((a,b)=>a.data-b.data) : [];
+  if(!hist.length){ box.style.display='none'; return; }
+  box.style.display = 'block';
+  el.innerHTML = hist.map(h=>`<div>🔹 <strong>${new Date(h.data).toLocaleString('pt-BR')}</strong> — ${h.evento}</div>`).join('');
+}
 async function loadConcursoAluno(){
   const statusBox     = document.getElementById('concursoAlunoStatusBox');
   const envioBox       = document.getElementById('concursoAlunoEnvioBox');
   const envioControles = document.getElementById('ccEnvioControles');
   const receberBox     = document.getElementById('ccReceberArtigoBox');
+  const protocoloBox   = document.getElementById('ccProtocoloBox');
+  const historicoBox   = document.getElementById('ccHistoricoBox');
   envioBox.style.display      = 'none';
   envioControles.style.display = 'none';
   receberBox.style.display    = 'none';
+  protocoloBox.style.display  = 'none';
+  historicoBox.style.display  = 'none';
 
   try{
   const cfgSnap = await rtdb.ref('concurso/config').get();
@@ -7008,6 +7246,23 @@ async function loadConcursoAluno(){
     </div>`;
     envioBox.style.display = 'block';
     envioControles.style.display = 'block';
+    // Garante campos vazios (ex.: após a Coordenação deletar uma inscrição anterior)
+    document.getElementById('ccTema').value = '';
+    document.getElementById('ccArea').value = '';
+    document.getElementById('ccArtigoFile').value = '';
+    document.getElementById('ccArtigoAtual').style.display = 'none';
+
+    // Prévia do número de inscrição (NÃO incrementa o contador — isso só acontece ao Salvar ou Enviar)
+    try{
+      const previa = await previaProximoNumeroProtocolo();
+      const ano = new Date().getFullYear();
+      protocoloBox.style.display = 'block';
+      document.getElementById('ccProtocoloNumero').textContent = previa + ' (prévia)';
+      document.getElementById('ccProtocoloCodigo').textContent = `InscricaoConcursoTCC1${ano}_${previa}`;
+      const sug = document.getElementById('ccNomeArquivoSugerido');
+      if(sug) sug.textContent = `ArtigoConcursoMelhorTCC1_${previa}.docx`;
+    } catch(e){ console.error('previaProximoNumeroProtocolo:', e); }
+
     const prazoAlerta = document.getElementById('ccPrazoAlertaArtigo');
     if(prazoAlerta && cfg.prazoArtigo){
       prazoAlerta.style.display = 'block';
@@ -7022,7 +7277,18 @@ async function loadConcursoAluno(){
   envioBox.style.display = 'block';
   statusBox.innerHTML = `<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <span style="font-weight:800;color:#163352">Sua inscrição (${cfg.periodo}):</span> ${statusBadgeConcurso(inscricao.status)}
-  </div>` + (inscricao.status==='Rejeitado' && inscricao.motivoRejeicao ? `<div style="margin-top:10px;background:#fee2e2;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 14px;font-size:.84rem;color:#991b1b"><strong>Motivo:</strong> ${inscricao.motivoRejeicao}</div>` : '');
+  </div>` + (inscricao.status==='Rejeitado' && inscricao.motivoRejeicao ? `<div style="margin-top:10px;background:#fee2e2;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 14px;font-size:.84rem;color:#991b1b"><strong>Motivo:</strong> ${inscricao.motivoRejeicao}</div>` : '')
+    + (inscricao.status==='Devolvido' && inscricao.motivoDevolucao ? `<div style="margin-top:10px;background:#fff7ed;border:1.5px solid #fed7aa;border-radius:8px;padding:10px 14px;font-size:.84rem;color:#9a3412"><strong>Observação da Coordenação:</strong> ${inscricao.motivoDevolucao}</div>` : '');
+
+  if(inscricao.numeroProtocolo){
+    protocoloBox.style.display = 'block';
+    document.getElementById('ccProtocoloNumero').textContent = inscricao.numeroProtocolo;
+    document.getElementById('ccProtocoloCodigo').textContent = inscricao.protocoloCodigo || '—';
+    const sug = document.getElementById('ccNomeArquivoSugerido');
+    if(sug) sug.textContent = `ArtigoConcursoMelhorTCC1_${inscricao.numeroProtocolo}.docx`;
+  }
+  if(inscricao.tema)  document.getElementById('ccTema').value = inscricao.tema;
+  if(inscricao.area)  document.getElementById('ccArea').value = inscricao.area;
 
   const prazosBox = document.getElementById('ccPrazosLembrete');
   if(prazosBox){
@@ -7030,7 +7296,7 @@ async function loadConcursoAluno(){
   }
   const prazoAlerta = document.getElementById('ccPrazoAlertaArtigo');
   if(prazoAlerta){
-    if(cfg.prazoArtigo && inscricao.status==='Inscrito'){
+    if(cfg.prazoArtigo && (inscricao.status==='Inscrito' || inscricao.status==='Devolvido')){
       prazoAlerta.style.display = 'block';
       prazoAlerta.innerHTML = `⏰ Atenção: prazo para envio do artigo — <strong>${cfg.prazoArtigo}</strong>`;
     } else {
@@ -7042,8 +7308,10 @@ async function loadConcursoAluno(){
     a.style.display='block'; a.textContent = '✅ Artigo salvo: '+inscricao.artigoNome;
   }
 
-  if(inscricao.status==='Inscrito'){
-    // Upload/Salvar/Enviar ainda disponíveis
+  renderHistoricoConcurso(inscricao);
+
+  if(inscricao.status==='Inscrito' || inscricao.status==='Devolvido'){
+    // Upload/Salvar/Enviar ainda disponíveis (inclusive após devolução para correção)
     envioControles.style.display = 'block';
   } else {
     receberBox.style.display = 'block';
@@ -7079,41 +7347,67 @@ async function loadConcursoAluno(){
   }
 }
 async function salvarArtigoConcurso(){
+  if(window._concursoSalvando){ return; }
+  const tema = document.getElementById('ccTema').value.trim();
+  const area = document.getElementById('ccArea').value;
   const fileInp = document.getElementById('ccArtigoFile');
   const file = fileInp && fileInp.files[0];
+  if(!tema){ toast('Informe o tema do artigo.','err'); return; }
+  if(!area){ toast('Selecione a principal área da Engenharia de Produção.','err'); return; }
   if(!file){ toast('Selecione o arquivo do artigo antes de salvar.','err'); return; }
   if(file.size > 3*1024*1024){ toast('Arquivo muito grande. Máximo 3 MB.','err'); return; }
+  window._concursoSalvando = true;
   try{
     const artigoUrl = await fileToBase64(file);
     const artigoNome = file.name;
     const artigoMime = file.type || 'application/octet-stream';
     const insc = window._concursoAlunoInscricao;
     if(insc){
-      await rtdb.ref('concurso/inscricoes/'+insc.id).update({ artigoNome, artigoMime, artigoUrl });
+      await rtdb.ref('concurso/inscricoes/'+insc.id).update({ tema, area, artigoNome, artigoMime, artigoUrl });
+      await pushHistoricoConcurso(insc.id, 'Artigo salvo (rascunho atualizado).');
+      Object.assign(window._concursoAlunoInscricao, { tema, area, artigoNome, artigoMime, artigoUrl });
     } else {
       const cfg = window._concursoConfigAtual || (await rtdb.ref('concurso/config').get()).val() || {};
       if(!cfg.periodo || cfg.aberto===false){ toast('As inscrições não estão abertas.','err'); return; }
       const d = await getAlunoById(currentUser.id);
       if(!d){ toast('Não foi possível carregar seus dados.','err'); return; }
-      await rtdb.ref('concurso/inscricoes').push({
+      // Reserva atômica e única do próximo número global, na ordem real de inscrição
+      const numeroProtocolo = await reservarNumeroProtocolo();
+      const protocoloCodigo = `InscricaoConcursoTCC1${new Date().getFullYear()}_${numeroProtocolo}`;
+      const novaRef = rtdb.ref('concurso/inscricoes').push();
+      const novoRegistro = {
         alunoId: currentUser.id, alunoNome: d.nome, alunoEmail: d.email, turma: d.turma||'',
         orientadorId: d.orientadorId||'', periodo: cfg.periodo,
+        numeroProtocolo, protocoloCodigo, tema, area,
         status: 'Inscrito', dataInscricao: Date.now(),
         artigoNome, artigoMime, artigoUrl
-      });
+      };
+      await novaRef.set(novoRegistro);
+      // Atualiza a referência local IMEDIATAMENTE, evitando que um clique seguido em "Enviar"
+      // (antes do recarregamento completar) crie um segundo registro e consuma outro número.
+      window._concursoAlunoInscricao = { id: novaRef.key, ...novoRegistro };
+      await pushHistoricoConcurso(novaRef.key, `Inscrição iniciada — protocolo ${protocoloCodigo} gerado.`);
+      await pushHistoricoConcurso(novaRef.key, 'Artigo salvo (rascunho).');
     }
     toast('Artigo salvo! Você ainda pode substituí-lo até enviar a inscrição.');
     loadConcursoAluno();
   } catch(e){ toast('Erro: '+e.message,'err'); }
+  finally{ window._concursoSalvando = false; }
 }
 async function enviarInscricaoConcurso(){
+  if(window._concursoEnviando){ return; }
+  const tema = document.getElementById('ccTema').value.trim();
+  const area = document.getElementById('ccArea').value;
   const fileInp = document.getElementById('ccArtigoFile');
   const file = fileInp && fileInp.files[0];
   const insc = window._concursoAlunoInscricao;
   const jaTemArtigo = !!(insc && insc.artigoNome);
+  if(!tema){ toast('Informe o tema do artigo.','err'); return; }
+  if(!area){ toast('Selecione a principal área da Engenharia de Produção.','err'); return; }
   if(!file && !jaTemArtigo){ toast('Selecione o arquivo do artigo antes de enviar.','err'); return; }
   if(file && file.size > 3*1024*1024){ toast('Arquivo muito grande. Máximo 3 MB.','err'); return; }
   if(!confirm('Após o envio, não será possível alterar o artigo. Confirmar envio da inscrição para a Coordenação?')) return;
+  window._concursoEnviando = true;
   try{
     let artigoNome, artigoMime, artigoUrl;
     if(file){
@@ -7122,24 +7416,36 @@ async function enviarInscricaoConcurso(){
       artigoUrl  = await fileToBase64(file);
     }
     if(insc){
-      const data = { status:'Enviado', dataEnvio:Date.now() };
+      const data = { status:'Enviado', dataEnvio:Date.now(), tema, area };
       if(file){ data.artigoNome = artigoNome; data.artigoMime = artigoMime; data.artigoUrl = artigoUrl; }
       await rtdb.ref('concurso/inscricoes/'+insc.id).update(data);
+      await pushHistoricoConcurso(insc.id, 'Inscrição enviada à Coordenação.');
+      Object.assign(window._concursoAlunoInscricao, data);
     } else {
       const cfg = window._concursoConfigAtual || (await rtdb.ref('concurso/config').get()).val() || {};
       if(!cfg.periodo || cfg.aberto===false){ toast('As inscrições não estão abertas.','err'); return; }
       const d = await getAlunoById(currentUser.id);
       if(!d){ toast('Não foi possível carregar seus dados.','err'); return; }
-      await rtdb.ref('concurso/inscricoes').push({
+      // Reserva atômica e única do próximo número global, na ordem real de inscrição
+      const numeroProtocolo = await reservarNumeroProtocolo();
+      const protocoloCodigo = `InscricaoConcursoTCC1${new Date().getFullYear()}_${numeroProtocolo}`;
+      const novaRef = rtdb.ref('concurso/inscricoes').push();
+      const novoRegistro = {
         alunoId: currentUser.id, alunoNome: d.nome, alunoEmail: d.email, turma: d.turma||'',
         orientadorId: d.orientadorId||'', periodo: cfg.periodo,
+        numeroProtocolo, protocoloCodigo, tema, area,
         status: 'Enviado', dataInscricao: Date.now(), dataEnvio: Date.now(),
         artigoNome, artigoMime, artigoUrl
-      });
+      };
+      await novaRef.set(novoRegistro);
+      window._concursoAlunoInscricao = { id: novaRef.key, ...novoRegistro };
+      await pushHistoricoConcurso(novaRef.key, `Inscrição iniciada — protocolo ${protocoloCodigo} gerado.`);
+      await pushHistoricoConcurso(novaRef.key, 'Inscrição enviada à Coordenação.');
     }
     toast('Inscrição enviada com sucesso!');
     loadConcursoAluno();
   } catch(e){ toast('Erro: '+e.message,'err'); }
+  finally{ window._concursoEnviando = false; }
 }
 
 // ─── Banner ───
