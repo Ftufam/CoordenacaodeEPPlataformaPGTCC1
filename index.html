@@ -989,7 +989,7 @@ footer {
   </div>
 
   <div class="header-center">
-    <h1>PLATAFORMA DE GESTÃO DE TRABALHO DE CONCLUSÃO DE CURSO 1 (PGTCC 1)</h1>
+    <h1>PLATAFORMA DE GESTÃO DE TRABALHO DE CONCLUSÃO DE CURSO (PGTCC)</h1>
     <div class="header-meta">
       <div class="hm-line">
         <span>COORDENADOR: NILSON RODRIGUES BARREIROS (2025-2027)</span>
@@ -1265,7 +1265,7 @@ footer {
 </main>
 
 <footer>
-  PGTCC 1 &nbsp;·&nbsp; Coordenação de Engenharia de Produção – DEP/FT/UFAM &nbsp;·&nbsp; Versão 2 &nbsp;·&nbsp; 2026
+  PGTCC &nbsp;·&nbsp; Coordenação de Engenharia de Produção – DEP/FT/UFAM &nbsp;·&nbsp; Versão 4 &nbsp;·&nbsp; 2026
 </footer>
 
 <!-- ═══ SCRIPTS ═══ -->
@@ -1644,7 +1644,7 @@ function toggleAcc(btn) {
 
       <div class="panel" style="display:block;border-top-color:var(--border);margin-top:16px">
         <div class="panel-title">🔸 Inscrições sem Envio <span id="ccContagemPendentes" style="font-size:.72rem;color:var(--muted);font-weight:700"></span></div>
-        <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Alunos que clicaram em "Inscrever-se" mas ainda não enviaram o artigo. Você pode cancelar inscrições paradas/abandonadas.</p>
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Alunos que salvaram um rascunho do artigo mas ainda não enviaram a inscrição. Você pode cancelar inscrições paradas/abandonadas.</p>
         <div id="listaConcursoPendentes"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
       </div>
     </div>
@@ -2045,10 +2045,6 @@ function toggleAcc(btn) {
         <div class="panel-title">🏆 Concurso Melhor TCC1</div>
         <div id="ccEditalBoxAluno" style="display:none;margin-bottom:14px"></div>
         <div id="concursoAlunoStatusBox"><p class="empty-box"><span class="emo">🔍</span><br>Verificando situação do concurso...</p></div>
-
-        <div id="concursoAlunoInscricaoBox" style="display:none;margin-top:14px">
-          <button class="act-btn" style="background:linear-gradient(135deg,#C9972B,#e8b840)" onclick="inscreverConcurso()">📝 Inscrever-se no Concurso</button>
-        </div>
       </div>
 
       <div id="concursoAlunoEnvioBox" style="display:none">
@@ -2062,13 +2058,13 @@ function toggleAcc(btn) {
           </div>
           <div id="concursoInstrucoesBody" style="display:none">
             <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
-              <li><strong>📥 Download do modelo de artigo</strong><br>Clique em <strong>⬇ Baixar Modelo de Artigo</strong>, na seção "Enviar e Receber o Artigo" abaixo.</li>
-              <li><strong>✂️ Remoção de identificação</strong><br>Edite seu artigo já revisado, em Word, e remova <strong>nome, e-mail e nome do avaliador/orientador</strong> de todo o documento — inclusive cabeçalho, rodapé e propriedades do arquivo. A avaliação é <strong>cega</strong>: os avaliadores não podem identificar o autor.</li>
+              <li><strong>📥 Download do modelo de artigo</strong> <em>(apenas se seu artigo foi feito fora do padrão do Modelo de Artigo disponível na PGTCC, caso contrário iniciar com seu artigo)</em><br>Clique em <strong>⬇ Baixar Modelo de Artigo</strong>, na seção "Enviar e Receber o Artigo" abaixo.</li>
+              <li><strong>✂️ Remoção de identificação</strong><br>Edite seu artigo já revisado, em Word, e remova <strong>nome, e-mail e nome do avaliador/orientador</strong> de todo o documento. A avaliação é <strong>cega</strong>: os avaliadores não podem identificar o autor.</li>
               <li><strong>📤 Upload do artigo</strong><br>Na seção "Enviar e Receber o Artigo", selecione o arquivo em Word e clique em <strong>💾 Salvar</strong> para guardar o progresso (você pode salvar quantas vezes quiser antes de enviar).</li>
               <li><strong>📨 Envio para a Coordenação</strong><br>Quando o artigo estiver pronto, clique em <strong>Enviar sua Inscrição para a Coordenação</strong>. Após o envio, não será mais possível alterar o arquivo.</li>
               <li><strong>🔎 Homologação</strong><br>A Coordenação avaliará se o artigo atende aos requisitos e poderá homologar ou rejeitar a inscrição (com justificativa).</li>
               <li><strong>🕶️ Avaliação cega</strong><br>Se homologado, seu artigo será enviado, sem identificação, a até 3 avaliadores do concurso, que também não serão identificados para você.</li>
-              <li><strong>📬 Devolutiva</strong><br>Você acompanhará o andamento (homologação, em análise, revisado) e receberá o artigo com o parecer e as recomendações de melhoria dos avaliadores na seção "Receber o Artigo" abaixo — sem a nota.</li>
+              <li><strong>📬 Devolutiva</strong><br>Você acompanhará o andamento (homologação, em análise, revisado) e receberá o artigo com o parecer e as recomendações de melhoria dos avaliadores na seção "Receber o Artigo" abaixo — sem a nota. A média da nota será divulgada no final do concurso.</li>
               <li><strong>🖼️ Banner Digital</strong><br>Em construção — em breve você poderá preparar e imprimir seu banner por aqui.</li>
             </ol>
           </div>
@@ -6968,11 +6964,9 @@ async function enviarParecerConcurso(inscricaoId, slot){
 window._concursoAlunoInscricao = null;
 async function loadConcursoAluno(){
   const statusBox     = document.getElementById('concursoAlunoStatusBox');
-  const inscricaoBox  = document.getElementById('concursoAlunoInscricaoBox');
   const envioBox       = document.getElementById('concursoAlunoEnvioBox');
   const envioControles = document.getElementById('ccEnvioControles');
   const receberBox     = document.getElementById('ccReceberArtigoBox');
-  inscricaoBox.style.display  = 'none';
   envioBox.style.display      = 'none';
   envioControles.style.display = 'none';
   receberBox.style.display    = 'none';
@@ -6981,6 +6975,7 @@ async function loadConcursoAluno(){
   const cfgSnap = await rtdb.ref('concurso/config').get();
   const cfg = cfgSnap.exists() ? cfgSnap.val() : {};
   renderEditalBox(cfg, 'ccEditalBoxAluno');
+  window._concursoConfigAtual = cfg;
 
   if(!cfg.periodo){
     statusBox.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>O Concurso Melhor TCC1 ainda não foi configurado pela Coordenação.</p>';
@@ -6999,22 +6994,31 @@ async function loadConcursoAluno(){
   window._concursoAlunoInscricao = inscricao ? {id:inscricaoId, ...inscricao} : null;
 
   if(!inscricao){
+    // Nenhum registro ainda — NADA é gravado no Firebase até o aluno salvar ou enviar o artigo
     if(cfg.aberto === false){
       statusBox.innerHTML = `<p class="empty-box"><span class="emo">🔒</span><br>As inscrições do Concurso Melhor TCC1 (${cfg.periodo}) estão fechadas no momento.</p>`;
-    } else {
-      statusBox.innerHTML = `<div style="background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:10px;padding:14px 18px;font-size:.86rem;color:#7a5200;line-height:1.8">
-        🏆 <strong>Concurso Melhor TCC1 — ${cfg.periodo}</strong> está com inscrições abertas!<br>
-        ${cfg.prazoArtigo?`📄 Prazo para envio do artigo: <strong>${cfg.prazoArtigo}</strong><br>`:''}
-        ${cfg.prazoBannerDigital?`🖼️ Prazo para concluir o banner digital: <strong>${cfg.prazoBannerDigital}</strong><br>`:''}
-        ${cfg.prazoBannerImpresso?`🖨️ Prazo para entregar o banner impresso (A1) à Coordenação: <strong>${cfg.prazoBannerImpresso}</strong><br>`:''}
-        Se você já defendeu seu TCC1 no semestre anterior, inscreva-se abaixo.
-      </div>`;
-      inscricaoBox.style.display = 'block';
+      return;
+    }
+    statusBox.innerHTML = `<div style="background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:10px;padding:14px 18px;font-size:.86rem;color:#7a5200;line-height:1.8">
+      🏆 <strong>Concurso Melhor TCC1 — ${cfg.periodo}</strong> está com inscrições abertas!<br>
+      ${cfg.prazoArtigo?`📄 Prazo para envio do artigo: <strong>${cfg.prazoArtigo}</strong><br>`:''}
+      ${cfg.prazoBannerDigital?`🖼️ Prazo para concluir o banner digital: <strong>${cfg.prazoBannerDigital}</strong><br>`:''}
+      ${cfg.prazoBannerImpresso?`🖨️ Prazo para entregar o banner impresso (A1) à Coordenação: <strong>${cfg.prazoBannerImpresso}</strong><br>`:''}
+      Se você já defendeu seu TCC1 no semestre anterior, preencha e envie sua inscrição abaixo. <strong>Nenhum registro é criado até você clicar em Salvar ou Enviar.</strong>
+    </div>`;
+    envioBox.style.display = 'block';
+    envioControles.style.display = 'block';
+    const prazoAlerta = document.getElementById('ccPrazoAlertaArtigo');
+    if(prazoAlerta && cfg.prazoArtigo){
+      prazoAlerta.style.display = 'block';
+      prazoAlerta.innerHTML = `⏰ Atenção: prazo para envio do artigo — <strong>${cfg.prazoArtigo}</strong>`;
+    } else if(prazoAlerta){
+      prazoAlerta.style.display = 'none';
     }
     return;
   }
 
-  // Já inscrito — Instruções + Enviar/Receber Artigo ficam visíveis em qualquer status
+  // Já existe registro (aluno salvou ou enviou) — Instruções + Enviar/Receber Artigo ficam visíveis
   envioBox.style.display = 'block';
   statusBox.innerHTML = `<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <span style="font-weight:800;color:#163352">Sua inscrição (${cfg.periodo}):</span> ${statusBadgeConcurso(inscricao.status)}
@@ -7074,57 +7078,65 @@ async function loadConcursoAluno(){
     statusBox.innerHTML = `<p class="empty-box" style="color:#991b1b"><span class="emo">⚠️</span><br>Erro ao carregar o Concurso Melhor TCC1.<br><span style="font-size:.72rem;font-weight:400">${e.message}</span></p>`;
   }
 }
-async function inscreverConcurso(){
-  const cfgSnap = await rtdb.ref('concurso/config').get();
-  const cfg = cfgSnap.exists() ? cfgSnap.val() : {};
-  if(!cfg.periodo || cfg.aberto===false){ toast('As inscrições não estão abertas.','err'); return; }
-  const d = await getAlunoById(currentUser.id);
-  if(!d){ toast('Não foi possível carregar seus dados.','err'); return; }
-  try{
-    await rtdb.ref('concurso/inscricoes').push({
-      alunoId: currentUser.id, alunoNome: d.nome, alunoEmail: d.email, turma: d.turma||'',
-      orientadorId: d.orientadorId||'', periodo: cfg.periodo,
-      status: 'Inscrito', dataInscricao: Date.now()
-    });
-    toast('Inscrição realizada! Agora envie seu artigo.');
-    loadConcursoAluno();
-  } catch(e){ toast('Erro: '+e.message,'err'); }
-}
 async function salvarArtigoConcurso(){
-  const insc = window._concursoAlunoInscricao;
-  if(!insc){ toast('Inscrição não encontrada.','err'); return; }
   const fileInp = document.getElementById('ccArtigoFile');
   const file = fileInp && fileInp.files[0];
   if(!file){ toast('Selecione o arquivo do artigo antes de salvar.','err'); return; }
   if(file.size > 3*1024*1024){ toast('Arquivo muito grande. Máximo 3 MB.','err'); return; }
   try{
     const artigoUrl = await fileToBase64(file);
-    await rtdb.ref('concurso/inscricoes/'+insc.id).update({
-      artigoNome: file.name,
-      artigoMime: file.type || 'application/octet-stream',
-      artigoUrl
-    });
+    const artigoNome = file.name;
+    const artigoMime = file.type || 'application/octet-stream';
+    const insc = window._concursoAlunoInscricao;
+    if(insc){
+      await rtdb.ref('concurso/inscricoes/'+insc.id).update({ artigoNome, artigoMime, artigoUrl });
+    } else {
+      const cfg = window._concursoConfigAtual || (await rtdb.ref('concurso/config').get()).val() || {};
+      if(!cfg.periodo || cfg.aberto===false){ toast('As inscrições não estão abertas.','err'); return; }
+      const d = await getAlunoById(currentUser.id);
+      if(!d){ toast('Não foi possível carregar seus dados.','err'); return; }
+      await rtdb.ref('concurso/inscricoes').push({
+        alunoId: currentUser.id, alunoNome: d.nome, alunoEmail: d.email, turma: d.turma||'',
+        orientadorId: d.orientadorId||'', periodo: cfg.periodo,
+        status: 'Inscrito', dataInscricao: Date.now(),
+        artigoNome, artigoMime, artigoUrl
+      });
+    }
     toast('Artigo salvo! Você ainda pode substituí-lo até enviar a inscrição.');
     loadConcursoAluno();
   } catch(e){ toast('Erro: '+e.message,'err'); }
 }
 async function enviarInscricaoConcurso(){
-  const insc = window._concursoAlunoInscricao;
-  if(!insc){ toast('Inscrição não encontrada.','err'); return; }
   const fileInp = document.getElementById('ccArtigoFile');
   const file = fileInp && fileInp.files[0];
-  const jaTemArtigo = !!insc.artigoNome;
-  if(!file && !jaTemArtigo){ toast('Selecione (ou salve) o arquivo do artigo antes de enviar.','err'); return; }
+  const insc = window._concursoAlunoInscricao;
+  const jaTemArtigo = !!(insc && insc.artigoNome);
+  if(!file && !jaTemArtigo){ toast('Selecione o arquivo do artigo antes de enviar.','err'); return; }
   if(file && file.size > 3*1024*1024){ toast('Arquivo muito grande. Máximo 3 MB.','err'); return; }
   if(!confirm('Após o envio, não será possível alterar o artigo. Confirmar envio da inscrição para a Coordenação?')) return;
   try{
-    const data = { status:'Enviado', dataEnvio:Date.now() };
+    let artigoNome, artigoMime, artigoUrl;
     if(file){
-      data.artigoNome = file.name;
-      data.artigoMime = file.type || 'application/octet-stream';
-      data.artigoUrl  = await fileToBase64(file);
+      artigoNome = file.name;
+      artigoMime = file.type || 'application/octet-stream';
+      artigoUrl  = await fileToBase64(file);
     }
-    await rtdb.ref('concurso/inscricoes/'+insc.id).update(data);
+    if(insc){
+      const data = { status:'Enviado', dataEnvio:Date.now() };
+      if(file){ data.artigoNome = artigoNome; data.artigoMime = artigoMime; data.artigoUrl = artigoUrl; }
+      await rtdb.ref('concurso/inscricoes/'+insc.id).update(data);
+    } else {
+      const cfg = window._concursoConfigAtual || (await rtdb.ref('concurso/config').get()).val() || {};
+      if(!cfg.periodo || cfg.aberto===false){ toast('As inscrições não estão abertas.','err'); return; }
+      const d = await getAlunoById(currentUser.id);
+      if(!d){ toast('Não foi possível carregar seus dados.','err'); return; }
+      await rtdb.ref('concurso/inscricoes').push({
+        alunoId: currentUser.id, alunoNome: d.nome, alunoEmail: d.email, turma: d.turma||'',
+        orientadorId: d.orientadorId||'', periodo: cfg.periodo,
+        status: 'Enviado', dataInscricao: Date.now(), dataEnvio: Date.now(),
+        artigoNome, artigoMime, artigoUrl
+      });
+    }
     toast('Inscrição enviada com sucesso!');
     loadConcursoAluno();
   } catch(e){ toast('Erro: '+e.message,'err'); }
