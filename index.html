@@ -1006,9 +1006,9 @@ footer {
       <div class="hm-line">
         <span class="badge-pilot">TESTE PILOTO</span>
         <span class="hm-sep">·</span>
-        <span class="badge-ver">V4</span>
+        <span class="badge-ver">V5</span>
         <span class="hm-sep">·</span>
-        <span>06/08/26 (JORNAIS CIENTÍFICOS E CONCURSO TCC1)</span>
+        <span>04/09/26</span>
       </div>
     </div>
   </div>
@@ -1019,19 +1019,15 @@ footer {
 </header>
 </div><!-- ═══ MAIN ═══ -->
 <main>
-    <nav class="btn-grid">    <button class="nav-btn btn-teal" onclick="openPanel('jornais')" data-tip="Plataforma de análise de jornais científicos – em construção">
-      <div class="icon">🔬</div>
-      <span class="lbl">Análise de Jornais Científicos</span>
-    </button>
-
+    <nav class="btn-grid">
     <button class="nav-btn btn-lock" onclick="openAreaRestrita()" data-tip="Acesso exclusivo para Coordenador, Avaliadores ou Orientadores e Alunos">
       <div class="icon">🔐</div>
       <span class="lbl">Área Restrita</span>
     </button>
 
-    <button class="nav-btn btn-blue" onclick="triggerDownload(FILES.ataDefesa)" data-tip="Baixar: Ata de Defesa (.doc)">
+    <button class="nav-btn btn-blue" onclick="triggerDownload(FILES.ataDefesa)" data-tip="Baixar: Ata de Defesa (TCC 1) (.doc)">
       <div class="icon">📋</div>
-      <span class="lbl">Ata de Defesa</span>
+      <span class="lbl">Ata de Defesa (TCC 1)</span>
     </button>
 
         <a class="nav-btn btn-green" href="https://form.typeform.com/to/yd4N31nI" target="_blank" rel="noopener" data-tip="Avaliar a qualidade da plataforma PGTCC 1">
@@ -1051,29 +1047,34 @@ footer {
 
     <button class="nav-btn btn-green" onclick="openPanel('manual1')" data-tip="Orientações gerais sobre o TCC 1 – regras, prazos e deveres">
       <div class="icon">📘</div>
-      <span class="lbl">Manual 1</span>
+      <span class="lbl">MANUAL 1 (ORIENTAÇÕES GERAIS - TCC 1)</span>
     </button>
 
     <button class="nav-btn btn-blue" onclick="triggerDownload(FILES.manual2)" data-tip="Baixar: Manual para Elaboração de Artigos (PDF)">
       <div class="icon">📄</div>
-      <span class="lbl">Manual 2</span>
+      <span class="lbl">MANUAL 2 (DICAS PARA ELABORAR O ARTIGO-TCC1)</span>
     </button>
 
     <button class="nav-btn btn-purple" onclick="triggerDownload(FILES.manual3)" data-tip="Baixar: Manual de uso da Plataforma PGTCC 1 (PDF)">
       <div class="icon">📗</div>
-      <span class="lbl">Manual 3</span>
+      <span class="lbl">MANUAL 3 (USO DA PLATAFORMA)</span>
     </button>
 
     <button class="nav-btn btn-gold" onclick="triggerDownload(FILES.modeloArtigo)" data-tip="Baixar: Modelo de Artigo TCC1 (.doc)">
       <div class="icon">📝</div>
-      <span class="lbl">Modelo de Artigo</span>
+      <span class="lbl">MODELO DE ARTIGO (TCC 1)</span>
+    </button>
+
+    <button class="nav-btn btn-teal" onclick="openPanel('jornais')" data-tip="Veículo de publicação qualificado para o TCC 2 – em construção">
+      <div class="icon">🔬</div>
+      <span class="lbl">Veículo de publicação qualificado (para TCC 2)</span>
     </button>
 </nav>
 
   <!-- ── PANEL: MANUAL 1 ── -->
   <div class="panel" id="panel-manual1" style="border-top-color:var(--green);">
     <div class="panel-title">
-      📘 Manual 1 – Orientações Gerais sobre o TCC 1
+      📘 MANUAL 1 (ORIENTAÇÕES GERAIS - TCC 1)
       <button class="close-panel" onclick="closePanel('manual1')">✕</button>
     </div>
 
@@ -1196,7 +1197,7 @@ footer {
   <!-- ── PANEL: MANUAL 3 ── -->
   <div class="panel" id="panel-manual3" style="border-top-color:var(--purple);">
     <div class="panel-title">
-      📗 Manual 3 – Manual de Uso da Plataforma PGTCC 1
+      📗 MANUAL 3 (USO DA PLATAFORMA)
       <button class="close-panel" onclick="closePanel('manual3')">✕</button>
     </div>
     <div class="empty-box">
@@ -1207,17 +1208,17 @@ footer {
     </div>
   </div>
 
-  <!-- ── PANEL: ANÁLISE DE JORNAIS CIENTÍFICOS (EM CONSTRUÇÃO) ── -->
+  <!-- ── PANEL: VEÍCULO DE PUBLICAÇÃO QUALIFICADO (PARA TCC 2) (EM CONSTRUÇÃO) ── -->
   <div class="panel" id="panel-jornais" style="border-top-color:var(--teal);">
     <div class="panel-title">
-      🔬 Plataforma de Análise de Jornais Científicos
+      🔬 Veículo de publicação qualificado (para TCC 2)
       <span class="badge-pilot" style="background:linear-gradient(90deg,var(--teal),var(--teal-light));box-shadow:0 2px 6px rgba(14,131,136,0.35);margin-left:8px">Em Construção</span>
       <button class="close-panel" onclick="closePanel('jornais')">✕</button>
     </div>
     <div class="empty-box">
       <div class="emo">🚧</div>
       <p><strong>Esta seção está em construção.</strong></p>
-      <p style="margin-top:6px;font-size:0.82rem">Em breve, esta área trará ferramentas para análise de jornais científicos (indicadores, rankings e apoio à escolha de periódicos para publicação). Volte em breve para conferir as novidades.</p>
+      <p style="margin-top:6px;font-size:0.82rem">Em breve, esta área trará ferramentas para consulta e apoio à escolha de veículos de publicação qualificados para o TCC 2 (indicadores, rankings e critérios de qualificação). Volte em breve para conferir as novidades.</p>
     </div>
   </div>
 
@@ -1392,7 +1393,7 @@ function toggleAcc(btn) {
     <div style="max-width:1100px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:center;position:relative">
       <div style="text-align:center">
         <div style="font-family:'Playfair Display',serif;font-size:clamp(.85rem,1.8vw,1.18rem);color:#0d3a6e;line-height:1.38;letter-spacing:.2px;text-shadow:0 1px 0 rgba(255,255,255,.8);font-weight:700">
-          Ambiente da Coordenação da Plataforma de Gestão de TCC 1
+          Ambiente da Coordenação da Plataforma de Gestão de TCCs
         </div>
         <div id="coordNomeTop" style="font-size:.72rem;color:#3a5f82;font-weight:600;letter-spacing:.3px;margin-top:4px"></div>
       </div>
@@ -1468,14 +1469,13 @@ function toggleAcc(btn) {
         <div class="grid-2">
           <div class="field"><label>Nome Completo *</label><input id="oNome" type="text" placeholder="Prof. João Silva"/></div>
           <div class="field"><label>E-mail Institucional *</label><input id="oEmail" type="email" placeholder="joao@ufam.edu.br"/></div>
-          <div class="field"><label>Turma * <small style="font-weight:400;text-transform:none">(máx. 4 caracteres)</small></label><input id="oTurma" type="text" maxlength="4" placeholder="EP01"/></div>
           <div class="field"><label>Senha de Acesso * <small style="font-weight:400;text-transform:none">(6–9 caracteres)</small></label><input id="oSenha" type="password" name="new-password" autocomplete="new-password" minlength="6" maxlength="9" placeholder="••••••••"/></div>
           <div class="field" style="grid-column:1/-1"><label>Classe *</label>
             <select id="oClasse">
               <option value="">– Selecione –</option>
               <option value="ORIENTADOR DO DEP">🏫 Orientador do DEP</option>
               <option value="ORIENTADOR EXTERNO">🌐 Orientador Externo</option>
-              <option value="AVALIADOR DO TCC 1">📝 Avaliador do TCC 1</option>
+              <option value="AVALIADOR DO TCC 1">📝 Avaliador Externo do TCC 1</option>
               <option value="AVALIADOR DE CONCURSO DE TCC 1">🏆 Avaliador de Concurso de TCC 1</option>
               <option value="OUTRO TIPO DE AVALIADOR">🔹 Outro Tipo de Avaliador</option>
             </select>
@@ -1507,9 +1507,7 @@ function toggleAcc(btn) {
             <select id="selPeriodo" style="width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.88rem">
               <option value="">— Selecione —</option>
               <option value="1">1 — 1º Semestre Regular</option>
-              <option value="1F">1F — 1º Semestre Férias</option>
               <option value="2">2 — 2º Semestre Regular</option>
-              <option value="2F">2F — 2º Semestre Férias</option>
             </select>
           </div>
           <button onclick="confirmarPeriodoCadastro()" style="padding:.7rem 1.2rem;background:linear-gradient(135deg,#163352,#1a4a6e);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer;white-space:nowrap">✅ Confirmar para Cadastro</button>
@@ -1528,6 +1526,23 @@ function toggleAcc(btn) {
           <div class="field"><label>Senha *</label><input id="aSenha" type="text" placeholder="••••••••"/></div>
           <div class="field"><label>Avaliador ou Orientador</label>
             <select id="aOrientador"><option value="">– Selecione –</option></select>
+          </div>
+          <div class="field"><label>Turma *</label>
+            <select id="aTurma">
+              <option value="">– Selecione –</option>
+              <option>PR1</option><option>PR2</option><option>PR3</option><option>PR4</option>
+              <option>PR5</option><option>PR6</option><option>PR7</option><option>PR8</option>
+              <option>PR9</option><option>PR10</option><option>PR11</option><option>PR12</option>
+              <option>PR13</option><option>PR14</option><option>PR15</option><option>PR16</option>
+              <option>BANE</option><option>CTCC</option>
+            </select>
+          </div>
+          <div class="field"><label>Disciplina *</label>
+            <select id="aDisciplina">
+              <option value="">– Selecione –</option>
+              <option value="TCC 1">TCC 1</option>
+              <option value="TCC 2">TCC 2</option>
+            </select>
           </div>
           <div class="field"><label>Período Letivo</label><input id="aPeriodo" type="text" placeholder="2026/1" readonly style="background:#f0f4f8;cursor:default"/></div>
         </div>
@@ -3642,17 +3657,15 @@ async function salvarOrientador(){
   const id     = document.getElementById('oEditId').value;
   const nome   = document.getElementById('oNome').value.trim();
   const email  = document.getElementById('oEmail').value.trim();
-  const turma  = document.getElementById('oTurma').value.trim().toUpperCase();
   const senha  = document.getElementById('oSenha').value.trim();
   const classe = document.getElementById('oClasse').value;
 
-  if(!nome||!email||!turma){ toast('Preencha nome, e-mail e turma.','err'); return; }
+  if(!nome||!email){ toast('Preencha nome e e-mail.','err'); return; }
   if(!classe){ toast('Selecione a classe.','err'); return; }
-  if(turma.length>4){ toast('Turma deve ter no máximo 4 caracteres.','err'); return; }
   if(!id && !senha){ toast('Senha obrigatória para novo avaliador ou orientador.','err'); return; }
   if(senha && (senha.length<6||senha.length>9)){ toast('Senha deve ter entre 6 e 9 caracteres.','err'); return; }
 
-  const data = { nome, email, turma, classe };
+  const data = { nome, email, classe };
   if(senha) data.senha = senha;
 
   try{
@@ -3673,14 +3686,13 @@ function editarOrientador(id, d){
   document.getElementById('oEditId').value = id;
   document.getElementById('oNome').value   = d.nome||'';
   document.getElementById('oEmail').value  = d.email||'';
-  document.getElementById('oTurma').value  = d.turma||'';
   document.getElementById('oClasse').value = d.classe||'';
   document.getElementById('oSenha').value  = '';
   document.getElementById('btnCancelarOrient').style.display='inline-flex';
   document.querySelector('#ct-orientadores .panel-title').scrollIntoView({behavior:'smooth'});
 }
 function limparOrientadorForm(){
-  ['oNome','oEmail','oTurma','oSenha','oEditId','oClasse'].forEach(id=>document.getElementById(id).value='');
+  ['oNome','oEmail','oSenha','oEditId','oClasse'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('btnCancelarOrient').style.display='none';
 }
 async function excluirOrientador(id,nome){
@@ -3699,7 +3711,7 @@ async function definirSenhaOrientador(id, nomeOrient){
 const CLASSE_INFO = {
   'ORIENTADOR DO DEP':              { icon:'🏫', label:'Orientador do DEP',              bg:'var(--blue-pale)',   fg:'var(--blue)',   bd:'var(--blue-light)' },
   'ORIENTADOR EXTERNO':             { icon:'🌐', label:'Orientador Externo',             bg:'var(--purple-pale)', fg:'var(--purple)', bd:'var(--purple-light)' },
-  'AVALIADOR DO TCC 1':             { icon:'📝', label:'Avaliador do TCC 1',             bg:'var(--green-pale)',  fg:'var(--green)',  bd:'var(--green-light)' },
+  'AVALIADOR DO TCC 1':             { icon:'📝', label:'Avaliador Externo do TCC 1',     bg:'var(--green-pale)',  fg:'var(--green)',  bd:'var(--green-light)' },
   'AVALIADOR DE CONCURSO DE TCC 1': { icon:'🏆', label:'Avaliador de Concurso de TCC 1', bg:'var(--gold-pale)',   fg:'var(--gold)',   bd:'var(--gold-light)' },
   'OUTRO TIPO DE AVALIADOR':        { icon:'🔹', label:'Outro Tipo de Avaliador',        bg:'var(--teal-pale)',   fg:'var(--teal)',   bd:'var(--teal-light)' }
 };
@@ -3710,16 +3722,17 @@ function classeBadge(classe){
 }
 async function loadOrientadoresList(){
   const lista = await getOrientadores();
+  lista.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
   const el = document.getElementById('listaOrientadores');
   if(!lista.length){ el.innerHTML='<p class="empty-box"><span class="emo">🎓</span><br>Nenhum avaliador ou orientador cadastrado.</p>'; return; }
   el.innerHTML=`<div class="table-shell"><table>
-    <thead><tr><th>Nome</th><th>E-mail</th><th>Turma</th><th>Classe</th><th>Senha</th><th>Ações</th></tr></thead>
+    <thead><tr><th>Nome</th><th>E-mail</th><th>Classe</th><th>Senha</th><th>Ações</th></tr></thead>
     <tbody>${lista.map(o=>`<tr>
-      <td>${o.nome}</td><td>${o.email}</td><td>${o.turma||'—'}</td>
+      <td>${o.nome}</td><td>${o.email}</td>
       <td>${classeBadge(o.classe)}</td>
       <td><span style="letter-spacing:2px;color:var(--muted)">••••••</span></td>
       <td class="tbl-actions">
-        <button class="tbl-btn tbl-edit" onclick='editarOrientador("${o.id}",${JSON.stringify({nome:o.nome,email:o.email,turma:o.turma,classe:o.classe||''})})'>✏️ Editar</button>
+        <button class="tbl-btn tbl-edit" onclick='editarOrientador("${o.id}",${JSON.stringify({nome:o.nome,email:o.email,classe:o.classe||''})})'>✏️ Editar</button>
         <button class="tbl-btn tbl-viz" onclick='definirSenhaOrientador("${o.id}","${o.nome}")'>🔑 Senha</button>
         <button class="tbl-btn tbl-del" onclick='excluirOrientador("${o.id}","${o.nome}")'>🗑 Deletar</button>
       </td>
@@ -3733,7 +3746,7 @@ async function loadOrientadoresSelect(targetId='aOrientador'){
   const sel = document.getElementById(targetId);
   sel.innerHTML='<option value="">– Selecione –</option>';
   lista.forEach(o=>{
-    sel.innerHTML+=`<option value="${o.id}">${o.nome} (${o.turma||''})</option>`;
+    sel.innerHTML+=`<option value="${o.id}">${o.nome}</option>`;
   });
 }
 // ── Ano/Período ──
@@ -3754,14 +3767,79 @@ function confirmarPeriodoCadastro(){
   box.textContent = `✅ Período de cadastro confirmado: ${p} — formulário pronto para receber novos dados.`;
 }
 
+// Calcula o período letivo imediatamente anterior a um período "ANO/N" (N = 1 ou 2)
+function calcPeriodoAnterior(periodoStr){
+  const [anoStr, periodo] = (periodoStr||'').split('/');
+  const ano = parseInt(anoStr, 10);
+  if(!ano || (periodo!=='1' && periodo!=='2')) return null;
+  return periodo==='2' ? `${ano}/1` : `${ano-1}/2`;
+}
+
+// Compara dois períodos "ANO/N" cronologicamente: retorna >0 se p1 é depois de p2.
+function compararPeriodos(p1, p2){
+  const [a1,n1] = (p1||'').split('/').map(Number);
+  const [a2,n2] = (p2||'').split('/').map(Number);
+  if(!a1 || !a2) return 0;
+  if(a1!==a2) return a1-a2;
+  return n1-n2;
+}
+
+// Chave segura para gravar um período (ex.: "2026/1") dentro de outro nó do Firebase.
+// A "/" de um período não pode ir direto na chave do update(), pois o Firebase a
+// interpretaria como separador de caminho — por isso convertemos para "2026-1".
+function chavePeriodo(periodoStr){ return (periodoStr||'').replace('/','-'); }
+
+// Migração automática ao AVANÇAR o período vigente (nunca ao retroceder/reabrir um período já concluído):
+// - Alunos de TCC 1 no período anterior avançam automaticamente para o novo período.
+//   • Se estavam com status "Aprovado", a Disciplina do novo período já entra como "TCC 2".
+//   • Caso contrário, a Disciplina fica em branco para a Coordenação decidir.
+// - Alunos que já concluíram TCC 2 (disciplina TCC 2 e status Aprovado) no período anterior
+//   NÃO são migrados — permanecem registrados apenas no período em que se formaram.
+// - O Status de cada aluno nunca é alterado por esta rotina.
+// - Antes de sobrescrever, a Turma/Disciplina/Status do período concluído são guardadas em
+//   "periodos/{periodoAnterior}" do próprio aluno, para que nada se perca caso a Coordenação
+//   volte a definir aquele período como vigente futuramente (apenas para consulta/histórico).
+async function migrarAlunosParaNovoPeriodo(novoPeriodo, periodoVigenteAnterior){
+  const periodoAnterior = calcPeriodoAnterior(novoPeriodo);
+  if(!periodoAnterior) return { migrados:0 };
+  // Só migra quando o novo período vigente é, de fato, um avanço em relação ao vigente
+  // anterior — evita migrar novamente (ou de forma indevida) quando a Coordenação apenas
+  // volta a marcar como vigente um período já concluído para consulta.
+  if(periodoVigenteAnterior && compararPeriodos(novoPeriodo, periodoVigenteAnterior) <= 0){
+    return { migrados:0 };
+  }
+  const todos = await getAlunos();
+  const elegiveis = todos.filter(a => a.periodoLetivo===periodoAnterior && a.disciplina==='TCC 1');
+  if(!elegiveis.length) return { migrados:0 };
+  const oListaCompleta = await getOrientadores();
+  const oTurmaMap = {}; oListaCompleta.forEach(o=>oTurmaMap[o.id]=o.turma);
+  const gravacoes = elegiveis.map(a=>{
+    const novaDisciplina = a.status==='Aprovado' ? 'TCC 2' : '';
+    const snapshot = { turma: a.turma || oTurmaMap[a.orientadorId] || '', disciplina: 'TCC 1', status: a.status||'Pendente' };
+    return rtdb.ref('alunos/'+a.id).update({
+      periodoLetivo: novoPeriodo,
+      disciplina: novaDisciplina,
+      ['periodos/'+chavePeriodo(periodoAnterior)]: snapshot
+    }).catch(()=>{});
+  });
+  await Promise.all(gravacoes);
+  return { migrados: elegiveis.length };
+}
+
 async function definirPeriodoVigente(){
   const p = getPeriodoSelecionado();
   if(!p){ toast('Selecione o ano e o período antes de definir como vigente.','err'); return; }
+  const snapAnterior = await rtdb.ref('config/periodoVigente').get();
+  const vigenteAnterior = snapAnterior.exists() ? (snapAnterior.val().periodo||'') : '';
   await rtdb.ref('config/periodoVigente').set({ periodo:p, atualizadoEm:Date.now() });
+  const { migrados } = await migrarAlunosParaNovoPeriodo(p, vigenteAnterior);
   const box = document.getElementById('periodoVigenteBox');
   box.style.display='block';
-  box.textContent = `⭐ Período Vigente definido como: ${p} — alunos e avaliadores ou orientadores verão este período.`;
-  toast(`Período vigente definido: ${p}`);
+  box.textContent = migrados
+    ? `⭐ Período Vigente definido como: ${p} — ${migrados} aluno(s) de TCC 1 do período anterior migrado(s) automaticamente.`
+    : `⭐ Período Vigente definido como: ${p} — alunos e avaliadores ou orientadores verão este período.`;
+  toast(migrados ? `Período vigente definido: ${p} (${migrados} aluno(s) migrado(s))` : `Período vigente definido: ${p}`);
+  if(document.getElementById('listaAlunos')) loadAlunosList();
 }
 
 async function carregarPeriodoCadastro(){
@@ -3791,10 +3869,14 @@ async function salvarAluno(){
     email:       document.getElementById('aEmail').value.trim(),
     senha:       document.getElementById('aSenha').value.trim()||undefined,
     orientadorId:document.getElementById('aOrientador').value,
-    periodoLetivo:document.getElementById('aPeriodo').value.trim(),
-    status:      'Pendente'
+    turma:       document.getElementById('aTurma').value,
+    disciplina:  document.getElementById('aDisciplina').value,
+    periodoLetivo:document.getElementById('aPeriodo').value.trim()
   };
+  if(!id) data.status = 'Pendente'; // status inicial só é definido no cadastro; edições preservam o status atual do aluno
   if(!data.nome||!matricula||!data.email){ toast('Preencha nome, matrícula e e-mail.','err'); return; }
+  if(!data.turma){ toast('Selecione a turma.','err'); return; }
+  if(!data.disciplina){ toast('Selecione a disciplina.','err'); return; }
   if(!id&&!data.senha){ toast('Senha obrigatória para novo aluno.','err'); return; }
   try{
     if(id){
@@ -3815,6 +3897,8 @@ function editarAluno(id, d){
   document.getElementById('aMatricula').value = d.matricula||'';
   document.getElementById('aEmail').value     = d.email||'';
   document.getElementById('aSenha').value     = d.senha||'';
+  document.getElementById('aTurma').value      = d.turma||'';
+  document.getElementById('aDisciplina').value = d.disciplina||'';
   document.getElementById('aPeriodo').value   = d.periodoLetivo||'';
   loadOrientadoresSelect().then(()=>{
     document.getElementById('aOrientador').value = d.orientadorId||'';
@@ -3824,6 +3908,8 @@ function editarAluno(id, d){
 function limparAlunoForm(){
   ['aNome','aMatricula','aEmail','aSenha','aPeriodo','aEditId'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('aOrientador').value='';
+  document.getElementById('aTurma').value='';
+  document.getElementById('aDisciplina').value='';
   document.getElementById('btnCancelarAluno').style.display='none';
 }
 // ── Abrir modal de exclusão de aluno ──
@@ -3994,19 +4080,78 @@ async function confirmarExclusaoAluno(){
   }
 }
 async function loadAlunosList(){
-  const todos = await getAlunos();
-  const lista = todos.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
   const el = document.getElementById('listaAlunos');
+  el.innerHTML = '<p class="empty-box"><span class="emo">⏳</span><br>Carregando...</p>';
+  // Busca alunos, avaliadores/orientadores e o período vigente em paralelo (uma única
+  // requisição para cada nó do Firebase) para acelerar o carregamento da lista.
+  const [todos, oListaCompleta, snapVigente] = await Promise.all([
+    getAlunos(),
+    getOrientadores(),
+    rtdb.ref('config/periodoVigente').get().catch(()=>null)
+  ]);
+  const lista = todos.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
   if(!lista.length){ el.innerHTML='<p class="empty-box"><span class="emo">📚</span><br>Nenhum aluno cadastrado.</p>'; return; }
-  const oMap = await getOrientadoresMap();
+  const oMap = {}; const oTurmaMap = {};
+  oListaCompleta.forEach(o=>{ oMap[o.id]=o.nome; oTurmaMap[o.id]=o.turma; });
+  const periodoVigente = (snapVigente && snapVigente.exists()) ? (snapVigente.val().periodo||'') : '';
+
+  // Ajustes automáticos para o período 2026/1 (já encerrado — todos os alunos são de TCC 1):
+  // 1) Alunos ainda registrados em 2026/1: força Disciplina = "TCC 1" e herda/preserva a turma
+  //    do avaliador/orientador da época quando o aluno ainda não tem turma própria gravada.
+  // 2) Alunos já migrados para 2026/2 que ainda não têm o retrato histórico de 2026/1 salvo
+  //    (ex.: migrados antes desta correção existir): reconstrói esse retrato agora, já que
+  //    2026/2 é o primeiro período seguinte a existir na plataforma — logo, todo aluno que já
+  //    esteve em 2026/2 obrigatoriamente veio de 2026/1, sempre como TCC 1.
+  // 3) NUNCA grava o campo "status" aqui — o status atual de cada aluno é sempre preservado.
+  const gravacoes = [];
+  lista.forEach(d=>{
+    if(d.periodoLetivo==='2026/1'){
+      const campos = {};
+      if(!d.turma && oTurmaMap[d.orientadorId]){
+        campos.turma = oTurmaMap[d.orientadorId];
+        d.turma = campos.turma;
+      }
+      if(d.disciplina!=='TCC 1'){
+        campos.disciplina = 'TCC 1';
+        d.disciplina = 'TCC 1';
+      }
+      if(Object.keys(campos).length){
+        gravacoes.push(rtdb.ref('alunos/'+d.id).update(campos).catch(()=>{}));
+      }
+    } else if(d.periodoLetivo==='2026/2' && !(d.periodos && d.periodos[chavePeriodo('2026/1')])){
+      const turmaOriginal = d.turma || oTurmaMap[d.orientadorId] || '';
+      const snapshot = { turma: turmaOriginal, disciplina:'TCC 1', status: d.status||'Pendente' };
+      d.periodos = d.periodos || {};
+      d.periodos[chavePeriodo('2026/1')] = snapshot;
+      gravacoes.push(rtdb.ref('alunos/'+d.id).update({ ['periodos/'+chavePeriodo('2026/1')]: snapshot }).catch(()=>{}));
+    }
+  });
+  if(gravacoes.length) Promise.all(gravacoes);
+
+  // Resolve Turma/Disciplina/Status "efetivos" conforme o período vigente selecionado:
+  // se o aluno já avançou de período (ex.: migrou para TCC 2) mas a Coordenação está
+  // consultando um período anterior já concluído, mostra o retrato histórico gravado em
+  // "periodos/{periodo}" daquele aluno — sem nunca sobrescrever os dados atuais dele.
+  function dadosEfetivos(d){
+    const chaveVig = chavePeriodo(periodoVigente);
+    if(periodoVigente && d.periodoLetivo!==periodoVigente && d.periodos && d.periodos[chaveVig]){
+      const h = d.periodos[chaveVig];
+      return { turma: h.turma||'', disciplina: h.disciplina||'', status: h.status||'Pendente', historico:true };
+    }
+    return { turma: d.turma || oTurmaMap[d.orientadorId] || '', disciplina: d.disciplina||'', status: d.status||'Pendente', historico:false };
+  }
+
   el.innerHTML=`<div class="table-shell"><table>
-    <thead><tr><th>Nome</th><th>Matrícula</th><th>E-mail</th><th>Avaliador ou Orientador</th><th>Status</th><th>Ações</th></tr></thead>
-    <tbody>${lista.map(a=>{const d=a; return`<tr>
+    <thead><tr><th>Nome</th><th>Matrícula</th><th>E-mail</th><th>Turma</th><th>Disciplina</th><th>Avaliador ou Orientador</th><th>Status</th><th>Ações</th></tr></thead>
+    <tbody>${lista.map(a=>{const d=a; const ef = dadosEfetivos(d); const turmaAtual = d.turma || oTurmaMap[d.orientadorId] || ''; return`<tr>
       <td>${d.nome}</td><td>${d.matricula}</td><td>${d.email}</td>
+      <td>${ef.turma||'—'}${ef.historico?' <span title="Dado histórico do período '+periodoVigente+'" style="color:var(--muted);font-size:.7rem">🕘</span>':''}</td>
+      <td>${ef.disciplina||'—'}</td>
       <td>${oMap[d.orientadorId]||'—'}</td>
-      <td><span class="sb ${statusClass(d.status)}">${d.status||'Pendente'}</span></td>
+      <td><span class="sb ${statusClass(ef.status)}">${ef.status||'Pendente'}</span></td>
       <td class="tbl-actions">
-        <button class="tbl-btn tbl-edit" onclick='editarAluno("${a.id}",${JSON.stringify({nome:d.nome,matricula:d.matricula,email:d.email,senha:d.senha,periodoLetivo:d.periodoLetivo,orientadorId:d.orientadorId})})'>✏️ Editar</button>
+        <button class="tbl-btn tbl-edit" onclick='editarAluno("${a.id}",${JSON.stringify({nome:d.nome,matricula:d.matricula,email:d.email,senha:d.senha,turma:turmaAtual,disciplina:d.disciplina,periodoLetivo:d.periodoLetivo,orientadorId:d.orientadorId})})'>✏️ Editar</button>
+        <button class="tbl-btn" onclick='abrirAlterarStatus("${a.id}","${d.nome}","${d.orientadorId||''}","${d.status||'Pendente'}")' style="background:var(--purple-pale);color:var(--purple)">🔄 Status</button>
         <button class="tbl-btn tbl-del" onclick='excluirAluno("${a.id}","${d.nome}")'>🗑 Excluir</button>
       </td>
     </tr>`;}).join('')}</tbody>
@@ -4087,7 +4232,8 @@ async function confirmarAlterarStatus(){
   }
   closeModal('modalAlterarStatus');
   toast('Status alterado com sucesso!');
-  loadArtigosCoord();
+  if(document.getElementById('tblArtigos'))   loadArtigosCoord();
+  if(document.getElementById('listaAlunos'))  loadAlunosList();
 }
 
 async function deletarArtigo(id, nome){
@@ -4493,9 +4639,10 @@ async function loadOrientDashboard(){
   // preencher perfil
   const og = document.getElementById('orientPerfilGrid');
   const u = currentUser;
+  const turmasVinculadas = [...new Set(snapDocs.map(a=>a.turma).filter(Boolean))].sort().join(', ');
   og.innerHTML = [
     {l:'Nome',v:u.nome},{l:'E-mail',v:u.email},
-    {l:'Turma',v:u.turma},{l:'Alunos Vinculados',v:snapDocs.length}
+    {l:'Turma(s)',v:turmasVinculadas},{l:'Alunos Vinculados',v:snapDocs.length}
   ].map(i=>`<div class="perfil-item"><label>${i.l}</label><p>${i.v||'—'}</p></div>`).join('');
 
   loadOrientAlunosTable(snapDocs);
@@ -4621,7 +4768,7 @@ async function openAvaliacao(alunoId, nome){
     const sel = document.getElementById(selId);
     sel.innerHTML='<option value="">— Selecione —</option>';
     orientadores.filter(o=>o.id!==currentUser.id)
-      .forEach(o=>{ sel.innerHTML+=`<option value="${o.id}">${o.nome} (${o.turma||''})</option>`; });
+      .forEach(o=>{ sel.innerHTML+=`<option value="${o.id}">${o.nome}</option>`; });
   });
 
   // Histórico
@@ -5006,11 +5153,12 @@ async function loadAlunoDashboard(){
   }
   const orientObj = _oMap[d.orientadorId];
   const orientNome  = (orientObj && orientObj.nome) ? orientObj.nome : (typeof orientObj==='string' ? orientObj : '—');
-  const orientTurma = (orientObj && orientObj.turma) ? 'Turma '+orientObj.turma : '';
+  const alunoTurmaValor = d.turma || (orientObj && orientObj.turma) || '';
+  const alunoTurmaTexto = alunoTurmaValor ? 'Turma '+alunoTurmaValor : '';
 
   // Avaliador ou Orientador + turma
   document.getElementById('alunoOrientadorNome').textContent  = orientNome;
-  document.getElementById('alunoOrientadorTurma').textContent = orientTurma;
+  document.getElementById('alunoOrientadorTurma').textContent = alunoTurmaTexto;
 
   // Status badge
   const badge = document.getElementById('alunoStatusBadge');
@@ -5173,7 +5321,8 @@ async function loadAlunoDashboard(){
   if(pg) pg.innerHTML=[
     {l:'Nome',v:d.nome},{l:'Matrícula',v:d.matricula},
     {l:'E-mail',v:d.email},{l:'Período Letivo',v:d.periodoLetivo},
-    {l:'Avaliador ou Orientador',v:orientNome},{l:'Turma',v:orientTurma||'—'},
+    {l:'Avaliador ou Orientador',v:orientNome},{l:'Turma',v:alunoTurmaValor||'—'},
+    {l:'Disciplina',v:d.disciplina},
     {l:'Senha de Acesso',v:d.senha}
   ].map(i=>`<div class="perfil-item"><label>${i.l}</label><p>${i.v||'—'}</p></div>`).join('');
 
@@ -5565,7 +5714,7 @@ async function loadBiblioteca(){
       Promise.all(orfaosRemover).catch(e => console.warn('[Biblioteca] Erro ao remover \u00f3rf\u00e3os:', e));
     }
 
-    itens.sort((a, b) => (b.data || 0) - (a.data || 0));
+    itens.sort((a, b) => (a.alunoNome || '').localeCompare(b.alunoNome || '', 'pt-BR'));
     window._bibCache = itens;
 
     // Popula filtro de per\u00edodo com valores únicos vindos dos dados
