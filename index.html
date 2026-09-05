@@ -1551,6 +1551,7 @@ function toggleAcc(btn) {
           <button class="act-btn sec" onclick="limparAlunoForm()" id="btnCancelarAluno" style="display:none">Cancelar Edição</button>
         </div>
         <input type="hidden" id="aEditId"/>
+        <input type="hidden" id="aPeriodoOriginal"/>
       </div>
       <div class="sec-title">📚 Alunos Cadastrados</div>
       <div id="listaAlunos"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
@@ -3133,6 +3134,20 @@ async function enviarParecerDetalhe(){
     await rtdb.ref('alunos/'+alunoId).update({ status:'Parecer de Banca Recebido', bancaMembro:currentUser.nome, ultimaAtualizacao:Date.now() });
     await rtdb.ref('historico/'+alunoId).push({ tipo:'Parecer de Banca', status:'Parecer de Banca Recebido', comentario:mensagem, arquivoNome:arquivoNome||'—', data:Date.now(), autor:currentUser.nome });
     if(orientId) await rtdb.ref('notificacoes/'+orientId).push({ tipo:'Parecer de Banca', alunoId, mensagem, arquivoNome:arquivoNome||'—', data:Date.now(), lida:false, de:currentUser.nome });
+    // Notifica também o próprio aluno — antes só o avaliador ou orientador principal era avisado.
+    await rtdb.ref('notificacoes/'+alunoId).push({
+      tipo:'Parecer de Banca Recebido', lida:false,
+      mensagem:`🏛️ Um membro da banca (${currentUser.nome}) enviou o parecer sobre o seu TCC. Parecer: ${parecer} · Nota sugerida: ${nota}.`,
+      arquivoNome:arquivoNome||'', data:Date.now(), de:currentUser.nome
+    }).catch(()=>{});
+    // Registra também no histórico do próprio membro da banca que emitiu o parecer.
+    const orientHistIdParecer = currentUser.uid || currentUser.id || null;
+    if(currentUser && orientHistIdParecer){
+      await rtdb.ref('historico_orientador/'+orientHistIdParecer).push({
+        tipo:'Parecer de Banca', status:'Parecer de Banca Recebido', alunoId,
+        comentario:mensagem, data:Date.now(), arquivoNome:arquivoNome||''
+      }).catch(()=>{});
+    }
     // Evita orderByChild (requer index no RTDB) — itera todos e filtra por alunoId
     const snapB = await rtdb.ref('bancasAgendadas').get();
     if(snapB.exists()){
@@ -3533,14 +3548,24 @@ async function loadCoordDashboard(){
     .forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='…'; });
 
 
-  // Busca sempre dados frescos do Firebase
-  const [alunosLista, orientLista] = await Promise.all([getAlunos(), getOrientadores()]);
+  // Busca sempre dados frescos do Firebase (alunos, orientadores e período vigente em paralelo)
+  const [alunosLista, orientLista, snapVigenteDash] = await Promise.all([
+    getAlunos(), getOrientadores(),
+    rtdb.ref('config/periodoVigente').get().catch(()=>null)
+  ]);
+  const periodoVigenteDash = (snapVigenteDash && snapVigenteDash.exists()) ? (snapVigenteDash.val().periodo||'') : '';
+  const oTurmaMapDash = {}; orientLista.forEach(o=>oTurmaMapDash[o.id]=o.turma);
 
   // Reconstrói o mapa de avaliadores ou orientadores
   _oMap = {};
   orientLista.forEach(o=>{ _oMap[o.id] = o; });
 
-  const alunos = alunosLista.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
+  // Resolve Turma/Disciplina/Status de cada aluno conforme o período vigente selecionado
+  // (mesma lógica usada em "📚 Alunos Cadastrados"), para que o Dashboard e a Visão Geral
+  // sempre mostrem o status correspondente ao período que a Coordenação está consultando —
+  // e não fiquem "desatualizados" quando o aluno já avançou para um período seguinte.
+  const alunosBrutos = alunosLista.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
+  const alunos = alunosBrutos.map(a=>({ ...a, ...resolverDadosPeriodo(a, periodoVigenteDash, oTurmaMapDash) }));
   _todosAlunos = alunos;
 
   const sete = Date.now() - 7*86400000;
@@ -3789,6 +3814,39 @@ function compararPeriodos(p1, p2){
 // interpretaria como separador de caminho — por isso convertemos para "2026-1".
 function chavePeriodo(periodoStr){ return (periodoStr||'').replace('/','-'); }
 
+// Busca no histórico do aluno a última decisão tomada de fato pelo avaliador ou orientador
+// (ignora entradas cujo autor seja 'Coordenação'), garantindo que o retrato histórico de um
+// período espelhe sempre a decisão do orientador — nunca um valor de status que possa ter
+// sido alterado por outra via depois. Retorna null se nenhuma decisão do orientador existir.
+async function statusRealDoOrientador(alunoId){
+  try{
+    const snap = await rtdb.ref('historico/'+alunoId).get();
+    if(!snap.exists()) return null;
+    const entradas = Object.values(snap.val())
+      .filter(e => e && e.status && e.autor && e.autor !== 'Coordenação')
+      .sort((a,b)=>(b.data||0)-(a.data||0));
+    return entradas.length ? entradas[0].status : null;
+  } catch(e){ return null; }
+}
+
+// Resolve Turma/Disciplina/Status "efetivos" de um aluno para um período vigente específico:
+// se o aluno já avançou de período (ex.: migrou de TCC 1 para TCC 2) mas a Coordenação está
+// consultando um período anterior já concluído, retorna o retrato histórico gravado em
+// "periodos/{periodo}" daquele aluno — sem nunca sobrescrever os dados atuais dele.
+// Usada tanto em "📚 Alunos Cadastrados" quanto em "👁️ Visão Geral por Aluno" (Dashboard),
+// garantindo que as duas telas sempre mostrem o mesmo status para o mesmo período vigente.
+// Esse retrato é sempre um espelho da decisão do avaliador ou orientador — nunca é editável
+// pela Coordenação (ver statusRealDoOrientador, usado para capturá-lo corretamente).
+function resolverDadosPeriodo(d, periodoVigente, oTurmaMap){
+  oTurmaMap = oTurmaMap || {};
+  const chaveVig = chavePeriodo(periodoVigente);
+  if(periodoVigente && d.periodoLetivo!==periodoVigente && d.periodos && d.periodos[chaveVig]){
+    const h = d.periodos[chaveVig];
+    return { turma: h.turma||'', disciplina: h.disciplina||'', status: h.status||'Pendente', historico:true };
+  }
+  return { turma: d.turma || oTurmaMap[d.orientadorId] || '', disciplina: d.disciplina||'', status: d.status||'Pendente', historico:false };
+}
+
 // Migração automática ao AVANÇAR o período vigente (nunca ao retroceder/reabrir um período já concluído):
 // - Alunos de TCC 1 no período anterior avançam automaticamente para o novo período.
 //   • Se estavam com status "Aprovado", a Disciplina do novo período já entra como "TCC 2".
@@ -3813,9 +3871,12 @@ async function migrarAlunosParaNovoPeriodo(novoPeriodo, periodoVigenteAnterior){
   if(!elegiveis.length) return { migrados:0 };
   const oListaCompleta = await getOrientadores();
   const oTurmaMap = {}; oListaCompleta.forEach(o=>oTurmaMap[o.id]=o.turma);
-  const gravacoes = elegiveis.map(a=>{
-    const novaDisciplina = a.status==='Aprovado' ? 'TCC 2' : '';
-    const snapshot = { turma: a.turma || oTurmaMap[a.orientadorId] || '', disciplina: 'TCC 1', status: a.status||'Pendente' };
+  const gravacoes = elegiveis.map(async(a)=>{
+    // Usa a última decisão real do orientador (histórico) como fonte da verdade, com o
+    // campo "status" do aluno como reserva apenas se não houver nenhuma decisão registrada.
+    const statusReal = (await statusRealDoOrientador(a.id)) || a.status || 'Pendente';
+    const novaDisciplina = statusReal==='Aprovado' ? 'TCC 2' : '';
+    const snapshot = { turma: a.turma || oTurmaMap[a.orientadorId] || '', disciplina: 'TCC 1', status: statusReal };
     return rtdb.ref('alunos/'+a.id).update({
       periodoLetivo: novoPeriodo,
       disciplina: novaDisciplina,
@@ -3863,6 +3924,16 @@ async function carregarPeriodoCadastro(){
 async function salvarAluno(){
   const id = document.getElementById('aEditId').value;
   const matricula = document.getElementById('aMatricula').value.trim();
+  const periodoAtualForm = document.getElementById('aPeriodo').value.trim();
+  const periodoOriginal  = document.getElementById('aPeriodoOriginal').value.trim();
+  // Proteção: se o aluno já pertencia a outro período letivo (ex.: já migrado para TCC 2)
+  // e a Coordenação está com um período diferente confirmado para cadastro no momento,
+  // confirma explicitamente antes de mover o aluno — evita alterar o período por engano
+  // só por estar editando outro campo (turma, e-mail, etc.).
+  if(id && periodoOriginal && periodoAtualForm && periodoOriginal!==periodoAtualForm){
+    const ok = confirm(`Este aluno está atualmente no período ${periodoOriginal}. Salvar agora vai movê-lo para o período ${periodoAtualForm} (o período confirmado para cadastro no momento). Deseja continuar?`);
+    if(!ok){ toast('Alteração cancelada — período do aluno não foi modificado.'); return; }
+  }
   const data = {
     nome:        document.getElementById('aNome').value.trim(),
     matricula,
@@ -3871,7 +3942,7 @@ async function salvarAluno(){
     orientadorId:document.getElementById('aOrientador').value,
     turma:       document.getElementById('aTurma').value,
     disciplina:  document.getElementById('aDisciplina').value,
-    periodoLetivo:document.getElementById('aPeriodo').value.trim()
+    periodoLetivo:periodoAtualForm
   };
   if(!id) data.status = 'Pendente'; // status inicial só é definido no cadastro; edições preservam o status atual do aluno
   if(!data.nome||!matricula||!data.email){ toast('Preencha nome, matrícula e e-mail.','err'); return; }
@@ -3899,14 +3970,18 @@ function editarAluno(id, d){
   document.getElementById('aSenha').value     = d.senha||'';
   document.getElementById('aTurma').value      = d.turma||'';
   document.getElementById('aDisciplina').value = d.disciplina||'';
-  document.getElementById('aPeriodo').value   = d.periodoLetivo||'';
+  // O campo Período Letivo permanece com o período atualmente confirmado para cadastro
+  // (definido em "📅 Selecione o Ano e Período"), e não com o período gravado no aluno —
+  // assim ele nunca fica "preso" a um período diferente do que a Coordenação selecionou.
+  // O período real do aluno é guardado à parte, só para confirmar antes de sobrescrevê-lo.
+  document.getElementById('aPeriodoOriginal').value = d.periodoLetivo||'';
   loadOrientadoresSelect().then(()=>{
     document.getElementById('aOrientador').value = d.orientadorId||'';
   });
   document.getElementById('btnCancelarAluno').style.display='inline-flex';
 }
 function limparAlunoForm(){
-  ['aNome','aMatricula','aEmail','aSenha','aPeriodo','aEditId'].forEach(id=>document.getElementById(id).value='');
+  ['aNome','aMatricula','aEmail','aSenha','aEditId','aPeriodoOriginal'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('aOrientador').value='';
   document.getElementById('aTurma').value='';
   document.getElementById('aDisciplina').value='';
@@ -4104,7 +4179,7 @@ async function loadAlunosList(){
   //    esteve em 2026/2 obrigatoriamente veio de 2026/1, sempre como TCC 1.
   // 3) NUNCA grava o campo "status" aqui — o status atual de cada aluno é sempre preservado.
   const gravacoes = [];
-  lista.forEach(d=>{
+  for(const d of lista){
     if(d.periodoLetivo==='2026/1'){
       const campos = {};
       if(!d.turma && oTurmaMap[d.orientadorId]){
@@ -4120,26 +4195,20 @@ async function loadAlunosList(){
       }
     } else if(d.periodoLetivo==='2026/2' && !(d.periodos && d.periodos[chavePeriodo('2026/1')])){
       const turmaOriginal = d.turma || oTurmaMap[d.orientadorId] || '';
-      const snapshot = { turma: turmaOriginal, disciplina:'TCC 1', status: d.status||'Pendente' };
+      // Usa a última decisão real do orientador (histórico) — nunca o campo "status" isolado,
+      // que pode já estar desatualizado por outro motivo — para reconstruir o retrato de 2026/1.
+      const statusReal = (await statusRealDoOrientador(d.id)) || d.status || 'Pendente';
+      const snapshot = { turma: turmaOriginal, disciplina:'TCC 1', status: statusReal };
       d.periodos = d.periodos || {};
       d.periodos[chavePeriodo('2026/1')] = snapshot;
       gravacoes.push(rtdb.ref('alunos/'+d.id).update({ ['periodos/'+chavePeriodo('2026/1')]: snapshot }).catch(()=>{}));
     }
-  });
+  }
   if(gravacoes.length) Promise.all(gravacoes);
 
-  // Resolve Turma/Disciplina/Status "efetivos" conforme o período vigente selecionado:
-  // se o aluno já avançou de período (ex.: migrou para TCC 2) mas a Coordenação está
-  // consultando um período anterior já concluído, mostra o retrato histórico gravado em
-  // "periodos/{periodo}" daquele aluno — sem nunca sobrescrever os dados atuais dele.
-  function dadosEfetivos(d){
-    const chaveVig = chavePeriodo(periodoVigente);
-    if(periodoVigente && d.periodoLetivo!==periodoVigente && d.periodos && d.periodos[chaveVig]){
-      const h = d.periodos[chaveVig];
-      return { turma: h.turma||'', disciplina: h.disciplina||'', status: h.status||'Pendente', historico:true };
-    }
-    return { turma: d.turma || oTurmaMap[d.orientadorId] || '', disciplina: d.disciplina||'', status: d.status||'Pendente', historico:false };
-  }
+  // Resolve Turma/Disciplina/Status "efetivos" conforme o período vigente selecionado
+  // (função global — ver definição em resolverDadosPeriodo).
+  const dadosEfetivos = (d) => resolverDadosPeriodo(d, periodoVigente, oTurmaMap);
 
   el.innerHTML=`<div class="table-shell"><table>
     <thead><tr><th>Nome</th><th>Matrícula</th><th>E-mail</th><th>Turma</th><th>Disciplina</th><th>Avaliador ou Orientador</th><th>Status</th><th>Ações</th></tr></thead>
@@ -4151,7 +4220,9 @@ async function loadAlunosList(){
       <td><span class="sb ${statusClass(ef.status)}">${ef.status||'Pendente'}</span></td>
       <td class="tbl-actions">
         <button class="tbl-btn tbl-edit" onclick='editarAluno("${a.id}",${JSON.stringify({nome:d.nome,matricula:d.matricula,email:d.email,senha:d.senha,turma:turmaAtual,disciplina:d.disciplina,periodoLetivo:d.periodoLetivo,orientadorId:d.orientadorId})})'>✏️ Editar</button>
-        <button class="tbl-btn" onclick='abrirAlterarStatus("${a.id}","${d.nome}","${d.orientadorId||''}","${d.status||'Pendente'}")' style="background:var(--purple-pale);color:var(--purple)">🔄 Status</button>
+        ${ef.historico
+          ? `<button class="tbl-btn" disabled title="Este é o retrato histórico da decisão do avaliador ou orientador para o período ${periodoVigente} — não é editável pela Coordenação." style="background:#f1f5f9;color:#94a3b8;cursor:not-allowed">🕘 Decisão do Orientador</button>`
+          : `<button class="tbl-btn" onclick='abrirAlterarStatus("${a.id}","${d.nome}","${d.orientadorId||''}","${ef.status||'Pendente'}")' style="background:var(--purple-pale);color:var(--purple)">🔄 Status</button>`}
         <button class="tbl-btn tbl-del" onclick='excluirAluno("${a.id}","${d.nome}")'>🗑 Excluir</button>
       </td>
     </tr>`;}).join('')}</tbody>
@@ -4234,6 +4305,7 @@ async function confirmarAlterarStatus(){
   toast('Status alterado com sucesso!');
   if(document.getElementById('tblArtigos'))   loadArtigosCoord();
   if(document.getElementById('listaAlunos'))  loadAlunosList();
+  if(document.getElementById('tblVisaoGeral')) loadCoordDashboard();
 }
 
 async function deletarArtigo(id, nome){
@@ -4866,8 +4938,38 @@ async function confirmarEncerramento(){
   const status = statusMap[_acaoAtual]||'Reprovado';
   const coment = document.getElementById('avalComentario').value.trim() || 'Processo encerrado pelo avaliador ou orientador.';
   const id = document.getElementById('avalAlunoId').value;
-  await rtdb.ref('alunos/'+id).update({ status, comentarioOrientador:coment, ultimaAtualizacao:Date.now() });
-  await rtdb.ref('historico/'+id).push({ tipo:status, status, comentario:coment, data:Date.now(), autor:currentUser.nome });
+
+  // Busca o nome do aluno para os registros de histórico/notificação
+  const snapAluno = await rtdb.ref('alunos/'+id).get();
+  const al = snapAluno.val() || {};
+  const alunoNomeReal = al.nome || al.nomeAluno || '—';
+  const now = Date.now();
+
+  // 1. Atualiza o status do aluno (fonte da verdade lida por todas as telas)
+  await rtdb.ref('alunos/'+id).update({ status, comentarioOrientador:coment, ultimaAtualizacao:now });
+
+  // 2. Histórico do processo do aluno
+  await rtdb.ref('historico/'+id).push({ tipo:status, status, comentario:coment, data:now, autor:currentUser.nome });
+
+  // 3. Histórico do avaliador ou orientador — mesmo padrão usado em "Confirmar Versão Final",
+  //    garantindo que a ação também fique registrada do lado do orientador.
+  const orientHistId = currentUser.uid || currentUser.id || null;
+  if(currentUser && orientHistId){
+    await rtdb.ref('historico_orientador/'+orientHistId).push({
+      tipo:status, status, alunoNome:alunoNomeReal, alunoId:id,
+      comentario:coment, data:now
+    });
+  }
+
+  // 4. Notifica o aluno da mudança de status — sem isso o aluno não é avisado do encerramento.
+  await rtdb.ref('notificacoes/'+id).push({
+    tipo:'Status do TCC Atualizado',
+    mensagem: `❌ Seu processo de TCC foi encerrado (${status}). Motivo/Comentário: ${coment}`,
+    data: now,
+    lida: false,
+    de: currentUser.nome
+  });
+
   toast('Processo encerrado. Aluno notificado.');
   fecharAvalPanel();
 }
@@ -4963,6 +5065,15 @@ async function confirmarBanca(){
     data:Date.now(), de:currentUser.nome
   }).catch(()=>{});
 
+  // Registra no histórico do próprio orientador — mesmo padrão usado nas demais decisões.
+  const orientHistIdBanca = currentUser.uid || currentUser.id || null;
+  if(currentUser && orientHistIdBanca){
+    await rtdb.ref('historico_orientador/'+orientHistIdBanca).push({
+      tipo:'Versão Banca', status:'Versão Banca', alunoNome:aluno.nome||'—', alunoId:id,
+      comentario:`Banca agendada para ${data} às ${hora} em ${local}.`, data:Date.now(), arquivoNome
+    }).catch(()=>{});
+  }
+
   toast('✅ Banca enviada com o arquivo correto! Avaliadores ou Orientadores notificados.');
   fecharAvalPanel();
 }
@@ -4995,6 +5106,27 @@ async function executarAcao(){
 
   await rtdb.ref('alunos/'+id).update(update);
   await rtdb.ref('historico/'+id).push(hist);
+
+  // Notifica o aluno da decisão do orientador — sem isso ele não sabia que recebeu retorno.
+  await rtdb.ref('notificacoes/'+id).push({
+    tipo: status==='Versão Final' ? 'Versão Final Registrada' : 'Correção Recebida',
+    mensagem: status==='Versão Final'
+      ? `📄 Seu avaliador ou orientador registrou sua Versão Final. Comentário: ${coment}`
+      : `📝 Seu avaliador ou orientador enviou uma correção para o seu artigo. Comentário: ${coment}`,
+    arquivoNome: hist.arquivoNome||'', data: Date.now(), lida:false, de: currentUser.nome
+  });
+
+  // Registra no histórico do próprio orientador — mesmo padrão usado nas demais decisões.
+  const orientHistId = currentUser.uid || currentUser.id || null;
+  if(currentUser && orientHistId){
+    const snapAlunoAcao = await rtdb.ref('alunos/'+id).get();
+    const alNome = (snapAlunoAcao.val()||{}).nome || (snapAlunoAcao.val()||{}).nomeAluno || '—';
+    await rtdb.ref('historico_orientador/'+orientHistId).push({
+      tipo:'Versão do Avaliador ou Orientador', status, alunoNome:alNome, alunoId:id,
+      comentario:coment, data:Date.now(), arquivoNome:hist.arquivoNome||''
+    });
+  }
+
   toast(_acaoAtual==='final' ? 'Versão Final registrada!' : 'Versão corrigida enviada ao aluno!');
   fecharAvalPanel();
 }
