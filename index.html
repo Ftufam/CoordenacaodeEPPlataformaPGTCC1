@@ -7151,10 +7151,11 @@ function temAlgumParecerConcurso(i){ return contarPareceresConcurso(i) > 0; }
 // onde o parecer foi salvo — usa o "avaliadorId" gravado dentro do próprio parecer como
 // reforço, evitando que um parecer já enviado pareça "sumido" para quem o enviou.
 function meuParecerConcurso(i, uid){
+  if(!uid) return { slot:null, parecer:null };
   const av = i.avaliadores || {}; const p = i.pareceres || {};
-  const meuSlot = [1,2,3].find(n=>av[n] && av[n].id === uid);
+  const meuSlot = [1,2,3].find(n=>av[n] && av[n].id && av[n].id === uid);
   if(meuSlot && p[meuSlot] && p[meuSlot].parecer) return { slot:meuSlot, parecer:p[meuSlot] };
-  const chaveFallback = Object.keys(p).find(k=>p[k] && p[k].parecer && p[k].avaliadorId===uid);
+  const chaveFallback = Object.keys(p).find(k=>p[k] && p[k].parecer && p[k].avaliadorId && p[k].avaliadorId===uid);
   if(chaveFallback) return { slot:chaveFallback, parecer:p[chaveFallback] };
   return { slot:meuSlot||null, parecer:null };
 }
@@ -7631,10 +7632,14 @@ async function loadConcursoAvaliacoesOrient(){
   const snap = await rtdb.ref('concurso/inscricoes').get();
   if(!snap.exists()){ el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo designado a você no momento.</p>'; if(badge) badge.style.display='none'; return; }
   const todas = Object.entries(snap.val()).map(([id,d])=>({id,...d}));
-  const minhas = todas.filter(i=>{
+  // Só mostra a inscrição para o avaliador que REALMENTE está atribuído a ela — a
+  // comparação exige que tanto o uid do usuário quanto o id do slot sejam valores reais
+  // (nunca vazios/indefinidos), evitando qualquer correspondência falsa que revelasse
+  // informações do concurso para orientadores que não fazem parte da comissão daquele artigo.
+  const minhas = uid ? todas.filter(i=>{
     const av = i.avaliadores || {};
-    return [1,2,3].some(n=>av[n] && av[n].id === uid);
-  });
+    return [1,2,3].some(n=>av[n] && av[n].id && av[n].id === uid);
+  }) : [];
   if(!minhas.length){ el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo designado a você no momento.</p>'; if(badge) badge.style.display='none'; return; }
   window._concursoOrientCache = {};
   minhas.forEach(i=>window._concursoOrientCache[i.id]=i);
