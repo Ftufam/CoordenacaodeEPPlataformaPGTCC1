@@ -1500,21 +1500,21 @@ function toggleAcc(btn) {
         <div style="display:grid;grid-template-columns:1fr 1fr auto auto;gap:12px;align-items:end;flex-wrap:wrap">
           <div class="field">
             <label>Ano *</label>
-            <input id="selAno" type="number" min="2020" max="2099" placeholder="2026" style="font-size:.95rem;font-weight:700"/>
+            <input id="selAno" type="number" min="2020" max="2099" placeholder="2026" style="font-size:.95rem;font-weight:700" oninput="sincronizarPeriodoCadastro()"/>
           </div>
           <div class="field">
             <label>Período *</label>
-            <select id="selPeriodo" style="width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.88rem">
+            <select id="selPeriodo" style="width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.88rem" onchange="sincronizarPeriodoCadastro()">
               <option value="">— Selecione —</option>
               <option value="1">1 — 1º Semestre Regular</option>
               <option value="2">2 — 2º Semestre Regular</option>
             </select>
           </div>
-          <button onclick="confirmarPeriodoCadastro()" style="padding:.7rem 1.2rem;background:linear-gradient(135deg,#163352,#1a4a6e);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer;white-space:nowrap">✅ Confirmar para Cadastro</button>
+          <button onclick="visualizarPeriodo()" style="padding:.7rem 1.2rem;background:linear-gradient(135deg,var(--blue),#2b6ca3);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer;white-space:nowrap">👁️ Visualizar/Editar</button>
           <button onclick="definirPeriodoVigente()" style="padding:.7rem 1.2rem;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#000;border:none;border-radius:9px;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer;white-space:nowrap">⭐ Definir como Vigente</button>
         </div>
-        <div id="periodoConfirmadoBox" style="display:none;margin-top:12px;padding:10px 14px;background:var(--green-pale);border:1.5px solid var(--green-light);border-radius:8px;font-size:.84rem;font-weight:700;color:var(--green)"></div>
         <div id="periodoVigenteBox" style="display:none;margin-top:8px;padding:10px 14px;background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:8px;font-size:.84rem;font-weight:700;color:#7a5200"></div>
+        <div id="periodoFiltroBox" style="display:none;margin-top:8px;padding:10px 14px;background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;font-size:.84rem;font-weight:700;color:#1a4a6e;align-items:center;gap:10px;flex-wrap:wrap"></div>
       </div>
 
       <div class="panel" style="display:block;border-top-color:var(--green-light)">
@@ -1712,6 +1712,7 @@ function toggleAcc(btn) {
     </nav>
 
     <div class="ct-content active" id="ot-meusAlunos">
+      <div id="orientPeriodoBanner"></div>
       <div id="orientAlertaBanner"></div>
       <div class="sec-title">👨‍🎓 Alunos Vinculados</div>
       <div class="table-shell">
@@ -3548,24 +3549,17 @@ async function loadCoordDashboard(){
     .forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='…'; });
 
 
-  // Busca sempre dados frescos do Firebase (alunos, orientadores e período vigente em paralelo)
-  const [alunosLista, orientLista, snapVigenteDash] = await Promise.all([
-    getAlunos(), getOrientadores(),
-    rtdb.ref('config/periodoVigente').get().catch(()=>null)
-  ]);
-  const periodoVigenteDash = (snapVigenteDash && snapVigenteDash.exists()) ? (snapVigenteDash.val().periodo||'') : '';
-  const oTurmaMapDash = {}; orientLista.forEach(o=>oTurmaMapDash[o.id]=o.turma);
+  // Busca sempre dados frescos do Firebase
+  const [alunosLista, orientLista] = await Promise.all([getAlunos(), getOrientadores()]);
 
   // Reconstrói o mapa de avaliadores ou orientadores
   _oMap = {};
   orientLista.forEach(o=>{ _oMap[o.id] = o; });
 
-  // Resolve Turma/Disciplina/Status de cada aluno conforme o período vigente selecionado
-  // (mesma lógica usada em "📚 Alunos Cadastrados"), para que o Dashboard e a Visão Geral
-  // sempre mostrem o status correspondente ao período que a Coordenação está consultando —
-  // e não fiquem "desatualizados" quando o aluno já avançou para um período seguinte.
-  const alunosBrutos = alunosLista.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
-  const alunos = alunosBrutos.map(a=>({ ...a, ...resolverDadosPeriodo(a, periodoVigenteDash, oTurmaMapDash) }));
+  // Mostra sempre a Turma/Disciplina/Status ATUAIS e REAIS de cada aluno — o período Vigente
+  // não filtra nem congela essa visão; ele só controla o cadastro de novos alunos e a
+  // migração automática de TCC 1 → TCC 2.
+  const alunos = alunosLista.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
   _todosAlunos = alunos;
 
   const sete = Date.now() - 7*86400000;
@@ -3775,21 +3769,88 @@ async function loadOrientadoresSelect(targetId='aOrientador'){
   });
 }
 // ── Ano/Período ──
+// Período que a Coordenação está explicitamente "visualizando/editando" no momento nesta
+// sessão (sobrepõe o período Vigente só para a tela de Alunos Cadastrados). Valores possíveis:
+// '' (segue o período Vigente por padrão), 'TODOS' (mostra todos os períodos sem filtro),
+// ou um período específico "ANO/N" escolhido manualmente.
+let _periodoVisualizacao = '';
+
 function getPeriodoSelecionado(){
   const ano     = document.getElementById('selAno').value.trim();
   const periodo = document.getElementById('selPeriodo').value;
   return (ano && periodo) ? `${ano}/${periodo}` : '';
 }
 
-function confirmarPeriodoCadastro(){
+// Botão "👁️ Visualizar/Editar": mostra em "Alunos Cadastrados" apenas os alunos do
+// ano/período escolhido, sem alterar o período Vigente (não afeta orientadores/alunos).
+function visualizarPeriodo(){
   const p = getPeriodoSelecionado();
-  if(!p){ toast('Selecione o ano e o período antes de confirmar.','err'); return; }
-  // Limpa o formulário e preenche só o período
-  limparAlunoForm();
+  if(!p){ toast('Selecione o ano e o período antes de visualizar.','err'); return; }
+  _periodoVisualizacao = p;
   document.getElementById('aPeriodo').value = p;
-  const box = document.getElementById('periodoConfirmadoBox');
-  box.style.display='block';
-  box.textContent = `✅ Período de cadastro confirmado: ${p} — formulário pronto para receber novos dados.`;
+  atualizarPeriodoFiltroBox();
+  if(document.getElementById('listaAlunos')) loadAlunosList();
+}
+
+// Remove o filtro de visualização manual, voltando a seguir o período Vigente por padrão.
+async function limparFiltroPeriodo(){
+  _periodoVisualizacao = '';
+  const snap = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
+  const vig = (snap && snap.exists()) ? (snap.val().periodo||'') : '';
+  if(vig) document.getElementById('aPeriodo').value = vig;
+  atualizarPeriodoFiltroBox();
+  if(document.getElementById('listaAlunos')) loadAlunosList();
+}
+
+// Mostra todos os alunos, de todos os períodos, ignorando qualquer filtro.
+function verTodosPeriodos(){
+  _periodoVisualizacao = 'TODOS';
+  atualizarPeriodoFiltroBox();
+  if(document.getElementById('listaAlunos')) loadAlunosList();
+}
+
+async function atualizarPeriodoFiltroBox(){
+  const box = document.getElementById('periodoFiltroBox');
+  if(!box) return;
+  let texto = '';
+  if(_periodoVisualizacao === 'TODOS'){
+    texto = '👁️ Mostrando alunos de <strong>todos os períodos</strong>.';
+  } else if(_periodoVisualizacao){
+    texto = `👁️ Visualizando/editando apenas o período <strong>${_periodoVisualizacao}</strong> (sem alterar o período Vigente).`;
+  } else {
+    const snap = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
+    const vig = (snap && snap.exists()) ? (snap.val().periodo||'') : '';
+    texto = vig
+      ? `👁️ Mostrando o período <strong>Vigente</strong> atual: ${vig}.`
+      : '👁️ Nenhum período Vigente definido ainda — mostrando todos os alunos.';
+  }
+
+  // Contagem por período: ajuda a Coordenação a enxergar onde cada aluno está,
+  // sem precisar alternar o filtro várias vezes para descobrir.
+  let resumoHtml = '';
+  try{
+    const todos = await getAlunos();
+    const contagem = {};
+    todos.forEach(a=>{ const p = a.periodoLetivo || '(sem período)'; contagem[p] = (contagem[p]||0)+1; });
+    const chaves = Object.keys(contagem).sort();
+    if(chaves.length){
+      resumoHtml = '<div style="width:100%;font-weight:600;font-size:.78rem;color:#375a7f;margin-top:4px">📊 Distribuição atual: ' +
+        chaves.map(p=>`${p} → ${contagem[p]} aluno(s)`).join(' &nbsp;·&nbsp; ') + '</div>';
+    }
+  } catch(e){ /* ignora falha no resumo, não é crítico */ }
+
+  box.style.display = 'flex';
+  box.innerHTML = texto + ' <button onclick="verTodosPeriodos()" style="margin-left:auto;padding:.35rem .8rem;background:#fff;border:1.5px solid #bcd6ee;border-radius:7px;font-family:inherit;font-size:.75rem;font-weight:700;cursor:pointer;color:#1a4a6e">🔄 Ver Todos os Períodos</button>' +
+    (_periodoVisualizacao ? ' <button onclick="limparFiltroPeriodo()" style="padding:.35rem .8rem;background:#fff;border:1.5px solid #bcd6ee;border-radius:7px;font-family:inherit;font-size:.75rem;font-weight:700;cursor:pointer;color:#1a4a6e">⭐ Voltar ao Vigente</button>' : '') +
+    resumoHtml;
+}
+
+// O campo "Período Letivo" (na seção Cadastrar/Editar Aluno) segue automaticamente o
+// Ano/Período selecionado aqui em cima — sem precisar de um passo extra de confirmação.
+// Assim, qualquer aluno novo cadastrado (ou editado) usa o período que estiver selecionado.
+function sincronizarPeriodoCadastro(){
+  const p = getPeriodoSelecionado();
+  if(p) document.getElementById('aPeriodo').value = p;
 }
 
 // Calcula o período letivo imediatamente anterior a um período "ANO/N" (N = 1 ou 2)
@@ -3829,23 +3890,11 @@ async function statusRealDoOrientador(alunoId){
   } catch(e){ return null; }
 }
 
-// Resolve Turma/Disciplina/Status "efetivos" de um aluno para um período vigente específico:
-// se o aluno já avançou de período (ex.: migrou de TCC 1 para TCC 2) mas a Coordenação está
-// consultando um período anterior já concluído, retorna o retrato histórico gravado em
-// "periodos/{periodo}" daquele aluno — sem nunca sobrescrever os dados atuais dele.
-// Usada tanto em "📚 Alunos Cadastrados" quanto em "👁️ Visão Geral por Aluno" (Dashboard),
-// garantindo que as duas telas sempre mostrem o mesmo status para o mesmo período vigente.
-// Esse retrato é sempre um espelho da decisão do avaliador ou orientador — nunca é editável
-// pela Coordenação (ver statusRealDoOrientador, usado para capturá-lo corretamente).
-function resolverDadosPeriodo(d, periodoVigente, oTurmaMap){
-  oTurmaMap = oTurmaMap || {};
-  const chaveVig = chavePeriodo(periodoVigente);
-  if(periodoVigente && d.periodoLetivo!==periodoVigente && d.periodos && d.periodos[chaveVig]){
-    const h = d.periodos[chaveVig];
-    return { turma: h.turma||'', disciplina: h.disciplina||'', status: h.status||'Pendente', historico:true };
-  }
-  return { turma: d.turma || oTurmaMap[d.orientadorId] || '', disciplina: d.disciplina||'', status: d.status||'Pendente', historico:false };
-}
+// Observação de design: o retrato "periodos/{periodo}" continua sendo gravado no aluno a
+// cada migração automática (só para referência/consulta futura no Firebase, se necessário),
+// mas NENHUMA tela da Coordenação usa mais esse retrato para decidir o que exibir — todas
+// mostram sempre a Turma/Disciplina/Status ATUAIS e REAIS do aluno, refletindo diretamente
+// a última decisão do avaliador ou orientador, sem depender de qual período está Vigente.
 
 // Migração automática ao AVANÇAR o período vigente (nunca ao retroceder/reabrir um período já concluído):
 // - Alunos de TCC 1 no período anterior avançam automaticamente para o novo período.
@@ -3897,9 +3946,13 @@ async function definirPeriodoVigente(){
   const box = document.getElementById('periodoVigenteBox');
   box.style.display='block';
   box.textContent = migrados
-    ? `⭐ Período Vigente definido como: ${p} — ${migrados} aluno(s) de TCC 1 do período anterior migrado(s) automaticamente.`
-    : `⭐ Período Vigente definido como: ${p} — alunos e avaliadores ou orientadores verão este período.`;
+    ? `⭐ Período Vigente definido como: ${p} — ${migrados} aluno(s) de TCC 1 do período anterior migrado(s) automaticamente. Coordenação, avaliadores/orientadores e alunos agora veem apenas os dados deste período.`
+    : `⭐ Período Vigente definido como: ${p} — Coordenação, avaliadores/orientadores e alunos agora veem apenas os dados deste período.`;
   toast(migrados ? `Período vigente definido: ${p} (${migrados} aluno(s) migrado(s))` : `Período vigente definido: ${p}`);
+  // Volta a seguir o novo período Vigente por padrão na tela de Alunos Cadastrados.
+  _periodoVisualizacao = '';
+  document.getElementById('aPeriodo').value = p;
+  atualizarPeriodoFiltroBox();
   if(document.getElementById('listaAlunos')) loadAlunosList();
 }
 
@@ -3919,6 +3972,7 @@ async function carregarPeriodoCadastro(){
       box.textContent = `⭐ Período Vigente atual: ${p}`;
     }
   }
+  atualizarPeriodoFiltroBox();
 }
 
 async function salvarAluno(){
@@ -4157,31 +4211,61 @@ async function confirmarExclusaoAluno(){
 async function loadAlunosList(){
   const el = document.getElementById('listaAlunos');
   el.innerHTML = '<p class="empty-box"><span class="emo">⏳</span><br>Carregando...</p>';
-  // Busca alunos, avaliadores/orientadores e o período vigente em paralelo (uma única
-  // requisição para cada nó do Firebase) para acelerar o carregamento da lista.
-  const [todos, oListaCompleta, snapVigente] = await Promise.all([
+  // Busca alunos, avaliadores/orientadores e a Biblioteca em paralelo (uma única requisição
+  // para cada nó). A Biblioteca é usada como prova concreta de aprovações já confirmadas.
+  const [todos, oListaCompleta, bibSnapAlunos] = await Promise.all([
     getAlunos(),
     getOrientadores(),
-    rtdb.ref('config/periodoVigente').get().catch(()=>null)
+    rtdb.ref('biblioteca').get().catch(()=>null)
   ]);
   const lista = todos.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
   if(!lista.length){ el.innerHTML='<p class="empty-box"><span class="emo">📚</span><br>Nenhum aluno cadastrado.</p>'; return; }
   const oMap = {}; const oTurmaMap = {};
   oListaCompleta.forEach(o=>{ oMap[o.id]=o.nome; oTurmaMap[o.id]=o.turma; });
-  const periodoVigente = (snapVigente && snapVigente.exists()) ? (snapVigente.val().periodo||'') : '';
+
+  // Matrículas de alunos com artigo já publicado na Biblioteca — só existe um registro lá
+  // quando um avaliador ou orientador realmente confirmou a aprovação (Versão Final, nota≥5).
+  // É a prova mais confiável do status real de aprovação de um aluno.
+  const matriculasAprovadasNaBiblioteca = new Set();
+  if(bibSnapAlunos && bibSnapAlunos.exists()){
+    Object.values(bibSnapAlunos.val()).forEach(item=>{
+      if(item && item.alunoMatricula) matriculasAprovadasNaBiblioteca.add(item.alunoMatricula);
+    });
+  }
 
   // Ajustes automáticos para o período 2026/1 (já encerrado — todos os alunos são de TCC 1):
   // 1) Alunos ainda registrados em 2026/1: força Disciplina = "TCC 1" e herda/preserva a turma
   //    do avaliador/orientador da época quando o aluno ainda não tem turma própria gravada.
-  // 2) Alunos já migrados para 2026/2 que ainda não têm o retrato histórico de 2026/1 salvo
+  // 2) RESGATE AUTOMÁTICO: alunos que estavam em TCC 1 no 2026/1 e foram movidos para 2026/2
+  //    por causa de testes anteriores da migração automática são restaurados sozinhos para
+  //    2026/1 (usando o retrato salvo em "periodos/2026-1"), sem precisar de nenhuma ação da
+  //    Coordenação. O status atual do aluno nunca é alterado por esse resgate.
+  // 3) Alunos já migrados para 2026/2 que ainda não têm o retrato histórico de 2026/1 salvo
   //    (ex.: migrados antes desta correção existir): reconstrói esse retrato agora, já que
   //    2026/2 é o primeiro período seguinte a existir na plataforma — logo, todo aluno que já
   //    esteve em 2026/2 obrigatoriamente veio de 2026/1, sempre como TCC 1.
-  // 3) NUNCA grava o campo "status" aqui — o status atual de cada aluno é sempre preservado.
+  // 4) NUNCA grava o campo "status" aqui — o status atual de cada aluno é sempre preservado.
+  // 4) CORREÇÃO DE STATUS: se um aluno já tem artigo publicado na Biblioteca (prova de
+  //    aprovação confirmada por um avaliador ou orientador), mas o campo "status" atual dele
+  //    não diz "Aprovado" — foi corrompido por algum motivo (ex.: efeito colateral dos testes
+  //    de migração de período) — o status é restaurado automaticamente para "Aprovado".
+  //    Essa é a única situação em que esta rotina toca no status, porque a Biblioteca é uma
+  //    prova concreta e confiável de uma decisão real do orientador, nunca da Coordenação.
   const gravacoes = [];
   for(const d of lista){
-    if(d.periodoLetivo==='2026/1'){
+    if(matriculasAprovadasNaBiblioteca.has(d.id) && d.status!=='Aprovado'){
+      d.status = 'Aprovado';
+      gravacoes.push(rtdb.ref('alunos/'+d.id).update({ status:'Aprovado' }).catch(()=>{}));
+    }
+    if(d.periodoLetivo==='2026/1' || !d.periodoLetivo){
+      // Alunos sem "Período Letivo" gravado são, por definição, do período em que a
+      // plataforma começou (2026/1) — preenche isso retroativamente para que eles
+      // apareçam corretamente ao filtrar/visualizar por período.
       const campos = {};
+      if(!d.periodoLetivo){
+        campos.periodoLetivo = '2026/1';
+        d.periodoLetivo = '2026/1';
+      }
       if(!d.turma && oTurmaMap[d.orientadorId]){
         campos.turma = oTurmaMap[d.orientadorId];
         d.turma = campos.turma;
@@ -4193,6 +4277,19 @@ async function loadAlunosList(){
       if(Object.keys(campos).length){
         gravacoes.push(rtdb.ref('alunos/'+d.id).update(campos).catch(()=>{}));
       }
+    } else if(d.periodoLetivo==='2026/2' && d.periodos && d.periodos[chavePeriodo('2026/1')]){
+      // RESGATE: este aluno tem um retrato de 2026/1 salvo mas está registrado em 2026/2 —
+      // ou seja, foi movido por uma migração de teste, não por progresso acadêmico real.
+      // Restaura para 2026/1 com Disciplina TCC 1, preservando o status atual do aluno.
+      const snap2026_1 = d.periodos[chavePeriodo('2026/1')];
+      const campos = { periodoLetivo:'2026/1', disciplina:'TCC 1' };
+      if(!d.turma && snap2026_1.turma){ campos.turma = snap2026_1.turma; }
+      d.periodoLetivo = '2026/1';
+      d.disciplina = 'TCC 1';
+      if(campos.turma) d.turma = campos.turma;
+      gravacoes.push(rtdb.ref('alunos/'+d.id).update(campos).catch(()=>{}));
+      gravacoes.push(rtdb.ref('alunos/'+d.id+'/periodos/'+chavePeriodo('2026/1')).remove().catch(()=>{}));
+      delete d.periodos[chavePeriodo('2026/1')];
     } else if(d.periodoLetivo==='2026/2' && !(d.periodos && d.periodos[chavePeriodo('2026/1')])){
       const turmaOriginal = d.turma || oTurmaMap[d.orientadorId] || '';
       // Usa a última decisão real do orientador (histórico) — nunca o campo "status" isolado,
@@ -4206,23 +4303,40 @@ async function loadAlunosList(){
   }
   if(gravacoes.length) Promise.all(gravacoes);
 
-  // Resolve Turma/Disciplina/Status "efetivos" conforme o período vigente selecionado
-  // (função global — ver definição em resolverDadosPeriodo).
-  const dadosEfetivos = (d) => resolverDadosPeriodo(d, periodoVigente, oTurmaMap);
+  // Determina o período de filtro: segue a visualização manual da Coordenação, se houver;
+  // senão, segue o período Vigente por padrão; se nenhum dos dois estiver definido, mostra
+  // todos os alunos (estado inicial, antes de qualquer configuração de período).
+  let periodoFiltro = '';
+  if(_periodoVisualizacao === 'TODOS'){
+    periodoFiltro = '';
+  } else if(_periodoVisualizacao){
+    periodoFiltro = _periodoVisualizacao;
+  } else {
+    const snapVig = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
+    periodoFiltro = (snapVig && snapVig.exists()) ? (snapVig.val().periodo||'') : '';
+  }
+  atualizarPeriodoFiltroBox();
+  const listaFiltrada = periodoFiltro ? lista.filter(d=>d.periodoLetivo===periodoFiltro) : lista;
 
+  if(!listaFiltrada.length){
+    el.innerHTML = `<p class="empty-box"><span class="emo">📚</span><br>Nenhum aluno cadastrado no período ${periodoFiltro||'selecionado'}.</p>`;
+    return;
+  }
+
+  // A tabela sempre mostra a Turma/Disciplina/Status ATUAIS e REAIS de cada aluno —
+  // o período Vigente/filtro só decide QUAIS alunos aparecem na lista; ele nunca "congela"
+  // ou substitui o status verdadeiro de um aluno já existente.
   el.innerHTML=`<div class="table-shell"><table>
     <thead><tr><th>Nome</th><th>Matrícula</th><th>E-mail</th><th>Turma</th><th>Disciplina</th><th>Avaliador ou Orientador</th><th>Status</th><th>Ações</th></tr></thead>
-    <tbody>${lista.map(a=>{const d=a; const ef = dadosEfetivos(d); const turmaAtual = d.turma || oTurmaMap[d.orientadorId] || ''; return`<tr>
+    <tbody>${listaFiltrada.map(a=>{const d=a; const turmaAtual = d.turma || oTurmaMap[d.orientadorId] || ''; return`<tr>
       <td>${d.nome}</td><td>${d.matricula}</td><td>${d.email}</td>
-      <td>${ef.turma||'—'}${ef.historico?' <span title="Dado histórico do período '+periodoVigente+'" style="color:var(--muted);font-size:.7rem">🕘</span>':''}</td>
-      <td>${ef.disciplina||'—'}</td>
+      <td>${turmaAtual||'—'}</td>
+      <td>${d.disciplina||'—'}</td>
       <td>${oMap[d.orientadorId]||'—'}</td>
-      <td><span class="sb ${statusClass(ef.status)}">${ef.status||'Pendente'}</span></td>
+      <td><span class="sb ${statusClass(d.status)}">${d.status||'Pendente'}</span></td>
       <td class="tbl-actions">
         <button class="tbl-btn tbl-edit" onclick='editarAluno("${a.id}",${JSON.stringify({nome:d.nome,matricula:d.matricula,email:d.email,senha:d.senha,turma:turmaAtual,disciplina:d.disciplina,periodoLetivo:d.periodoLetivo,orientadorId:d.orientadorId})})'>✏️ Editar</button>
-        ${ef.historico
-          ? `<button class="tbl-btn" disabled title="Este é o retrato histórico da decisão do avaliador ou orientador para o período ${periodoVigente} — não é editável pela Coordenação." style="background:#f1f5f9;color:#94a3b8;cursor:not-allowed">🕘 Decisão do Orientador</button>`
-          : `<button class="tbl-btn" onclick='abrirAlterarStatus("${a.id}","${d.nome}","${d.orientadorId||''}","${ef.status||'Pendente'}")' style="background:var(--purple-pale);color:var(--purple)">🔄 Status</button>`}
+        <button class="tbl-btn" onclick='abrirAlterarStatus("${a.id}","${d.nome}","${d.orientadorId||''}","${d.status||'Pendente'}")' style="background:var(--purple-pale);color:var(--purple)">🔄 Status</button>
         <button class="tbl-btn tbl-del" onclick='excluirAluno("${a.id}","${d.nome}")'>🗑 Excluir</button>
       </td>
     </tr>`;}).join('')}</tbody>
@@ -4692,7 +4806,23 @@ async function redefinirSenhaCoord(){
 async function loadOrientDashboard(){
   renderCountdown('orientCountdown');
   const oId = currentUser.id;
-  const snapDocs = await getAlunosByOrientador(oId);
+  const todosVinculados = await getAlunosByOrientador(oId);
+
+  // Filtra pelos alunos do período Vigente definido pela Coordenação — o orientador só vê
+  // os dados do período escolhido, assim como a Coordenação. Se nenhum período Vigente
+  // estiver definido ainda, mostra todos os alunos vinculados (estado inicial).
+  const snapVigOrient = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
+  const periodoVigenteOrient = (snapVigOrient && snapVigOrient.exists()) ? (snapVigOrient.val().periodo||'') : '';
+  const snapDocs = periodoVigenteOrient
+    ? todosVinculados.filter(a=>a.periodoLetivo===periodoVigenteOrient)
+    : todosVinculados;
+
+  const bannerPeriodo = document.getElementById('orientPeriodoBanner');
+  if(bannerPeriodo){
+    bannerPeriodo.innerHTML = periodoVigenteOrient
+      ? `<div class="alert-banner alert-info">📅 Mostrando os alunos do período Vigente: <strong>${periodoVigenteOrient}</strong> (${snapDocs.length} de ${todosVinculados.length} vinculados no total).</div>`
+      : '';
+  }
 
   // alertas de pendência >7 dias
   const sete = Date.now()-7*86400000;
@@ -5278,6 +5408,17 @@ async function loadAlunoDashboard(){
   const d = await getAlunoById(currentUser.id);
   if(!d) return;
 
+  // Informa o aluno quando o período dele não é o período Vigente atual (não bloqueia nada,
+  // é apenas informativo — a Coordenação e o avaliador ou orientador operam por período).
+  const snapVigAluno = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
+  const periodoVigenteAluno = (snapVigAluno && snapVigAluno.exists()) ? (snapVigAluno.val().periodo||'') : '';
+  if(periodoVigenteAluno && d.periodoLetivo && d.periodoLetivo!==periodoVigenteAluno){
+    const bannerEl = document.getElementById('alunoAlertaBanner');
+    if(bannerEl){
+      bannerEl.innerHTML += `<div class="alert-banner alert-info">📅 Você está registrado no período <strong>${d.periodoLetivo}</strong>. O período Vigente atual da plataforma é <strong>${periodoVigenteAluno}</strong>.</div>`;
+    }
+  }
+
   // Popula _oMap se necessário
   if(!Object.keys(_oMap).length){
     const ol = await getOrientadores();
@@ -5443,7 +5584,7 @@ async function loadAlunoDashboard(){
   if(d.comentarioOrientador && d.ultimaAtualizacao){
     const t = typeof d.ultimaAtualizacao==='number' ? d.ultimaAtualizacao : new Date(d.ultimaAtualizacao).getTime();
     if(Date.now()-t > 7*86400000){
-      document.getElementById('alunoAlertaBanner').innerHTML=
+      document.getElementById('alunoAlertaBanner').innerHTML +=
         `<div class="alert-banner alert-warn">🔴 Seu avaliador ou orientador enviou uma correção há mais de 7 dias. Por favor, responda!</div>`;
     }
   }
