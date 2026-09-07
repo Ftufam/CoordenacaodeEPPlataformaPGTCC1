@@ -1635,7 +1635,8 @@ function toggleAcc(btn) {
         <div class="grid-2">
           <div class="field"><label>Período do Concurso</label><input id="ccPeriodo" type="text" placeholder="Ex: 2026/2"/></div>
           <div class="field"><label>Inscrições</label>
-            <select id="ccStatusAberto"><option value="true">🟢 Abertas</option><option value="false">🔴 Fechadas</option></select>
+            <select id="ccStatusAberto" onchange="alternarInscricoesConcurso()"><option value="true">🟢 Abertas</option><option value="false">🔴 Fechadas</option></select>
+            <div id="ccStatusAbertoMsg" style="font-size:.72rem;margin-top:4px;font-weight:700"></div>
           </div>
           <div class="field"><label>Prazo para Envio do Artigo</label><input id="ccPrazoArtigo" type="text" maxlength="16" placeholder="DD/MM/AAAA HH:MM" style="max-width:260px"/></div>
           <div class="field"><label>Prazo para Concluir Banner Digital</label><input id="ccPrazoBannerDigital" type="text" maxlength="16" placeholder="DD/MM/AAAA HH:MM" style="max-width:260px"/></div>
@@ -7079,9 +7080,15 @@ function renderEditalBox(cfg, elId){
   if(!el) return;
   const temEdital = cfg && cfg.editalNome;
   const temDefesa = cfg && (cfg.defesaData || cfg.defesaHorario || cfg.defesaLocal);
-  if(!temEdital && !temDefesa){ el.style.display = 'none'; return; }
+  const temStatus = cfg && typeof cfg.aberto === 'boolean';
+  if(!temEdital && !temDefesa && !temStatus){ el.style.display = 'none'; return; }
   el.style.display = 'block';
   let html = '';
+  if(temStatus){
+    html += `<div style="background:${cfg.aberto?'var(--green-pale)':'#fee2e2'};border:1.5px solid ${cfg.aberto?'var(--green-light)':'#fca5a5'};border-radius:10px;padding:10px 16px;font-size:.84rem;color:${cfg.aberto?'var(--green)':'#991b1b'};font-weight:800;margin-bottom:10px">
+      ${cfg.aberto?'🟢 Inscrições do Concurso Melhor TCC1 estão abertas.':'🔴 Inscrições do Concurso Melhor TCC1 estão fechadas no momento.'}
+    </div>`;
+  }
   if(temEdital){
     html += `<div style="background:var(--blue-pale);border:1.5px solid var(--blue-light);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:${temDefesa?'10px':'0'}">
       <div style="font-size:.84rem;color:var(--blue);font-weight:800">📜 Edital do Concurso: ${cfg.editalNome}</div>
@@ -7130,19 +7137,74 @@ function contarAvaliadoresConcurso(i){
   const av = i.avaliadores || {};
   return [1,2,3].filter(n=>av[n] && av[n].id).length;
 }
+// Conta qualquer parecer realmente registrado (tem o campo "parecer" preenchido),
+// não apenas os que estão exatamente nas chaves 1, 2 ou 3 — assim, nenhum parecer
+// enviado por um avaliador deixa de ser contabilizado por qualquer inconsistência de chave.
 function contarPareceresConcurso(i){
   const p = i.pareceres || {};
-  return [1,2,3].filter(n=>p[n] && p[n].parecer).length;
+  return Object.values(p).filter(x=>x && x.parecer).length;
 }
 function temAlgumParecerConcurso(i){ return contarPareceresConcurso(i) > 0; }
 
+// Encontra o parecer que um avaliador específico realmente enviou para uma inscrição,
+// mesmo que o slot de atribuição (avaliadores/1,2,3) não bata perfeitamente com a chave
+// onde o parecer foi salvo — usa o "avaliadorId" gravado dentro do próprio parecer como
+// reforço, evitando que um parecer já enviado pareça "sumido" para quem o enviou.
+function meuParecerConcurso(i, uid){
+  const av = i.avaliadores || {}; const p = i.pareceres || {};
+  const meuSlot = [1,2,3].find(n=>av[n] && av[n].id === uid);
+  if(meuSlot && p[meuSlot] && p[meuSlot].parecer) return { slot:meuSlot, parecer:p[meuSlot] };
+  const chaveFallback = Object.keys(p).find(k=>p[k] && p[k].parecer && p[k].avaliadorId===uid);
+  if(chaveFallback) return { slot:chaveFallback, parecer:p[chaveFallback] };
+  return { slot:meuSlot||null, parecer:null };
+}
+
 // ─── Coordenação: configuração ───
+// Campo ISOLADO e dedicado só para Abertas/Fechadas — separado do resto do objeto de
+// configuração do concurso (que tem período, prazos, edital etc.) para eliminar qualquer
+// possibilidade de esse status ser sobrescrito por outra gravação relacionada a outros
+// campos do formulário. É a ÚNICA fonte de verdade lida por Coordenação, aluno e avaliadores.
+async function lerInscricoesAbertas(){
+  try{
+    const snap = await rtdb.ref('concurso/inscricoesAbertas').get();
+    if(snap.exists()) return snap.val() !== false;
+    // Compatibilidade com dados antigos, de antes deste campo dedicado existir.
+    const legado = await rtdb.ref('concurso/config/aberto').get();
+    return legado.exists() ? legado.val() !== false : true;
+  } catch(e){ return true; }
+}
+
+// Alterna Inscrições Abertas/Fechadas com gravação IMEDIATA no campo dedicado — não depende
+// do botão "Salvar Configurações" nem de nenhum outro campo do formulário (ex.: período em
+// branco, upload de edital em andamento). Isso garante que o status nunca "volte atrás"
+// silenciosamente ao recarregar a página.
+async function alternarInscricoesConcurso(){
+  const sel = document.getElementById('ccStatusAberto');
+  const msgEl = document.getElementById('ccStatusAbertoMsg');
+  const novoValor = sel.value === 'true';
+  try{
+    await rtdb.ref('concurso/inscricoesAbertas').set(novoValor);
+    // Mantém o campo legado sincronizado também, só por compatibilidade de exibição.
+    await rtdb.ref('concurso/config/aberto').set(novoValor).catch(()=>{});
+    if(msgEl){
+      msgEl.style.color = novoValor ? 'var(--green)' : '#b91c1c';
+      msgEl.textContent = novoValor ? '✅ Inscrições marcadas como Abertas (salvo).' : '✅ Inscrições marcadas como Fechadas (salvo).';
+    }
+    toast(novoValor ? 'Inscrições do concurso reabertas.' : 'Inscrições do concurso fechadas.');
+    loadConcursoConfig();
+  } catch(e){
+    if(msgEl){ msgEl.style.color = '#b91c1c'; msgEl.textContent = '❌ Erro ao salvar: '+e.message; }
+    toast('Erro ao salvar status das inscrições: '+e.message, 'err');
+  }
+}
+
 async function loadConcursoConfig(){
   try{
   const snap = await rtdb.ref('concurso/config').get();
   const cfg = snap.exists() ? snap.val() : {};
+  const inscricoesAbertas = await lerInscricoesAbertas();
   document.getElementById('ccPeriodo').value              = cfg.periodo || '';
-  document.getElementById('ccStatusAberto').value         = cfg.aberto === false ? 'false' : 'true';
+  document.getElementById('ccStatusAberto').value         = inscricoesAbertas ? 'true' : 'false';
   document.getElementById('ccPrazoArtigo').value          = cfg.prazoArtigo || '';
   document.getElementById('ccPrazoBannerDigital').value   = cfg.prazoBannerDigital || '';
   document.getElementById('ccPrazoBannerImpresso').value  = cfg.prazoBannerImpresso || '';
@@ -7159,7 +7221,7 @@ async function loadConcursoConfig(){
   const box = document.getElementById('ccConfigAtual');
   if(cfg.periodo){
     box.style.display = 'block';
-    box.innerHTML = `🏆 Concurso ${cfg.periodo} · ${cfg.aberto===false?'🔴 Inscrições fechadas':'🟢 Inscrições abertas'}<br>
+    box.innerHTML = `🏆 Concurso ${cfg.periodo} · ${inscricoesAbertas?'🟢 Inscrições abertas':'🔴 Inscrições fechadas'}<br>
       📄 Artigo: ${cfg.prazoArtigo||'—'} &nbsp;·&nbsp; 🖼️ Banner Digital: ${cfg.prazoBannerDigital||'—'} &nbsp;·&nbsp; 🖨️ Banner Impresso (A1): ${cfg.prazoBannerImpresso||'—'}
       ${(cfg.defesaData||cfg.defesaHorario||cfg.defesaLocal)?`<br>🎤 Defesa Pública: ${cfg.defesaData||'—'} ${cfg.defesaHorario||''} ${cfg.defesaLocal?'· '+cfg.defesaLocal:''}`:''}`;
   } else {
@@ -7171,7 +7233,7 @@ async function loadConcursoConfig(){
   }
 }
 async function salvarConcursoConfig(){
-  const periodo             = document.getElementById('ccPeriodo').value.trim();
+  const periodoInformado     = document.getElementById('ccPeriodo').value.trim();
   const aberto              = document.getElementById('ccStatusAberto').value === 'true';
   const prazoArtigo         = document.getElementById('ccPrazoArtigo').value.trim();
   const prazoBannerDigital  = document.getElementById('ccPrazoBannerDigital').value.trim();
@@ -7181,11 +7243,16 @@ async function salvarConcursoConfig(){
   const defesaLocal         = document.getElementById('ccDefesaLocal').value.trim();
   const editalInp           = document.getElementById('ccEditalFile');
   const editalFile          = editalInp && editalInp.files[0];
-  if(!periodo){ toast('Informe o período do concurso.','err'); return; }
   if(editalFile && editalFile.size > 5*1024*1024){ toast('Edital muito grande. Máximo 5 MB.','err'); return; }
   try{
     const snapAtual = await rtdb.ref('concurso/config').get();
     const atual = snapAtual.exists() ? snapAtual.val() : {};
+    // Se o campo Período não foi preenchido no formulário (ex.: o formulário ainda estava
+    // carregando quando a Coordenação salvou), usa o período já configurado anteriormente
+    // como reserva — assim uma troca simples de "Abertas/Fechadas" nunca falha silenciosamente
+    // por causa de um campo em branco.
+    const periodo = periodoInformado || atual.periodo || '';
+    if(!periodo){ toast('Informe o período do concurso.','err'); return; }
     const data = { periodo, aberto, prazoArtigo, prazoBannerDigital, prazoBannerImpresso, defesaData, defesaHorario, defesaLocal, atualizadoEm:Date.now() };
     if(editalFile){
       data.editalNome = editalFile.name;
@@ -7197,6 +7264,8 @@ async function salvarConcursoConfig(){
       data.editalUrl  = atual.editalUrl;
     }
     await rtdb.ref('concurso/config').set(data);
+    // Mantém o campo dedicado de Abertas/Fechadas sempre sincronizado com este formulário.
+    await rtdb.ref('concurso/inscricoesAbertas').set(aberto).catch(()=>{});
     toast('Configurações do concurso salvas!');
     loadConcursoConfig();
   } catch(e){ toast('Erro: '+e.message,'err'); }
@@ -7214,10 +7283,33 @@ async function loadConcursoInscricoes(){
     if(contEl) contEl.textContent = '';
     return;
   }
-  const lista = Object.entries(snap.val())
+  const todosDados = snap.val();
+  const lista = Object.entries(todosDados)
     .map(([id,d])=>({id,...d}))
-    .filter(i=>i.status && i.status!=='Inscrito') // só quem já enviou o artigo
+    // Mostra qualquer inscrição que já saiu do estado inicial "Inscrito" OU que já tenha
+    // avaliadores atribuídos/pareceres recebidos — mesmo que o campo "status" tenha ficado
+    // com um valor inesperado por algum motivo, ela nunca fica escondida da Coordenação.
+    .filter(i=> (i.status && i.status!=='Inscrito') || contarAvaliadoresConcurso(i)>0 || temAlgumParecerConcurso(i))
     .sort((a,b)=>(b.dataEnvio||b.dataInscricao||0)-(a.dataEnvio||a.dataInscricao||0));
+
+  // Reparo automático: pareceres enviados antes desta correção não tinham o campo
+  // "avaliadorId" gravado, então o mecanismo de reconhecimento por avaliador não
+  // conseguia "achá-los" caso o slot de atribuição não batesse. Aqui, sempre que um
+  // parecer está salvo em um slot (1, 2 ou 3) cujo avaliador atribuído é conhecido, o
+  // "avaliadorId" é preenchido retroativamente — sem precisar reenviar nada.
+  const reparos = [];
+  lista.forEach(i=>{
+    const av = i.avaliadores || {}; const p = i.pareceres || {};
+    [1,2,3].forEach(n=>{
+      if(p[n] && p[n].parecer && !p[n].avaliadorId && av[n] && av[n].id){
+        reparos.push(rtdb.ref('concurso/inscricoes/'+i.id+'/pareceres/'+n).update({
+          avaliadorId: av[n].id, avaliadorNome: av[n].nome||''
+        }).catch(()=>{}));
+      }
+    });
+  });
+  if(reparos.length) Promise.all(reparos);
+
   window._concursoCache = {};
   lista.forEach(i=>window._concursoCache[i.id]=i);
   if(contEl) contEl.textContent = `(${lista.length})`;
@@ -7258,7 +7350,11 @@ async function loadConcursoPendentes(){
   try{
     const snap = await rtdb.ref('concurso/inscricoes').get();
     const lista = snap.exists()
-      ? Object.entries(snap.val()).map(([id,d])=>({id,...d})).filter(i=>i.status==='Inscrito').sort((a,b)=>(b.dataInscricao||0)-(a.dataInscricao||0))
+      ? Object.entries(snap.val()).map(([id,d])=>({id,...d}))
+          // Só considera "parada" quem realmente não tem nenhum avaliador/parecer ainda —
+          // evita duplicar/esconder quem já avançou no processo mesmo com status inesperado.
+          .filter(i=>i.status==='Inscrito' && contarAvaliadoresConcurso(i)===0 && !temAlgumParecerConcurso(i))
+          .sort((a,b)=>(b.dataInscricao||0)-(a.dataInscricao||0))
       : [];
     window._concursoPendentesCache = {};
     lista.forEach(i=>window._concursoPendentesCache[i.id]=i);
@@ -7463,12 +7559,15 @@ async function abrirModalPareceresConcurso(id){
   const pareceres = i.pareceres || {};
   let notasValidas = [];
   let html = '';
-  [1,2,3].forEach(n=>{
+  // Percorre TODAS as chaves de pareceres realmente gravadas (não só 1, 2 e 3), garantindo
+  // que nenhum parecer enviado fique invisível para a Coordenação por qualquer inconsistência.
+  Object.keys(pareceres).forEach(n=>{
     const p = pareceres[n];
-    if(!p) return;
+    if(!p || !p.parecer) return;
     if(p.nota!=null && p.nota!=='') notasValidas.push(parseFloat(String(p.nota).replace(',','.')));
+    const nomeAvaliador = (i.avaliadores&&i.avaliadores[n]&&i.avaliadores[n].nome) || p.avaliadorNome || '';
     html += `<div style="border:1.5px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">
-      <div style="font-weight:800;color:var(--gold);margin-bottom:6px">Avaliador ${n} ${i.avaliadores&&i.avaliadores[n]?'— '+i.avaliadores[n].nome:''}</div>
+      <div style="font-weight:800;color:var(--gold);margin-bottom:6px">Avaliador ${n} ${nomeAvaliador?'— '+nomeAvaliador:''}</div>
       <div style="margin-bottom:6px"><strong>Parecer:</strong> ${p.parecer||'—'}</div>
       <div style="margin-bottom:6px"><strong>Nota sugerida:</strong> ${p.nota!=null?p.nota:'—'}</div>
       <div style="margin-bottom:6px"><strong>Comentários:</strong><br>${(p.comentarios||'—').replace(/\n/g,'<br>')}</div>
@@ -7491,16 +7590,28 @@ async function enviarRevisaoConcursoAluno(){
   if(!i) return;
   const pareceres = i.pareceres || {};
   let recomendacao = `Nota final do Concurso Melhor TCC1: ${notaFinal}\n\n`;
-  [1,2,3].forEach(n=>{
+  Object.keys(pareceres).forEach(n=>{
     const p = pareceres[n];
-    if(!p) return;
+    if(!p || !p.parecer) return;
     recomendacao += `— Avaliador ${n} —\nParecer: ${p.parecer||'—'}\nComentários: ${p.comentarios||'—'}\nSugestões de revistas: ${p.revistas||'—'}\n\n`;
   });
   try{
     await rtdb.ref('concurso/inscricoes/'+id).update({ status:'Concluído', notaFinal, recomendacaoFinal:recomendacao, dataConclusao:Date.now() });
     await pushHistoricoConcurso(id, 'Devolutiva final e nota registradas pela Coordenação.');
     if(i.alunoId) await rtdb.ref('notificacoes/'+i.alunoId).push({ tipo:'Concurso Melhor TCC1', mensagem:'A devolutiva do Concurso Melhor TCC1 está disponível na sua área.', data:Date.now(), lida:false, de:'Coordenação' });
-    toast('Devolutiva enviada ao aluno!');
+    // Sincroniza o resultado com todos os avaliadores que participaram deste parecer —
+    // antes só o aluno era avisado quando a devolutiva final era enviada.
+    const avaliadores = i.avaliadores || {};
+    const notificacoesAvaliadores = [1,2,3]
+      .map(n=>avaliadores[n] && avaliadores[n].id)
+      .filter(Boolean)
+      .map(avId => rtdb.ref('notificacoes/'+avId).push({
+        tipo:'Concurso Melhor TCC1 — Resultado Registrado',
+        mensagem:`A nota final (${notaFinal}) do artigo que você avaliou no Concurso Melhor TCC1 foi registrada pela Coordenação.`,
+        data:Date.now(), lida:false, de:'Coordenação'
+      }).catch(()=>{}));
+    await Promise.all(notificacoesAvaliadores);
+    toast('Devolutiva enviada ao aluno e aos avaliadores!');
     closeModal('modalConcursoPareceres');
     loadConcursoInscricoes();
   } catch(e){ toast('Erro: '+e.message,'err'); }
@@ -7514,7 +7625,9 @@ async function loadConcursoAvaliacoesOrient(){
   if(!uid){ el.innerHTML = '<p class="empty-box">Não foi possível identificar seu usuário.</p>'; return; }
   try{
   const cfgSnapO = await rtdb.ref('concurso/config').get();
-  renderEditalBox(cfgSnapO.exists() ? cfgSnapO.val() : null, 'ccEditalBoxOrient');
+  const cfgOrient = cfgSnapO.exists() ? cfgSnapO.val() : {};
+  cfgOrient.aberto = await lerInscricoesAbertas();
+  renderEditalBox(cfgOrient, 'ccEditalBoxOrient');
   const snap = await rtdb.ref('concurso/inscricoes').get();
   if(!snap.exists()){ el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo designado a você no momento.</p>'; if(badge) badge.style.display='none'; return; }
   const todas = Object.entries(snap.val()).map(([id,d])=>({id,...d}));
@@ -7526,18 +7639,17 @@ async function loadConcursoAvaliacoesOrient(){
   window._concursoOrientCache = {};
   minhas.forEach(i=>window._concursoOrientCache[i.id]=i);
   const pendentes = minhas.filter(i=>{
-    const av = i.avaliadores || {}; const p = i.pareceres || {};
-    const meuSlot = [1,2,3].find(n=>av[n] && av[n].id === uid);
-    return meuSlot && !(p[meuSlot] && p[meuSlot].parecer);
+    const r = meuParecerConcurso(i, uid);
+    return r.slot && !r.parecer;
   });
   if(badge){ badge.style.display = pendentes.length ? 'inline-block' : 'none'; badge.textContent = pendentes.length || ''; }
   el.innerHTML = minhas.map(i=>{
-    const av = i.avaliadores || {}; const p = i.pareceres || {};
-    const meuSlot = [1,2,3].find(n=>av[n] && av[n].id === uid);
-    const meuParecer = p[meuSlot];
+    const r = meuParecerConcurso(i, uid);
+    const meuSlot = r.slot;
+    const meuParecer = r.parecer;
     return `<div style="border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;background:${meuParecer?'#f8fafc':'#fff'}">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-        <div style="font-weight:800;color:#163352">📄 Inscrição Anônima #${i.id.slice(-6).toUpperCase()}</div>
+        <div style="font-weight:800;color:#163352">📄 Inscrição Nº ${i.numeroProtocolo || i.id.slice(-6).toUpperCase()}${i.protocoloCodigo?` · Protocolo: ${i.protocoloCodigo}`:''}</div>
         ${statusBadgeConcurso(i.status)}
       </div>
       ${i.artigoUrl?`<button class="tbl-btn tbl-viz" onclick='baixarBase64(${JSON.stringify(i.artigoUrl)},${JSON.stringify(i.artigoNome||"artigo.pdf")},${JSON.stringify(i.artigoMime||"application/pdf")})'>⬇ Baixar Artigo (anônimo)</button>`:'<p style="font-size:.82rem;color:var(--muted)">Artigo indisponível.</p>'}
@@ -7565,6 +7677,12 @@ async function loadConcursoAvaliacoesOrient(){
   }
 }
 async function enviarParecerConcurso(inscricaoId, slot){
+  // Proteção: garante que o parecer sempre vá para um slot válido (1, 2 ou 3) — nunca
+  // para uma chave inválida/indefinida, o que faria o parecer "sumir" da contagem.
+  if(![1,2,3].includes(Number(slot))){
+    toast('Não foi possível identificar seu slot de avaliador nesta inscrição. Atualize a página e tente novamente.','err');
+    return;
+  }
   const parecer     = document.getElementById('cvParecer_'+inscricaoId).value;
   const nota        = document.getElementById('cvNota_'+inscricaoId).value.trim();
   const comentarios = document.getElementById('cvComentarios_'+inscricaoId).value.trim();
@@ -7576,7 +7694,13 @@ async function enviarParecerConcurso(inscricaoId, slot){
   if(!comentarios){ toast('Escreva os comentários.','err'); return; }
   if(file && file.size > 3*1024*1024){ toast('Arquivo muito grande. Máximo 3 MB.','err'); return; }
   try{
-    const data = { parecer, nota, comentarios, revistas, data:Date.now() };
+    // Guarda também quem enviou (avaliadorId/avaliadorNome), permitindo auditar/recuperar
+    // o parecer mesmo que ele precise ser localizado por outro critério no futuro.
+    const data = {
+      parecer, nota, comentarios, revistas, data:Date.now(),
+      avaliadorId: currentUser.id || currentUser.uid || '',
+      avaliadorNome: currentUser.nome || ''
+    };
     if(file){
       data.arquivoRevisadoNome = file.name;
       data.arquivoRevisadoMime = file.type || 'application/octet-stream';
@@ -7585,7 +7709,7 @@ async function enviarParecerConcurso(inscricaoId, slot){
     await rtdb.ref('concurso/inscricoes/'+inscricaoId+'/pareceres/'+slot).set(data);
     toast('Parecer enviado!');
     loadConcursoAvaliacoesOrient();
-  } catch(e){ toast('Erro: '+e.message,'err'); }
+  } catch(e){ toast('Erro ao enviar parecer: '+e.message,'err'); }
 }
 
 // ─── Aluno: inscrição, envio, banner ───
@@ -7634,6 +7758,8 @@ async function loadConcursoAluno(){
   try{
   const cfgSnap = await rtdb.ref('concurso/config').get();
   const cfg = cfgSnap.exists() ? cfgSnap.val() : {};
+  const inscricoesAbertas = await lerInscricoesAbertas();
+  cfg.aberto = inscricoesAbertas; // mantém window._concursoConfigAtual.aberto sempre coerente
   renderEditalBox(cfg, 'ccEditalBoxAluno');
   window._concursoConfigAtual = cfg;
 
@@ -7655,7 +7781,7 @@ async function loadConcursoAluno(){
 
   if(!inscricao){
     // Nenhum registro ainda — NADA é gravado no Firebase até o aluno salvar ou enviar o artigo
-    if(cfg.aberto === false){
+    if(!inscricoesAbertas){
       statusBox.innerHTML = `<p class="empty-box"><span class="emo">🔒</span><br>As inscrições do Concurso Melhor TCC1 (${cfg.periodo}) estão fechadas no momento.</p>`;
       return;
     }
@@ -7742,15 +7868,16 @@ async function loadConcursoAluno(){
       conteudo.innerHTML = '⏳ Seu artigo foi enviado e aguarda <strong>homologação da Coordenação</strong>.';
     } else if(inscricao.status==='Rejeitado'){
       conteudo.innerHTML = `❌ Seu artigo foi <strong>rejeitado pela Coordenação</strong>.${inscricao.motivoRejeicao?`<br><strong>Motivo:</strong> ${inscricao.motivoRejeicao}`:''}`;
-    } else if(inscricao.status==='Homologado' || inscricao.status==='Em Avaliação'){
-      conteudo.innerHTML = '🔎 Sua inscrição foi <strong>homologada</strong> e o artigo está <strong>em análise de revisão</strong> pelos avaliadores do concurso.';
-    } else if(inscricao.status==='Avaliado' || inscricao.status==='Concluído'){
+    } else {
+      // Mostra qualquer parecer já recebido, mesmo que a inscrição ainda esteja "Em Avaliação"
+      // (nem todos os avaliadores terminaram) — antes, o aluno só via os pareceres depois que
+      // TODOS os 3 avaliadores enviassem o deles, o que podia esconder pareceres já prontos.
       const pareceres = inscricao.pareceres || {};
-      const itens = [1,2,3].filter(n=>pareceres[n] && pareceres[n].parecer);
+      const itens = Object.keys(pareceres).filter(n=>pareceres[n] && pareceres[n].parecer);
       if(!itens.length){
-        conteudo.innerHTML = '🔎 Seu artigo está em análise de revisão pelos avaliadores do concurso.';
+        conteudo.innerHTML = '🔎 Sua inscrição foi <strong>homologada</strong> e o artigo está <strong>em análise de revisão</strong> pelos avaliadores do concurso.';
       } else {
-        conteudo.innerHTML = '✅ Seu artigo foi <strong>revisado</strong>. Confira abaixo o parecer e as recomendações de melhoria (a nota não é exibida nesta seção):<br><br>' +
+        conteudo.innerHTML = `✅ Você já recebeu ${itens.length} de 3 parecer(es). Confira abaixo (a nota não é exibida nesta seção):<br><br>` +
           itens.map(n=>{
             const p = pareceres[n];
             return `<div style="border:1.5px solid var(--gold-light);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:#fff">
@@ -7790,7 +7917,8 @@ async function salvarArtigoConcurso(){
       Object.assign(window._concursoAlunoInscricao, { tema, area, artigoNome, artigoMime, artigoUrl });
     } else {
       const cfg = window._concursoConfigAtual || (await rtdb.ref('concurso/config').get()).val() || {};
-      if(!cfg.periodo || cfg.aberto===false){ toast('As inscrições não estão abertas.','err'); return; }
+      const abertasAgora = await lerInscricoesAbertas();
+      if(!cfg.periodo || !abertasAgora){ toast('As inscrições não estão abertas.','err'); return; }
       const d = await getAlunoById(currentUser.id);
       if(!d){ toast('Não foi possível carregar seus dados.','err'); return; }
       // Reserva atômica e única do próximo número global, na ordem real de inscrição
@@ -7845,7 +7973,8 @@ async function enviarInscricaoConcurso(){
       Object.assign(window._concursoAlunoInscricao, data);
     } else {
       const cfg = window._concursoConfigAtual || (await rtdb.ref('concurso/config').get()).val() || {};
-      if(!cfg.periodo || cfg.aberto===false){ toast('As inscrições não estão abertas.','err'); return; }
+      const abertasAgora = await lerInscricoesAbertas();
+      if(!cfg.periodo || !abertasAgora){ toast('As inscrições não estão abertas.','err'); return; }
       const d = await getAlunoById(currentUser.id);
       if(!d){ toast('Não foi possível carregar seus dados.','err'); return; }
       // Reserva atômica e única do próximo número global, na ordem real de inscrição
