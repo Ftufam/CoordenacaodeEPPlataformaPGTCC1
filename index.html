@@ -1418,6 +1418,7 @@ function toggleAcc(btn) {
 
     <!-- DASHBOARD TAB -->
     <div class="ct-content active" id="ct-dashboard">
+      <div id="dashPeriodoIndicador" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;font-size:.84rem;font-weight:700;color:#1a4a6e"></div>
       <div id="countdownWrap" style="margin-bottom:14px"></div>
 
       <!-- INDICADORES -->
@@ -1497,7 +1498,8 @@ function toggleAcc(btn) {
       <!-- GRID: Selecione Ano e Período -->
       <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
         <div class="panel-title">📅 Selecione o Ano e Período</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr auto auto;gap:12px;align-items:end;flex-wrap:wrap">
+        <p style="font-size:.78rem;color:var(--muted);margin:-6px 0 12px">Use isto para consultar/editar um período específico ou para definir o período de novos cadastros. Para definir o período <strong>Vigente</strong> da plataforma (e migrar os alunos automaticamente), use <strong>⚙️ Configurações → Configuração de Prazo</strong>.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;flex-wrap:wrap">
           <div class="field">
             <label>Ano *</label>
             <input id="selAno" type="number" min="2020" max="2099" placeholder="2026" style="font-size:.95rem;font-weight:700" oninput="sincronizarPeriodoCadastro()"/>
@@ -1511,7 +1513,6 @@ function toggleAcc(btn) {
             </select>
           </div>
           <button onclick="visualizarPeriodo()" style="padding:.7rem 1.2rem;background:linear-gradient(135deg,var(--blue),#2b6ca3);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer;white-space:nowrap">👁️ Visualizar/Editar</button>
-          <button onclick="definirPeriodoVigente()" style="padding:.7rem 1.2rem;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#000;border:none;border-radius:9px;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer;white-space:nowrap">⭐ Definir como Vigente</button>
         </div>
         <div id="periodoVigenteBox" style="display:none;margin-top:8px;padding:10px 14px;background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:8px;font-size:.84rem;font-weight:700;color:#7a5200"></div>
         <div id="periodoFiltroBox" style="display:none;margin-top:8px;padding:10px 14px;background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;font-size:.84rem;font-weight:700;color:#1a4a6e;align-items:center;gap:10px;flex-wrap:wrap"></div>
@@ -1559,6 +1560,7 @@ function toggleAcc(btn) {
 
     <!-- ARTIGOS TAB -->
     <div class="ct-content" id="ct-artigos">
+      <div id="artigosPeriodoIndicador" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;font-size:.84rem;font-weight:700;color:#1a4a6e"></div>
       <div class="sec-title">📄 Acompanhamento de Artigos</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
         <button class="art-filter active" onclick="filtrarArtigos('todos',this)">Todos</button>
@@ -1577,6 +1579,7 @@ function toggleAcc(btn) {
 
     <!-- BANCAS TAB (Coordenador) -->
     <div class="ct-content" id="ct-bancasCoord">
+      <div id="bancasPeriodoIndicador" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;font-size:.84rem;font-weight:700;color:#1a4a6e"></div>
       <div class="sec-title">🏛️ Bancas Agendadas</div>
       <p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">Defesas enviadas pelos avaliadores ou orientadores para avaliação em banca.</p>
       <div id="listaBancasCoord"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
@@ -1596,6 +1599,7 @@ function toggleAcc(btn) {
       </div>
       <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-top:16px">
         <div class="panel-title">⚙️ Configuração de Prazo</div>
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:12px">Este é o único lugar para definir o período <strong>Vigente</strong> da plataforma. Ao salvar um novo período (ex.: 2026/2), a Coordenação, os avaliadores/orientadores e os alunos passam a ver apenas as turmas e dados deste período — e os alunos do período anterior são matriculados/arquivados automaticamente (ver regras na aba Alunos).</p>
         <div class="grid-2">
           <div class="field"><label>Período Vigente</label><input id="cfgPeriodo" type="text" placeholder="2025/1"/></div>
           <div class="field"><label>Prazo Final de Entrega</label><input id="cfgPrazo" type="text" placeholder="DD/MM/AAAA HH:MM" maxlength="16" style="font-size:.95rem;letter-spacing:.5px"/><div style="font-size:.72rem;color:var(--muted);margin-top:3px">Formato: DD/MM/AAAA HH:MM — ex: 30/06/2026 23:59</div></div>
@@ -1655,6 +1659,7 @@ function toggleAcc(btn) {
       </div>
 
       <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-top:16px">
+        <div id="concursoPeriodoIndicador" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;font-size:.84rem;font-weight:700;color:#1a4a6e"></div>
         <div class="panel-title">📋 Inscrições Recebidas <span id="ccContagem" style="font-size:.72rem;color:var(--muted);font-weight:700"></span></div>
         <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Homologue os artigos recebidos, atribua até 3 avaliadores por artigo (revisão cega) e, após receber os pareceres, envie a devolutiva consolidada para cada aluno.</p>
         <div id="listaConcursoCoord"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
@@ -2869,9 +2874,26 @@ async function loadBancas(){
     document.getElementById('bancaBadge').style.display='none';
     return;
   }
-  const convites = Object.entries(snap.val())
+  // Filtra pelo período Vigente — um novo ano/semestre mostra só as bancas daquele período.
+  const snapVigBancas = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
+  const periodoVigBancas = (snapVigBancas && snapVigBancas.exists()) ? (snapVigBancas.val().periodo||'') : '';
+  let periodoPorAluno = {};
+  if(periodoVigBancas){
+    const todosAlunosB = await getAlunos();
+    todosAlunosB.forEach(a=>periodoPorAluno[a.id]=a.periodoLetivo);
+  }
+
+  let convites = Object.entries(snap.val())
     .map(([id,v])=>({cid:id,...v}))
     .sort((a,b)=>(a.dataEnvio||a.data||0)-(b.dataEnvio||b.data||0));
+  if(periodoVigBancas){
+    convites = convites.filter(c=>periodoPorAluno[c.alunoId]===periodoVigBancas);
+  }
+  if(!convites.length){
+    el.innerHTML='<p class="empty-box"><span class="emo">🏛️</span><br>Nenhum convite de banca recebido neste período.</p>';
+    document.getElementById('bancaBadge').style.display='none';
+    return;
+  }
 
   const pendentes = convites.filter(c=>!c.parecer&&c.status!=='Rejeitado');
   document.getElementById('bancaBadge').style.display = pendentes.length ? 'inline' : 'none';
@@ -3550,6 +3572,11 @@ async function loadCoordDashboard(){
     .forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='…'; });
 
 
+  // Garante que a migração automática já rodou para o período Vigente atual, ANTES de
+  // buscar os alunos — assim os dados já vêm corretos, sem precisar recarregar a página.
+  const periodoFiltroDash = await periodoAtivoParaFiltro();
+  renderIndicadorPeriodo('dashPeriodoIndicador');
+
   // Busca sempre dados frescos do Firebase
   const [alunosLista, orientLista] = await Promise.all([getAlunos(), getOrientadores()]);
 
@@ -3557,10 +3584,13 @@ async function loadCoordDashboard(){
   _oMap = {};
   orientLista.forEach(o=>{ _oMap[o.id] = o; });
 
-  // Mostra sempre a Turma/Disciplina/Status ATUAIS e REAIS de cada aluno — o período Vigente
-  // não filtra nem congela essa visão; ele só controla o cadastro de novos alunos e a
-  // migração automática de TCC 1 → TCC 2.
-  const alunos = alunosLista.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
+  // Filtra pelo período ativo (Vigente por padrão, ou o período que a Coordenação estiver
+  // visualizando manualmente) — um novo ano/semestre começa o Dashboard do zero, mostrando
+  // só os alunos e turmas daquele período. A Turma/Disciplina/Status exibidos continuam
+  // sempre os ATUAIS e REAIS de cada aluno (nunca um retrato congelado).
+  const alunos = alunosLista
+    .filter(a=>!periodoFiltroDash || a.periodoLetivo===periodoFiltroDash)
+    .sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
   _todosAlunos = alunos;
 
   const sete = Date.now() - 7*86400000;
@@ -3876,6 +3906,58 @@ function compararPeriodos(p1, p2){
 // interpretaria como separador de caminho — por isso convertemos para "2026-1".
 function chavePeriodo(periodoStr){ return (periodoStr||'').replace('/','-'); }
 
+// ── Filtro de período compartilhado entre todas as seções da Coordenação ──
+// Determina qual período está "ativo para filtro" nas telas de Dashboard, Alunos, Artigos,
+// Bancas e Concurso TCC1: segue a visualização manual escolhida (_periodoVisualizacao), ou o
+// período Vigente por padrão, ou mostra tudo se nada estiver configurado ainda.
+//
+// AUTO-CURA: sempre que o período Vigente for lido aqui, confere se a migração/matrícula
+// automática dos alunos do período anterior já rodou para ele (marca em
+// "config/ultimaMigracaoPeriodo"). Se ainda não rodou — por exemplo, porque o período
+// Vigente foi definido por algum caminho antigo, ou porque a Coordenação só definiu o
+// período sem nunca ter reaberto a tela de Configurações — ela roda automaticamente aqui,
+// sem exigir nenhuma ação manual extra da Coordenação.
+let _migracaoEmAndamento = null;
+async function periodoAtivoParaFiltro(){
+  if(_periodoVisualizacao === 'TODOS') return '';
+  if(_periodoVisualizacao) return _periodoVisualizacao;
+  const snap = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
+  const vigente = (snap && snap.exists()) ? (snap.val().periodo||'') : '';
+  if(vigente){
+    const snapMarca = await rtdb.ref('config/ultimaMigracaoPeriodo').get().catch(()=>null);
+    const jaMigrado = snapMarca && snapMarca.exists() && snapMarca.val()===vigente;
+    if(!jaMigrado){
+      // Evita disparar a mesma migração em paralelo se várias telas chamarem isto ao mesmo tempo.
+      if(!_migracaoEmAndamento || _migracaoEmAndamento.periodo!==vigente){
+        _migracaoEmAndamento = { periodo: vigente, promessa: migrarAlunosParaNovoPeriodo(vigente) };
+      }
+      await _migracaoEmAndamento.promessa;
+    }
+  }
+  return vigente;
+}
+
+// Renderiza um indicador compacto de período no topo de uma seção (Dashboard, Artigos,
+// Bancas, Concurso), com um atalho para trocar o período usando o mesmo controle já
+// existente na aba Alunos — evita duplicar o seletor completo em cada tela.
+async function renderIndicadorPeriodo(containerId){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  const periodo = await periodoAtivoParaFiltro();
+  const texto = _periodoVisualizacao === 'TODOS'
+    ? 'todos os períodos'
+    : (periodo ? `período <strong>${periodo}</strong>${_periodoVisualizacao?' (visualização manual)':' (Vigente)'}` : 'todos os períodos (nenhum Vigente definido ainda)');
+  el.style.display = 'flex';
+  el.innerHTML = `<span>📅 Mostrando dados do ${texto}.</span>
+    <button onclick="mostrarAbaCoord('alunos')" style="margin-left:auto;padding:.3rem .8rem;background:#fff;border:1.5px solid #bcd6ee;border-radius:7px;font-family:inherit;font-size:.72rem;font-weight:700;cursor:pointer;color:#1a4a6e">🔀 Mudar período</button>`;
+}
+
+// Alterna para outra aba do painel da Coordenação (usado pelo atalho "Mudar período").
+function mostrarAbaCoord(tab){
+  const btn = document.querySelector(`#dashCoord .cnav-btn[onclick*="'${tab}'"]`);
+  if(btn) showCoordTab(tab, btn);
+}
+
 // Busca no histórico do aluno a última decisão tomada de fato pelo avaliador ou orientador
 // (ignora entradas cujo autor seja 'Coordenação'), garantindo que o retrato histórico de um
 // período espelhe sempre a decisão do orientador — nunca um valor de status que possa ter
@@ -3891,70 +3973,87 @@ async function statusRealDoOrientador(alunoId){
   } catch(e){ return null; }
 }
 
-// Observação de design: o retrato "periodos/{periodo}" continua sendo gravado no aluno a
-// cada migração automática (só para referência/consulta futura no Firebase, se necessário),
-// mas NENHUMA tela da Coordenação usa mais esse retrato para decidir o que exibir — todas
-// mostram sempre a Turma/Disciplina/Status ATUAIS e REAIS do aluno, refletindo diretamente
-// a última decisão do avaliador ou orientador, sem depender de qual período está Vigente.
+// Observação de design: as telas da Coordenação sempre mostram a Turma/Disciplina/Status
+// ATUAIS e REAIS de cada aluno, refletindo diretamente a última decisão do avaliador ou
+// orientador — nunca dependem de qual período está Vigente. Os dados de um período já
+// encerrado, uma vez arquivados por esta rotina (ver "alunosHistorico" abaixo), nunca mais
+// são alterados por nada no sistema.
 
-// Migração automática ao AVANÇAR o período vigente (nunca ao retroceder/reabrir um período já concluído):
-// - Alunos de TCC 1 no período anterior avançam automaticamente para o novo período.
-//   • Se estavam com status "Aprovado", a Disciplina do novo período já entra como "TCC 2".
-//   • Caso contrário, a Disciplina fica em branco para a Coordenação decidir.
-// - Alunos que já concluíram TCC 2 (disciplina TCC 2 e status Aprovado) no período anterior
-//   NÃO são migrados — permanecem registrados apenas no período em que se formaram.
-// - O Status de cada aluno nunca é alterado por esta rotina.
-// - Antes de sobrescrever, a Turma/Disciplina/Status do período concluído são guardadas em
-//   "periodos/{periodoAnterior}" do próprio aluno, para que nada se perca caso a Coordenação
-//   volte a definir aquele período como vigente futuramente (apenas para consulta/histórico).
-async function migrarAlunosParaNovoPeriodo(novoPeriodo, periodoVigenteAnterior){
+// Migração/matrícula automática ao INICIAR um novo ano/período como Vigente (nunca ao
+// retroceder/reabrir um período já concluído). Para cada aluno do período anterior:
+//   1) Arquiva uma cópia EXATA e definitiva do estado dele naquele período em
+//      "alunosHistorico/{periodoAnterior}/{id}" — esse arquivo nunca é reescrito depois,
+//      preservando os dados originais mesmo que o registro "ao vivo" do aluno mude no futuro.
+//   2) Decide a matrícula do aluno no novo período, só para agilizar o trabalho da
+//      Coordenação (ela pode editar tudo depois):
+//        • TCC 1 + Aprovado          → nova disciplina: TCC 2
+//        • TCC 1 + Reprovado/Rejeitado (falta ou nota) → continua em TCC 1
+//        • TCC 1 + Pendente/outro    → disciplina em branco, para a Coordenação decidir
+//        • TCC 2 + Aprovado          → CONCLUIU o curso — não é matriculado de novo, não
+//          precisa repetir os dados dele no novo período
+//        • TCC 2 + não aprovado ainda → continua em TCC 2
+//   3) Turma e avaliador/orientador são mantidos automaticamente (evita redigitação); o
+//      status é reiniciado como "Pendente", já que é o começo de um novo ciclo de avaliação.
+async function migrarAlunosParaNovoPeriodo(novoPeriodo){
   const periodoAnterior = calcPeriodoAnterior(novoPeriodo);
-  if(!periodoAnterior) return { migrados:0 };
-  // Só migra quando o novo período vigente é, de fato, um avanço em relação ao vigente
-  // anterior — evita migrar novamente (ou de forma indevida) quando a Coordenação apenas
-  // volta a marcar como vigente um período já concluído para consulta.
-  if(periodoVigenteAnterior && compararPeriodos(novoPeriodo, periodoVigenteAnterior) <= 0){
-    return { migrados:0 };
+  if(!periodoAnterior) return { migrados:0, arquivados:0, concluidos:0 };
+  // Idempotência: só migra uma vez por período de destino, controlado por uma marca
+  // dedicada ("config/ultimaMigracaoPeriodo") — não pelo período Vigente anterior. Isso
+  // garante que, mesmo que o Vigente já tenha sido definido antes sem a migração ter
+  // rodado (ex.: por um caminho antigo/duplicado do sistema), salvar novamente aciona a
+  // migração corretamente; e evita migrar de novo se a Coordenação apenas resalvar o
+  // mesmo período ou voltar a um período já concluído para consulta.
+  const snapMarca = await rtdb.ref('config/ultimaMigracaoPeriodo').get().catch(()=>null);
+  if(snapMarca && snapMarca.exists() && snapMarca.val()===novoPeriodo){
+    return { migrados:0, arquivados:0, concluidos:0 };
   }
+
   const todos = await getAlunos();
-  const elegiveis = todos.filter(a => a.periodoLetivo===periodoAnterior && a.disciplina==='TCC 1');
-  if(!elegiveis.length) return { migrados:0 };
-  const oListaCompleta = await getOrientadores();
-  const oTurmaMap = {}; oListaCompleta.forEach(o=>oTurmaMap[o.id]=o.turma);
-  const gravacoes = elegiveis.map(async(a)=>{
-    // Usa a última decisão real do orientador (histórico) como fonte da verdade, com o
-    // campo "status" do aluno como reserva apenas se não houver nenhuma decisão registrada.
-    const statusReal = (await statusRealDoOrientador(a.id)) || a.status || 'Pendente';
-    const novaDisciplina = statusReal==='Aprovado' ? 'TCC 2' : '';
-    const snapshot = { turma: a.turma || oTurmaMap[a.orientadorId] || '', disciplina: 'TCC 1', status: statusReal };
-    return rtdb.ref('alunos/'+a.id).update({
+  const doPeriodoAnterior = todos.filter(a => a.periodoLetivo===periodoAnterior);
+  if(!doPeriodoAnterior.length){
+    await rtdb.ref('config/ultimaMigracaoPeriodo').set(novoPeriodo).catch(()=>{});
+    return { migrados:0, arquivados:0, concluidos:0 };
+  }
+
+  const chaveAnterior = chavePeriodo(periodoAnterior);
+  const gravacoes = [];
+  let migrados = 0, concluidos = 0;
+
+  for(const a of doPeriodoAnterior){
+    // 1) Arquiva o estado exato do aluno naquele período — nunca mais será tocado.
+    gravacoes.push(rtdb.ref('alunosHistorico/'+chaveAnterior+'/'+a.id).set({ ...a }).catch(()=>{}));
+
+    // 2) Decide a disciplina no novo período conforme as regras. Usa a última decisão real
+    //    do orientador (histórico) como fonte da verdade da aprovação/reprovação, evitando
+    //    propagar um campo "status" que possa ter ficado incorreto por outro motivo.
+    const disc = a.disciplina || '';
+    const status = (await statusRealDoOrientador(a.id)) || a.status || '';
+    const reprovado = ['Reprovado','Reprovado por Falta','Reprovado por Nota','Rejeitado'].includes(status);
+
+    if(disc==='TCC 2' && status==='Aprovado'){
+      // Concluiu TCC 1 e TCC 2 — não precisa repetir o cadastro no novo período.
+      concluidos++;
+      continue;
+    }
+
+    let novaDisciplina = '';
+    if(disc==='TCC 1'){
+      novaDisciplina = status==='Aprovado' ? 'TCC 2' : (reprovado ? 'TCC 1' : '');
+    } else if(disc==='TCC 2'){
+      novaDisciplina = 'TCC 2'; // ainda não concluiu TCC 2 — continua nela
+    } // sem disciplina definida → fica em branco para a Coordenação decidir
+
+    gravacoes.push(rtdb.ref('alunos/'+a.id).update({
       periodoLetivo: novoPeriodo,
       disciplina: novaDisciplina,
-      ['periodos/'+chavePeriodo(periodoAnterior)]: snapshot
-    }).catch(()=>{});
-  });
-  await Promise.all(gravacoes);
-  return { migrados: elegiveis.length };
-}
+      status: 'Pendente' // novo ciclo de avaliação — o status do período anterior fica só no arquivo
+    }).catch(()=>{}));
+    migrados++;
+  }
 
-async function definirPeriodoVigente(){
-  const p = getPeriodoSelecionado();
-  if(!p){ toast('Selecione o ano e o período antes de definir como vigente.','err'); return; }
-  const snapAnterior = await rtdb.ref('config/periodoVigente').get();
-  const vigenteAnterior = snapAnterior.exists() ? (snapAnterior.val().periodo||'') : '';
-  await rtdb.ref('config/periodoVigente').set({ periodo:p, atualizadoEm:Date.now() });
-  const { migrados } = await migrarAlunosParaNovoPeriodo(p, vigenteAnterior);
-  const box = document.getElementById('periodoVigenteBox');
-  box.style.display='block';
-  box.textContent = migrados
-    ? `⭐ Período Vigente definido como: ${p} — ${migrados} aluno(s) de TCC 1 do período anterior migrado(s) automaticamente. Coordenação, avaliadores/orientadores e alunos agora veem apenas os dados deste período.`
-    : `⭐ Período Vigente definido como: ${p} — Coordenação, avaliadores/orientadores e alunos agora veem apenas os dados deste período.`;
-  toast(migrados ? `Período vigente definido: ${p} (${migrados} aluno(s) migrado(s))` : `Período vigente definido: ${p}`);
-  // Volta a seguir o novo período Vigente por padrão na tela de Alunos Cadastrados.
-  _periodoVisualizacao = '';
-  document.getElementById('aPeriodo').value = p;
-  atualizarPeriodoFiltroBox();
-  if(document.getElementById('listaAlunos')) loadAlunosList();
+  await Promise.all(gravacoes);
+  await rtdb.ref('config/ultimaMigracaoPeriodo').set(novoPeriodo).catch(()=>{});
+  return { migrados, arquivados: doPeriodoAnterior.length, concluidos };
 }
 
 async function carregarPeriodoCadastro(){
@@ -4212,6 +4311,10 @@ async function confirmarExclusaoAluno(){
 async function loadAlunosList(){
   const el = document.getElementById('listaAlunos');
   el.innerHTML = '<p class="empty-box"><span class="emo">⏳</span><br>Carregando...</p>';
+  // Garante que a migração automática de período já rodou (se ainda não tiver rodado para
+  // o período Vigente atual, roda agora sozinha) ANTES de buscar os alunos — assim a lista
+  // já reflete o resultado da migração, sem precisar de nenhuma ação manual extra.
+  const periodoFiltro = await periodoAtivoParaFiltro();
   // Busca alunos, avaliadores/orientadores e a Biblioteca em paralelo (uma única requisição
   // para cada nó). A Biblioteca é usada como prova concreta de aprovações já confirmadas.
   const [todos, oListaCompleta, bibSnapAlunos] = await Promise.all([
@@ -4226,35 +4329,35 @@ async function loadAlunosList(){
 
   // Matrículas de alunos com artigo já publicado na Biblioteca — só existe um registro lá
   // quando um avaliador ou orientador realmente confirmou a aprovação (Versão Final, nota≥5).
-  // É a prova mais confiável do status real de aprovação de um aluno.
-  const matriculasAprovadasNaBiblioteca = new Set();
+  // É a prova mais confiável do status real de aprovação de um aluno NAQUELE período
+  // específico — guardamos o período junto para não confundir uma aprovação antiga (ex.:
+  // TCC 1 já concluído) com o período atual do aluno depois que ele migrar para o próximo
+  // (ex.: TCC 2, que começa como "Pendente" e ainda não tem nenhuma aprovação).
+  const aprovacoesBiblioteca = new Set();
   if(bibSnapAlunos && bibSnapAlunos.exists()){
     Object.values(bibSnapAlunos.val()).forEach(item=>{
-      if(item && item.alunoMatricula) matriculasAprovadasNaBiblioteca.add(item.alunoMatricula);
+      if(item && item.alunoMatricula) aprovacoesBiblioteca.add(item.alunoMatricula+'|'+(item.periodoLetivo||''));
     });
   }
 
   // Ajustes automáticos para o período 2026/1 (já encerrado — todos os alunos são de TCC 1):
   // 1) Alunos ainda registrados em 2026/1: força Disciplina = "TCC 1" e herda/preserva a turma
   //    do avaliador/orientador da época quando o aluno ainda não tem turma própria gravada.
-  // 2) RESGATE AUTOMÁTICO: alunos que estavam em TCC 1 no 2026/1 e foram movidos para 2026/2
-  //    por causa de testes anteriores da migração automática são restaurados sozinhos para
-  //    2026/1 (usando o retrato salvo em "periodos/2026-1"), sem precisar de nenhuma ação da
-  //    Coordenação. O status atual do aluno nunca é alterado por esse resgate.
-  // 3) Alunos já migrados para 2026/2 que ainda não têm o retrato histórico de 2026/1 salvo
-  //    (ex.: migrados antes desta correção existir): reconstrói esse retrato agora, já que
-  //    2026/2 é o primeiro período seguinte a existir na plataforma — logo, todo aluno que já
-  //    esteve em 2026/2 obrigatoriamente veio de 2026/1, sempre como TCC 1.
-  // 4) NUNCA grava o campo "status" aqui — o status atual de cada aluno é sempre preservado.
-  // 4) CORREÇÃO DE STATUS: se um aluno já tem artigo publicado na Biblioteca (prova de
+  // 2) CORREÇÃO DE STATUS: se um aluno já tem artigo publicado na Biblioteca (prova de
   //    aprovação confirmada por um avaliador ou orientador), mas o campo "status" atual dele
-  //    não diz "Aprovado" — foi corrompido por algum motivo (ex.: efeito colateral dos testes
-  //    de migração de período) — o status é restaurado automaticamente para "Aprovado".
-  //    Essa é a única situação em que esta rotina toca no status, porque a Biblioteca é uma
-  //    prova concreta e confiável de uma decisão real do orientador, nunca da Coordenação.
+  //    não diz "Aprovado" — foi corrompido por algum motivo — o status é restaurado
+  //    automaticamente para "Aprovado". Essa é a única situação em que esta rotina toca no
+  //    status, porque a Biblioteca é uma prova concreta e confiável de uma decisão real do
+  //    orientador, nunca da Coordenação.
+  // 3) LIMPEZA: remove o antigo campo "periodos" (retrato histórico de uma versão anterior
+  //    e já substituída do sistema, que usava a mesma chave para todos os alunos de TCC 1→2026/2
+  //    e por isso podia "resgatar" um aluno de volta para 2026/1 mesmo depois de uma migração
+  //    real e intencional). O histórico correto de cada período agora vive em
+  //    "alunosHistorico/{periodo}/{id}" (ver migrarAlunosParaNovoPeriodo), que nunca interfere
+  //    na matrícula atual do aluno.
   const gravacoes = [];
   for(const d of lista){
-    if(matriculasAprovadasNaBiblioteca.has(d.id) && d.status!=='Aprovado'){
+    if(aprovacoesBiblioteca.has(d.id+'|'+(d.periodoLetivo||'')) && d.status!=='Aprovado'){
       d.status = 'Aprovado';
       gravacoes.push(rtdb.ref('alunos/'+d.id).update({ status:'Aprovado' }).catch(()=>{}));
     }
@@ -4278,46 +4381,32 @@ async function loadAlunosList(){
       if(Object.keys(campos).length){
         gravacoes.push(rtdb.ref('alunos/'+d.id).update(campos).catch(()=>{}));
       }
-    } else if(d.periodoLetivo==='2026/2' && d.periodos && d.periodos[chavePeriodo('2026/1')]){
-      // RESGATE: este aluno tem um retrato de 2026/1 salvo mas está registrado em 2026/2 —
-      // ou seja, foi movido por uma migração de teste, não por progresso acadêmico real.
-      // Restaura para 2026/1 com Disciplina TCC 1, preservando o status atual do aluno.
-      const snap2026_1 = d.periodos[chavePeriodo('2026/1')];
-      const campos = { periodoLetivo:'2026/1', disciplina:'TCC 1' };
-      if(!d.turma && snap2026_1.turma){ campos.turma = snap2026_1.turma; }
-      d.periodoLetivo = '2026/1';
-      d.disciplina = 'TCC 1';
-      if(campos.turma) d.turma = campos.turma;
-      gravacoes.push(rtdb.ref('alunos/'+d.id).update(campos).catch(()=>{}));
-      gravacoes.push(rtdb.ref('alunos/'+d.id+'/periodos/'+chavePeriodo('2026/1')).remove().catch(()=>{}));
-      delete d.periodos[chavePeriodo('2026/1')];
-    } else if(d.periodoLetivo==='2026/2' && !(d.periodos && d.periodos[chavePeriodo('2026/1')])){
-      const turmaOriginal = d.turma || oTurmaMap[d.orientadorId] || '';
-      // Usa a última decisão real do orientador (histórico) — nunca o campo "status" isolado,
-      // que pode já estar desatualizado por outro motivo — para reconstruir o retrato de 2026/1.
-      const statusReal = (await statusRealDoOrientador(d.id)) || d.status || 'Pendente';
-      const snapshot = { turma: turmaOriginal, disciplina:'TCC 1', status: statusReal };
-      d.periodos = d.periodos || {};
-      d.periodos[chavePeriodo('2026/1')] = snapshot;
-      gravacoes.push(rtdb.ref('alunos/'+d.id).update({ ['periodos/'+chavePeriodo('2026/1')]: snapshot }).catch(()=>{}));
+    }
+    if(d.periodos){
+      // Remove o campo legado (nunca mais usado por nenhuma tela do sistema).
+      gravacoes.push(rtdb.ref('alunos/'+d.id+'/periodos').remove().catch(()=>{}));
+      delete d.periodos;
     }
   }
   if(gravacoes.length) Promise.all(gravacoes);
 
-  // Determina o período de filtro: segue a visualização manual da Coordenação, se houver;
-  // senão, segue o período Vigente por padrão; se nenhum dos dois estiver definido, mostra
-  // todos os alunos (estado inicial, antes de qualquer configuração de período).
-  let periodoFiltro = '';
-  if(_periodoVisualizacao === 'TODOS'){
-    periodoFiltro = '';
-  } else if(_periodoVisualizacao){
-    periodoFiltro = _periodoVisualizacao;
-  } else {
-    const snapVig = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
-    periodoFiltro = (snapVig && snapVig.exists()) ? (snapVig.val().periodo||'') : '';
-  }
   atualizarPeriodoFiltroBox();
-  const listaFiltrada = periodoFiltro ? lista.filter(d=>d.periodoLetivo===periodoFiltro) : lista;
+  let listaFiltrada = periodoFiltro ? lista.filter(d=>d.periodoLetivo===periodoFiltro) : lista;
+
+  // Se estiver filtrando por um período específico, também busca no arquivo os alunos que
+  // já passaram por ele mas seguiram em frente (ex.: aprovados em TCC 1 que já viraram TCC 2).
+  // Esses dados arquivados nunca são alterados — aparecem aqui só para consulta, sem os
+  // botões de edição/status, já que o registro "ao vivo" deles agora pertence a outro período.
+  let idsArquivados = new Set();
+  if(periodoFiltro){
+    const snapArquivo = await rtdb.ref('alunosHistorico/'+chavePeriodo(periodoFiltro)).get().catch(()=>null);
+    if(snapArquivo && snapArquivo.exists()){
+      const idsJaListados = new Set(listaFiltrada.map(d=>d.id));
+      const arquivados = Object.values(snapArquivo.val()).filter(d=>!idsJaListados.has(d.id));
+      arquivados.forEach(d=>idsArquivados.add(d.id));
+      listaFiltrada = [...listaFiltrada, ...arquivados].sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
+    }
+  }
 
   if(!listaFiltrada.length){
     el.innerHTML = `<p class="empty-box"><span class="emo">📚</span><br>Nenhum aluno cadastrado no período ${periodoFiltro||'selecionado'}.</p>`;
@@ -4329,16 +4418,19 @@ async function loadAlunosList(){
   // ou substitui o status verdadeiro de um aluno já existente.
   el.innerHTML=`<div class="table-shell"><table>
     <thead><tr><th>Nome</th><th>Matrícula</th><th>E-mail</th><th>Turma</th><th>Disciplina</th><th>Avaliador ou Orientador</th><th>Status</th><th>Ações</th></tr></thead>
-    <tbody>${listaFiltrada.map(a=>{const d=a; const turmaAtual = d.turma || oTurmaMap[d.orientadorId] || ''; return`<tr>
-      <td>${d.nome}</td><td>${d.matricula}</td><td>${d.email}</td>
+    <tbody>${listaFiltrada.map(a=>{const d=a; const arquivado = idsArquivados.has(d.id); const turmaAtual = d.turma || oTurmaMap[d.orientadorId] || ''; return`<tr${arquivado?' style="opacity:.75;background:#fafafa"':''}>
+      <td>${d.nome}${arquivado?' <span title="Registro arquivado deste período — o aluno já avançou; dados preservados e não editáveis." style="color:var(--muted);font-size:.7rem">📦</span>':''}</td>
+      <td>${d.matricula}</td><td>${d.email}</td>
       <td>${turmaAtual||'—'}</td>
       <td>${d.disciplina||'—'}</td>
       <td>${oMap[d.orientadorId]||'—'}</td>
       <td><span class="sb ${statusClass(d.status)}">${d.status||'Pendente'}</span></td>
       <td class="tbl-actions">
-        <button class="tbl-btn tbl-edit" onclick='editarAluno("${a.id}",${JSON.stringify({nome:d.nome,matricula:d.matricula,email:d.email,senha:d.senha,turma:turmaAtual,disciplina:d.disciplina,periodoLetivo:d.periodoLetivo,orientadorId:d.orientadorId})})'>✏️ Editar</button>
+        ${arquivado
+          ? `<span style="font-size:.72rem;color:var(--muted);font-style:italic">📦 Arquivado (somente consulta)</span>`
+          : `<button class="tbl-btn tbl-edit" onclick='editarAluno("${a.id}",${JSON.stringify({nome:d.nome,matricula:d.matricula,email:d.email,senha:d.senha,turma:turmaAtual,disciplina:d.disciplina,periodoLetivo:d.periodoLetivo,orientadorId:d.orientadorId})})'>✏️ Editar</button>
         <button class="tbl-btn" onclick='abrirAlterarStatus("${a.id}","${d.nome}","${d.orientadorId||''}","${d.status||'Pendente'}")' style="background:var(--purple-pale);color:var(--purple)">🔄 Status</button>
-        <button class="tbl-btn tbl-del" onclick='excluirAluno("${a.id}","${d.nome}")'>🗑 Excluir</button>
+        <button class="tbl-btn tbl-del" onclick='excluirAluno("${a.id}","${d.nome}")'>🗑 Excluir</button>`}
       </td>
     </tr>`;}).join('')}</tbody>
   </table></div>`;
@@ -4346,8 +4438,11 @@ async function loadAlunosList(){
 
 // ─── Artigos coord ───
 async function loadArtigosCoord(){
-  const lista = await getAlunos();
+  const periodoFiltroArt = await periodoAtivoParaFiltro();
+  renderIndicadorPeriodo('artigosPeriodoIndicador');
+  const listaCompleta = await getAlunos();
   const oMap = await getOrientadoresMap();
+  const lista = listaCompleta.filter(r=>!periodoFiltroArt || r.periodoLetivo===periodoFiltroArt);
   let rows = lista;
   if(artigosFiltro!=='todos') rows=rows.filter(r=>r.status===artigosFiltro);
   const tbody = document.getElementById('tblArtigos');
@@ -4558,7 +4653,13 @@ async function carregarGestao(){
 async function loadBancasCoord(){
   const el = document.getElementById('listaBancasCoord');
   el.innerHTML = '<p style="color:var(--muted)">Carregando...</p>';
-  const snap = await rtdb.ref('bancasAgendadas').get();
+  const periodoFiltroBancas = await periodoAtivoParaFiltro();
+  renderIndicadorPeriodo('bancasPeriodoIndicador');
+  const [snap, todosAlunosBanca] = await Promise.all([
+    rtdb.ref('bancasAgendadas').get(),
+    getAlunos()
+  ]);
+  const periodoPorAlunoId = {}; todosAlunosBanca.forEach(a=>periodoPorAlunoId[a.id]=a.periodoLetivo);
   if(!snap.exists()||!Object.keys(snap.val()).length){
     el.innerHTML='<p class="empty-box"><span class="emo">🏛️</span><br>Nenhuma banca agendada.</p>';
     return;
@@ -4566,12 +4667,18 @@ async function loadBancasCoord(){
   const oMap = await getOrientadoresMap();
   const bancas = Object.entries(snap.val())
     .map(([id,v])=>({id,...v}))
+    .filter(b=>!periodoFiltroBancas || periodoPorAlunoId[b.alunoId]===periodoFiltroBancas)
     .sort((a,b)=>{
       // Ordena por data de defesa (mais próxima primeiro)
       const da = a.defesa ? new Date(a.defesa.data.split('/').reverse().join('-')).getTime() : 0;
       const db2 = b.defesa ? new Date(b.defesa.data.split('/').reverse().join('-')).getTime() : 0;
       return da-db2;
     });
+
+  if(!bancas.length){
+    el.innerHTML='<p class="empty-box"><span class="emo">🏛️</span><br>Nenhuma banca agendada neste período.</p>';
+    return;
+  }
 
   el.innerHTML = `<div class="table-shell"><table>
     <thead><tr>
@@ -4767,13 +4874,37 @@ async function salvarConfig(){
   if(!periodo||!prazoStr){ toast('Preencha período e prazo.','err'); return; }
   const prazoTs = parsePrazoBR(prazoStr);
   if(!prazoTs){ toast('Formato inválido. Use DD/MM/AAAA HH:MM — ex: 30/06/2026 23:59','err'); return; }
+  if(!/^\d{4}\/[12]$/.test(periodo)){ toast('Formato de período inválido. Use ANO/1 ou ANO/2 — ex: 2026/2','err'); return; }
+
+  const snapAnterior = await rtdb.ref('config/periodoVigente').get();
+  const vigenteAnterior = snapAnterior.exists() ? (snapAnterior.val().periodo||'') : '';
+
   await rtdb.ref('config/prazo').set({periodo, prazo: prazoTs, prazoStr});
   await rtdb.ref('config/periodoVigente').set({periodo, atualizadoEm:Date.now()});
-  toast('Configuração salva!');
+
+  // Este é o ÚNICO lugar do sistema que define o período Vigente — ao salvar, dispara
+  // automaticamente a matrícula/migração dos alunos do período anterior (ver regras em
+  // migrarAlunosParaNovoPeriodo) e o arquivamento definitivo dos dados do período encerrado.
+  const { migrados, arquivados, concluidos } = await migrarAlunosParaNovoPeriodo(periodo);
+
+  const box = document.getElementById('cfgAtual');
+  if(box){
+    box.style.display='block';
+    box.innerHTML = arquivados
+      ? `✅ Prazo atual: ${periodo} | ${new Date(prazoTs).toLocaleString('pt-BR')}<br>
+         📦 ${arquivados} aluno(s) do período anterior arquivado(s) (dados preservados e nunca mais alterados).<br>
+         📝 ${migrados} aluno(s) matriculado(s) automaticamente no novo período (turma e orientador mantidos; Coordenação pode revisar).<br>
+         ${concluidos ? `🎓 ${concluidos} aluno(s) já concluíram TCC 1 e TCC 2 — não precisaram ser matriculados de novo.` : ''}`
+      : `✅ Prazo atual: ${periodo} | ${new Date(prazoTs).toLocaleString('pt-BR')}`;
+  }
+  toast(arquivados ? `Configuração salva! Período vigente: ${periodo} (${migrados} matriculado(s), ${arquivados} arquivado(s))` : 'Configuração salva!');
   loadConfig();
   // Recarrega o prazo do Firebase e atualiza todos os cronômetros
   _prazoCache = null;
   carregarPrazoGlobal();
+  // Atualiza a tela de Alunos, caso esteja aberta, para refletir o novo período imediatamente.
+  _periodoVisualizacao = '';
+  if(document.getElementById('listaAlunos')) loadAlunosList();
 }
 // ── Notifica coordenador sobre troca de senha ──
 async function notificarCoordSenha(tipo, nome, novaSenha){
@@ -7278,6 +7409,8 @@ async function loadConcursoInscricoes(){
   const el = document.getElementById('listaConcursoCoord');
   const contEl = document.getElementById('ccContagem');
   try{
+  const periodoFiltroConcurso = await periodoAtivoParaFiltro();
+  renderIndicadorPeriodo('concursoPeriodoIndicador');
   const snap = await rtdb.ref('concurso/inscricoes').get();
   if(!snap.exists()){
     el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo enviado ao concurso ainda.</p>';
@@ -7290,7 +7423,8 @@ async function loadConcursoInscricoes(){
     // Mostra qualquer inscrição que já saiu do estado inicial "Inscrito" OU que já tenha
     // avaliadores atribuídos/pareceres recebidos — mesmo que o campo "status" tenha ficado
     // com um valor inesperado por algum motivo, ela nunca fica escondida da Coordenação.
-    .filter(i=> (i.status && i.status!=='Inscrito') || contarAvaliadoresConcurso(i)>0 || temAlgumParecerConcurso(i))
+    // Também respeita o filtro de período ativo (Vigente por padrão).
+    .filter(i=> ((i.status && i.status!=='Inscrito') || contarAvaliadoresConcurso(i)>0 || temAlgumParecerConcurso(i)) && (!periodoFiltroConcurso || i.periodo===periodoFiltroConcurso))
     .sort((a,b)=>(b.dataEnvio||b.dataInscricao||0)-(a.dataEnvio||a.dataInscricao||0));
 
   // Reparo automático: pareceres enviados antes desta correção não tinham o campo
@@ -7349,12 +7483,14 @@ async function loadConcursoPendentes(){
   const el = document.getElementById('listaConcursoPendentes');
   const contEl = document.getElementById('ccContagemPendentes');
   try{
+    const periodoFiltroPend = await periodoAtivoParaFiltro();
     const snap = await rtdb.ref('concurso/inscricoes').get();
     const lista = snap.exists()
       ? Object.entries(snap.val()).map(([id,d])=>({id,...d}))
           // Só considera "parada" quem realmente não tem nenhum avaliador/parecer ainda —
           // evita duplicar/esconder quem já avançou no processo mesmo com status inesperado.
-          .filter(i=>i.status==='Inscrito' && contarAvaliadoresConcurso(i)===0 && !temAlgumParecerConcurso(i))
+          // Também respeita o filtro de período ativo (Vigente por padrão).
+          .filter(i=>i.status==='Inscrito' && contarAvaliadoresConcurso(i)===0 && !temAlgumParecerConcurso(i) && (!periodoFiltroPend || i.periodo===periodoFiltroPend))
           .sort((a,b)=>(b.dataInscricao||0)-(a.dataInscricao||0))
       : [];
     window._concursoPendentesCache = {};
@@ -7632,13 +7768,18 @@ async function loadConcursoAvaliacoesOrient(){
   const snap = await rtdb.ref('concurso/inscricoes').get();
   if(!snap.exists()){ el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo designado a você no momento.</p>'; if(badge) badge.style.display='none'; return; }
   const todas = Object.entries(snap.val()).map(([id,d])=>({id,...d}));
+  // Filtra pelo período Vigente da plataforma — um novo ano/semestre mostra só as
+  // inscrições do concurso daquele período para o avaliador.
+  const snapVigConcOrient = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
+  const periodoVigConcOrient = (snapVigConcOrient && snapVigConcOrient.exists()) ? (snapVigConcOrient.val().periodo||'') : '';
   // Só mostra a inscrição para o avaliador que REALMENTE está atribuído a ela — a
   // comparação exige que tanto o uid do usuário quanto o id do slot sejam valores reais
   // (nunca vazios/indefinidos), evitando qualquer correspondência falsa que revelasse
   // informações do concurso para orientadores que não fazem parte da comissão daquele artigo.
   const minhas = uid ? todas.filter(i=>{
     const av = i.avaliadores || {};
-    return [1,2,3].some(n=>av[n] && av[n].id && av[n].id === uid);
+    const souAvaliador = [1,2,3].some(n=>av[n] && av[n].id && av[n].id === uid);
+    return souAvaliador && (!periodoVigConcOrient || i.periodo===periodoVigConcOrient);
   }) : [];
   if(!minhas.length){ el.innerHTML = '<p class="empty-box"><span class="emo">🏆</span><br>Nenhum artigo designado a você no momento.</p>'; if(badge) badge.style.display='none'; return; }
   window._concursoOrientCache = {};
