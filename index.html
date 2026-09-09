@@ -3771,9 +3771,10 @@ function classeBadge(classe){
   return `<span style="display:inline-flex;align-items:center;gap:5px;background:${c.bg};color:${c.fg};border:1px solid ${c.bd};padding:4px 10px;border-radius:20px;font-size:.76rem;font-weight:800;white-space:nowrap">${c.icon} ${c.label}</span>`;
 }
 async function loadOrientadoresList(){
+  const el = document.getElementById('listaOrientadores');
+  try{
   const lista = await getOrientadores();
   lista.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR'));
-  const el = document.getElementById('listaOrientadores');
   if(!lista.length){ el.innerHTML='<p class="empty-box"><span class="emo">🎓</span><br>Nenhum avaliador ou orientador cadastrado.</p>'; return; }
   el.innerHTML=`<div class="table-shell"><table>
     <thead><tr><th>Nome</th><th>E-mail</th><th>Classe</th><th>Senha</th><th>Ações</th></tr></thead>
@@ -3788,6 +3789,10 @@ async function loadOrientadoresList(){
       </td>
     </tr>`).join('')}</tbody>
   </table></div>`;
+  } catch(e){
+    console.error('[loadOrientadoresList] erro:', e);
+    el.innerHTML = `<p class="empty-box" style="color:#991b1b"><span class="emo">⚠️</span><br>Erro ao carregar. Tente recarregar a página.<br><span style="font-size:.72rem;font-weight:400">${e.message}</span></p>`;
+  }
 }
 
 // ─── Alunos CRUD ───
@@ -3917,21 +3922,39 @@ function chavePeriodo(periodoStr){ return (periodoStr||'').replace('/','-'); }
 // Vigente foi definido por algum caminho antigo, ou porque a Coordenação só definiu o
 // período sem nunca ter reaberto a tela de Configurações — ela roda automaticamente aqui,
 // sem exigir nenhuma ação manual extra da Coordenação.
+//
+// PROTEÇÃO CONTRA TRAVAMENTO: esta função NUNCA espera a migração indefinidamente — se ela
+// não terminar em 10 segundos, ou se falhar por qualquer motivo, a tela segue carregando
+// normalmente (com os dados de antes da migração), em vez de travar em "Carregando..." para
+// sempre. Isso garante que nenhuma seção do sistema fique presa esperando essa rotina.
 let _migracaoEmAndamento = null;
+function comTimeout(promessa, ms){
+  return Promise.race([
+    promessa,
+    new Promise(resolve=>setTimeout(()=>resolve(null), ms))
+  ]);
+}
 async function periodoAtivoParaFiltro(){
   if(_periodoVisualizacao === 'TODOS') return '';
   if(_periodoVisualizacao) return _periodoVisualizacao;
   const snap = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
   const vigente = (snap && snap.exists()) ? (snap.val().periodo||'') : '';
   if(vigente){
-    const snapMarca = await rtdb.ref('config/ultimaMigracaoPeriodo').get().catch(()=>null);
-    const jaMigrado = snapMarca && snapMarca.exists() && snapMarca.val()===vigente;
-    if(!jaMigrado){
-      // Evita disparar a mesma migração em paralelo se várias telas chamarem isto ao mesmo tempo.
-      if(!_migracaoEmAndamento || _migracaoEmAndamento.periodo!==vigente){
-        _migracaoEmAndamento = { periodo: vigente, promessa: migrarAlunosParaNovoPeriodo(vigente) };
+    try{
+      const snapMarca = await rtdb.ref('config/ultimaMigracaoPeriodo').get().catch(()=>null);
+      const jaMigrado = snapMarca && snapMarca.exists() && snapMarca.val()===vigente;
+      if(!jaMigrado){
+        // Evita disparar a mesma migração em paralelo se várias telas chamarem isto ao mesmo tempo.
+        if(!_migracaoEmAndamento || _migracaoEmAndamento.periodo!==vigente){
+          _migracaoEmAndamento = { periodo: vigente, promessa: migrarAlunosParaNovoPeriodo(vigente) };
+        }
+        // Espera no máximo 10s pela migração; se demorar mais, segue sem bloquear a tela
+        // (a migração continua rodando em segundo plano e será concluída de todo jeito).
+        await comTimeout(_migracaoEmAndamento.promessa, 10000);
       }
-      await _migracaoEmAndamento.promessa;
+    } catch(e){
+      console.error('[periodoAtivoParaFiltro] migração falhou, seguindo sem bloquear a tela:', e);
+      _migracaoEmAndamento = null; // permite tentar de novo na próxima vez
     }
   }
   return vigente;
@@ -3995,6 +4018,7 @@ async function statusRealDoOrientador(alunoId){
 //   3) Turma e avaliador/orientador são mantidos automaticamente (evita redigitação); o
 //      status é reiniciado como "Pendente", já que é o começo de um novo ciclo de avaliação.
 async function migrarAlunosParaNovoPeriodo(novoPeriodo){
+  try{
   const periodoAnterior = calcPeriodoAnterior(novoPeriodo);
   if(!periodoAnterior) return { migrados:0, arquivados:0, concluidos:0 };
   // Idempotência: só migra uma vez por período de destino, controlado por uma marca
@@ -4016,10 +4040,18 @@ async function migrarAlunosParaNovoPeriodo(novoPeriodo){
   }
 
   const chaveAnterior = chavePeriodo(periodoAnterior);
+
+  // Busca a última decisão real do orientador para TODOS os alunos em paralelo (em vez de
+  // um por um, o que poderia levar muito tempo com muitos alunos) — cada busca individual
+  // tem um limite de 5s para nunca travar a migração inteira por causa de uma só consulta lenta.
+  const statusReais = await Promise.all(
+    doPeriodoAnterior.map(a => comTimeout(statusRealDoOrientador(a.id), 5000))
+  );
+
   const gravacoes = [];
   let migrados = 0, concluidos = 0;
 
-  for(const a of doPeriodoAnterior){
+  doPeriodoAnterior.forEach((a, idx)=>{
     // 1) Arquiva o estado exato do aluno naquele período — nunca mais será tocado.
     gravacoes.push(rtdb.ref('alunosHistorico/'+chaveAnterior+'/'+a.id).set({ ...a }).catch(()=>{}));
 
@@ -4027,13 +4059,13 @@ async function migrarAlunosParaNovoPeriodo(novoPeriodo){
     //    do orientador (histórico) como fonte da verdade da aprovação/reprovação, evitando
     //    propagar um campo "status" que possa ter ficado incorreto por outro motivo.
     const disc = a.disciplina || '';
-    const status = (await statusRealDoOrientador(a.id)) || a.status || '';
+    const status = statusReais[idx] || a.status || '';
     const reprovado = ['Reprovado','Reprovado por Falta','Reprovado por Nota','Rejeitado'].includes(status);
 
     if(disc==='TCC 2' && status==='Aprovado'){
       // Concluiu TCC 1 e TCC 2 — não precisa repetir o cadastro no novo período.
       concluidos++;
-      continue;
+      return;
     }
 
     let novaDisciplina = '';
@@ -4049,11 +4081,15 @@ async function migrarAlunosParaNovoPeriodo(novoPeriodo){
       status: 'Pendente' // novo ciclo de avaliação — o status do período anterior fica só no arquivo
     }).catch(()=>{}));
     migrados++;
-  }
+  });
 
   await Promise.all(gravacoes);
   await rtdb.ref('config/ultimaMigracaoPeriodo').set(novoPeriodo).catch(()=>{});
   return { migrados, arquivados: doPeriodoAnterior.length, concluidos };
+  } catch(e){
+    console.error('[migrarAlunosParaNovoPeriodo] falhou:', e);
+    return { migrados:0, arquivados:0, concluidos:0 };
+  }
 }
 
 async function carregarPeriodoCadastro(){
@@ -4311,6 +4347,7 @@ async function confirmarExclusaoAluno(){
 async function loadAlunosList(){
   const el = document.getElementById('listaAlunos');
   el.innerHTML = '<p class="empty-box"><span class="emo">⏳</span><br>Carregando...</p>';
+  try{
   // Garante que a migração automática de período já rodou (se ainda não tiver rodado para
   // o período Vigente atual, roda agora sozinha) ANTES de buscar os alunos — assim a lista
   // já reflete o resultado da migração, sem precisar de nenhuma ação manual extra.
@@ -4434,6 +4471,10 @@ async function loadAlunosList(){
       </td>
     </tr>`;}).join('')}</tbody>
   </table></div>`;
+  } catch(e){
+    console.error('[loadAlunosList] erro:', e);
+    el.innerHTML = `<p class="empty-box" style="color:#991b1b"><span class="emo">⚠️</span><br>Erro ao carregar. Tente recarregar a página.<br><span style="font-size:.72rem;font-weight:400">${e.message}</span></p>`;
+  }
 }
 
 // ─── Artigos coord ───
