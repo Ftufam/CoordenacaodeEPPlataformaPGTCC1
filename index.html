@@ -1604,6 +1604,7 @@ function toggleAcc(btn) {
       <div id="tcc2PeriodoIndicador" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;font-size:.84rem;font-weight:700;color:#1a4a6e"></div>
       <div class="sec-title">🎓 Finalizações de TCC 2 Recebidas</div>
       <p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">Artigos de TCC 2 finalizados e enviados pelos avaliadores ou orientadores, com o comprovante de submissão ao veículo de publicação qualificado.</p>
+      <button onclick="abrirVeiculoQualificado()" style="margin-bottom:16px;padding:.55rem 1rem;background:linear-gradient(90deg,var(--teal),var(--teal-light));color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.8rem;font-weight:800;cursor:pointer">🔬 Veículo de publicação qualificado (para TCC 2)</button>
       <div class="table-shell">
         <table>
           <thead><tr><th>Aluno</th><th>Matrícula</th><th>Avaliador ou Orientador</th><th>Veículo de Publicação</th><th>Modelo de Acesso</th><th>Classificação</th><th>Status</th><th>Nota</th><th>Data</th><th>Ações</th></tr></thead>
@@ -1650,6 +1651,25 @@ function toggleAcc(btn) {
           <span style="color:var(--muted)">10º Período &nbsp;·&nbsp; Eixo: Trabalho de Conclusão de Curso &nbsp;·&nbsp; Créditos 2.2.0 &nbsp;·&nbsp; CH 30h &nbsp;·&nbsp; Pré-requisito: FTL125</span>
           <p style="margin:8px 0 4px">Modelos de acesso e financiamento da publicação científica (fechado por assinatura, aberto diamante, dourado, verde e híbrido). Critérios para seleção de periódico ou evento técnico-científico: escopo, avaliação por pares, corpo editorial, indexação, Qualis, indicadores bibliométricos, idioma, prazo editorial e taxas de publicação. Consulta às bases Qualis Periódicos (Plataforma Sucupira), SCImago Journal & Country Rank (SJR) e Directory of Open Access Journals (DOAJ). Adequação do artigo às instruções aos autores e ao modelo do veículo selecionado. Ética e integridade na publicação científica: autoria, ineditismo, plágio, autoplágio, conflitos de interesse e direitos autorais. Preparação da carta ao editor, dos metadados e dos arquivos necessários à submissão. Submissão e acompanhamento inicial do fluxo editorial.</p>
           <p style="margin:4px 0 0"><strong>Objetivo geral:</strong> ao final da disciplina, o aluno será capaz de selecionar e submeter artigo científico a Veículo de Publicação Qualificado, em conformidade com as diretrizes editoriais e os princípios de integridade científica, obtendo comprovante de submissão e confirmação de encaminhamento do artigo para avaliação por revisores.</p>
+        </div>
+<div style="background:#f8fafc;border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:var(--text);line-height:1.7">
+          <strong>📚 O que é um Veículo de Publicação Qualificado?</strong>
+          <p style="margin:8px 0 4px">É um periódico científico, revista, ou os anais de um evento científico (congresso, simpósio ou conferência) que passou por avaliação formal de qualidade editorial e científica. No Brasil, essa avaliação é conduzida pela CAPES por meio de dois sistemas complementares, ambos consultáveis na <strong>Plataforma Sucupira/WebQualis</strong>: o <strong>Qualis Periódicos</strong>, para revistas científicas, e o <strong>Qualis Eventos</strong>, específico para anais de congressos, simpósios e conferências — ou seja, eventos científicos também são Veículos de Publicação Qualificados, desde que classificados pela CAPES. Ambos os sistemas classificam os veículos em estratos de qualidade (A1 ao mais alto, variando conforme a área de avaliação), considerando critérios como corpo editorial/científico, revisão por pares, indexação em bases reconhecidas e indicadores bibliométricos. A idoneidade de um veículo também pode ser verificada em bases internacionais como o <strong>SCImago Journal & Country Rank (SJR)</strong> e o <strong>Directory of Open Access Journals (DOAJ)</strong>, este último específico para periódicos de acesso aberto.</p>
+          <p style="margin:4px 0 0;font-size:.76rem;color:var(--muted)">Fonte: CAPES — Coordenação de Aperfeiçoamento de Pessoal de Nível Superior. Sistemas Qualis Periódicos e Qualis Eventos, Plataforma Sucupira (sucupira.capes.gov.br), consultado em 2024.</p>
+          <button onclick="abrirVeiculoQualificado()" style="margin-top:10px;padding:.55rem 1rem;background:linear-gradient(90deg,var(--teal),var(--teal-light));color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.8rem;font-weight:800;cursor:pointer">🔬 Abrir: Veículo de publicação qualificado (para TCC 2)</button>
+        </div>
+
+        <div style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:var(--text);line-height:1.7">
+          <strong>⚖️ Entendendo o Autoplágio — o que é e o que não é</strong>
+          <p style="margin:8px 0 4px"><strong>Autoplágio</strong> (ou "publicação redundante") ocorre quando um autor republica, como se fosse inédito, um trabalho <strong>já publicado formalmente</strong> em outro veículo, sem informar essa origem — geralmente para obter dupla contagem de produção científica ou submeter o mesmo conteúdo a mais de uma avaliação por pares.</p>
+          <p style="margin:4px 0">Isso é <strong>diferente</strong> de transformar o TCC 1 — um trabalho acadêmico ainda <strong>não publicado formalmente</strong> — em um artigo científico para o TCC 2. Essa transformação é a prática padrão e esperada na maioria das áreas.</p>
+          <p style="margin:4px 0 0">Para que isso seja eticamente correto:</p>
+          <ul style="margin:4px 0 0;padding-left:20px">
+            <li>Informe ao veículo, na carta ao editor, que o artigo deriva de um Trabalho de Conclusão de Curso;</li>
+            <li>Reelabore o conteúdo no formato de artigo (diferente da monografia) — reestruture, condense, atualize a revisão bibliográfica;</li>
+            <li>Nunca submeta o mesmo artigo, simultaneamente, a mais de um veículo;</li>
+            <li>Nunca reivindique como "inédito" um conteúdo já publicado anteriormente em outro veículo, sem declarar a origem.</li>
+          </ul>
         </div>
         <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
           <li><strong>➡️ Como um aluno chega ao TCC 2</strong><br>Alunos Aprovados em TCC 1 são migrados automaticamente para a disciplina TCC 2 quando a Coordenação define o novo período Vigente em Configurações.</li>
@@ -1923,12 +1943,31 @@ function toggleAcc(btn) {
           <p style="margin:8px 0 4px">Modelos de acesso e financiamento da publicação científica (fechado por assinatura, aberto diamante, dourado, verde e híbrido). Critérios para seleção de periódico ou evento técnico-científico: escopo, avaliação por pares, corpo editorial, indexação, Qualis, indicadores bibliométricos, idioma, prazo editorial e taxas de publicação. Consulta às bases Qualis Periódicos (Plataforma Sucupira), SCImago Journal & Country Rank (SJR) e Directory of Open Access Journals (DOAJ). Adequação do artigo às instruções aos autores e ao modelo do veículo selecionado. Ética e integridade na publicação científica: autoria, ineditismo, plágio, autoplágio, conflitos de interesse e direitos autorais. Preparação da carta ao editor, dos metadados e dos arquivos necessários à submissão. Submissão e acompanhamento inicial do fluxo editorial.</p>
           <p style="margin:4px 0 0"><strong>Objetivo geral:</strong> ao final da disciplina, o aluno será capaz de selecionar e submeter artigo científico a Veículo de Publicação Qualificado, em conformidade com as diretrizes editoriais e os princípios de integridade científica, obtendo comprovante de submissão e confirmação de encaminhamento do artigo para avaliação por revisores.</p>
         </div>
+<div style="background:#f8fafc;border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:var(--text);line-height:1.7">
+          <strong>📚 O que é um Veículo de Publicação Qualificado?</strong>
+          <p style="margin:8px 0 4px">É um periódico científico, revista, ou os anais de um evento científico (congresso, simpósio ou conferência) que passou por avaliação formal de qualidade editorial e científica. No Brasil, essa avaliação é conduzida pela CAPES por meio de dois sistemas complementares, ambos consultáveis na <strong>Plataforma Sucupira/WebQualis</strong>: o <strong>Qualis Periódicos</strong>, para revistas científicas, e o <strong>Qualis Eventos</strong>, específico para anais de congressos, simpósios e conferências — ou seja, eventos científicos também são Veículos de Publicação Qualificados, desde que classificados pela CAPES. Ambos os sistemas classificam os veículos em estratos de qualidade (A1 ao mais alto, variando conforme a área de avaliação), considerando critérios como corpo editorial/científico, revisão por pares, indexação em bases reconhecidas e indicadores bibliométricos. A idoneidade de um veículo também pode ser verificada em bases internacionais como o <strong>SCImago Journal & Country Rank (SJR)</strong> e o <strong>Directory of Open Access Journals (DOAJ)</strong>, este último específico para periódicos de acesso aberto.</p>
+          <p style="margin:4px 0 0;font-size:.76rem;color:var(--muted)">Fonte: CAPES — Coordenação de Aperfeiçoamento de Pessoal de Nível Superior. Sistemas Qualis Periódicos e Qualis Eventos, Plataforma Sucupira (sucupira.capes.gov.br), consultado em 2024.</p>
+          <button onclick="abrirVeiculoQualificado()" style="margin-top:10px;padding:.55rem 1rem;background:linear-gradient(90deg,var(--teal),var(--teal-light));color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.8rem;font-weight:800;cursor:pointer">🔬 Abrir: Veículo de publicação qualificado (para TCC 2)</button>
+        </div>
+
+        <div style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:var(--text);line-height:1.7">
+          <strong>⚖️ Entendendo o Autoplágio — o que é e o que não é</strong>
+          <p style="margin:8px 0 4px"><strong>Autoplágio</strong> (ou "publicação redundante") ocorre quando um autor republica, como se fosse inédito, um trabalho <strong>já publicado formalmente</strong> em outro veículo, sem informar essa origem — geralmente para obter dupla contagem de produção científica ou submeter o mesmo conteúdo a mais de uma avaliação por pares.</p>
+          <p style="margin:4px 0">Isso é <strong>diferente</strong> de transformar o TCC 1 — um trabalho acadêmico ainda <strong>não publicado formalmente</strong> — em um artigo científico para o TCC 2. Essa transformação é a prática padrão e esperada na maioria das áreas.</p>
+          <p style="margin:4px 0 0">Para que isso seja eticamente correto:</p>
+          <ul style="margin:4px 0 0;padding-left:20px">
+            <li>Informe ao veículo, na carta ao editor, que o artigo deriva de um Trabalho de Conclusão de Curso;</li>
+            <li>Reelabore o conteúdo no formato de artigo (diferente da monografia) — reestruture, condense, atualize a revisão bibliográfica;</li>
+            <li>Nunca submeta o mesmo artigo, simultaneamente, a mais de um veículo;</li>
+            <li>Nunca reivindique como "inédito" um conteúdo já publicado anteriormente em outro veículo, sem declarar a origem.</li>
+          </ul>
+        </div>
         <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
           <li><strong>➡️ Quando um aluno aparece em TCC 2</strong><br>Alunos Aprovados em TCC 1 são migrados automaticamente para a disciplina <strong>TCC 2</strong> assim que a Coordenação define um novo período Vigente. Você pode identificar a disciplina de cada aluno na coluna <strong>Disciplina</strong> da tabela Alunos Vinculados.</li>
           <li><strong>🏁 Finalizando o TCC 2</strong><br>Selecione o aluno de TCC 2 em <strong>📝 Avaliar</strong>. O botão <strong>🏁 Finalizar TCC 2</strong> só aparece para alunos matriculados nessa disciplina.</li>
           <li><strong>📎 Documento comprobatório</strong><br>Anexe o documento (PDF ou DOCX, máx. 7 MB) que comprova a submissão do artigo ao veículo de publicação, nomeado como <code style="background:#f1f5f9;padding:2px 7px;border-radius:5px;font-size:.82rem">TCC2_NomeAluno_VersaoSubmetida.docx</code> (ou .pdf).</li>
           <li><strong>📝 Preencha os dados da submissão</strong><br>Data do documento, tema do artigo, nome e tipo do veículo (Revista, Congresso, Simpósio ou Outros), modelo de acesso e financiamento (Fechado por assinatura, Aberto Diamante, Dourado, Verde ou Híbrido), classificação (A1 a B3), status atual da submissão e a nota do aluno (1 a 10).</li>
-          <li><strong>⚖️ Ética e integridade</strong><br>Confirme a declaração de que o artigo é inédito, não constitui plágio/autoplágio, não há conflitos de interesse não declarados e os direitos autorais foram respeitados — essa confirmação é obrigatória para prosseguir.</li>
+          <li><strong>⚖️ Ética e integridade</strong><br>Confirme a declaração de que a origem do artigo no TCC 1 foi informada ao veículo de publicação (evitando republicação indevida do mesmo conteúdo já publicado), que não há plágio de terceiros nem conflitos de interesse não declarados, e que os direitos autorais foram respeitados — essa confirmação é obrigatória para prosseguir.</li>
           <li><strong>🏛️ Sem banca no TCC 2</strong><br>Diferente do TCC 1, o TCC 2 <strong>não passa por banca examinadora</strong> — a finalização é feita diretamente pelo avaliador ou orientador, com base na comprovação de submissão ao veículo qualificado.</li>
           <li><strong>✅ Confirmação em duas etapas</strong><br>Ao clicar em <strong>Confirmar e Enviar</strong>, uma segunda tela pedirá a confirmação final, avisando que a ação é <strong>irreversível</strong> e que os dados serão enviados imediatamente à Coordenação.</li>
           <li><strong>🎓 Envio à Coordenação</strong><br>Após confirmar, os dados ficam registrados no histórico do aluno e são enviados automaticamente para a tela <strong>🎓 TCC 2</strong> da Coordenação — não é mais possível alterar as informações enviadas.</li>
@@ -2054,6 +2093,25 @@ function toggleAcc(btn) {
           <span style="color:var(--muted)">10º Período &nbsp;·&nbsp; Eixo: Trabalho de Conclusão de Curso &nbsp;·&nbsp; Créditos 2.2.0 &nbsp;·&nbsp; CH 30h &nbsp;·&nbsp; Pré-requisito: FTL125</span>
           <p style="margin:8px 0 4px">Modelos de acesso e financiamento da publicação científica (fechado por assinatura, aberto diamante, dourado, verde e híbrido). Critérios para seleção de periódico ou evento técnico-científico: escopo, avaliação por pares, corpo editorial, indexação, Qualis, indicadores bibliométricos, idioma, prazo editorial e taxas de publicação. Consulta às bases Qualis Periódicos (Plataforma Sucupira), SCImago Journal & Country Rank (SJR) e Directory of Open Access Journals (DOAJ). Adequação do artigo às instruções aos autores e ao modelo do veículo selecionado. Ética e integridade na publicação científica: autoria, ineditismo, plágio, autoplágio, conflitos de interesse e direitos autorais. Preparação da carta ao editor, dos metadados e dos arquivos necessários à submissão. Submissão e acompanhamento inicial do fluxo editorial.</p>
           <p style="margin:4px 0 0"><strong>Objetivo geral:</strong> ao final da disciplina, o aluno será capaz de selecionar e submeter artigo científico a Veículo de Publicação Qualificado, em conformidade com as diretrizes editoriais e os princípios de integridade científica, obtendo comprovante de submissão e confirmação de encaminhamento do artigo para avaliação por revisores.</p>
+        </div>
+<div style="background:#f8fafc;border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:var(--text);line-height:1.7">
+          <strong>📚 O que é um Veículo de Publicação Qualificado?</strong>
+          <p style="margin:8px 0 4px">É um periódico científico, revista, ou os anais de um evento científico (congresso, simpósio ou conferência) que passou por avaliação formal de qualidade editorial e científica. No Brasil, essa avaliação é conduzida pela CAPES por meio de dois sistemas complementares, ambos consultáveis na <strong>Plataforma Sucupira/WebQualis</strong>: o <strong>Qualis Periódicos</strong>, para revistas científicas, e o <strong>Qualis Eventos</strong>, específico para anais de congressos, simpósios e conferências — ou seja, eventos científicos também são Veículos de Publicação Qualificados, desde que classificados pela CAPES. Ambos os sistemas classificam os veículos em estratos de qualidade (A1 ao mais alto, variando conforme a área de avaliação), considerando critérios como corpo editorial/científico, revisão por pares, indexação em bases reconhecidas e indicadores bibliométricos. A idoneidade de um veículo também pode ser verificada em bases internacionais como o <strong>SCImago Journal & Country Rank (SJR)</strong> e o <strong>Directory of Open Access Journals (DOAJ)</strong>, este último específico para periódicos de acesso aberto.</p>
+          <p style="margin:4px 0 0;font-size:.76rem;color:var(--muted)">Fonte: CAPES — Coordenação de Aperfeiçoamento de Pessoal de Nível Superior. Sistemas Qualis Periódicos e Qualis Eventos, Plataforma Sucupira (sucupira.capes.gov.br), consultado em 2024.</p>
+          <button onclick="abrirVeiculoQualificado()" style="margin-top:10px;padding:.55rem 1rem;background:linear-gradient(90deg,var(--teal),var(--teal-light));color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.8rem;font-weight:800;cursor:pointer">🔬 Abrir: Veículo de publicação qualificado (para TCC 2)</button>
+        </div>
+
+        <div style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:var(--text);line-height:1.7">
+          <strong>⚖️ Entendendo o Autoplágio — o que é e o que não é</strong>
+          <p style="margin:8px 0 4px"><strong>Autoplágio</strong> (ou "publicação redundante") ocorre quando um autor republica, como se fosse inédito, um trabalho <strong>já publicado formalmente</strong> em outro veículo, sem informar essa origem — geralmente para obter dupla contagem de produção científica ou submeter o mesmo conteúdo a mais de uma avaliação por pares.</p>
+          <p style="margin:4px 0">Isso é <strong>diferente</strong> de transformar o TCC 1 — um trabalho acadêmico ainda <strong>não publicado formalmente</strong> — em um artigo científico para o TCC 2. Essa transformação é a prática padrão e esperada na maioria das áreas.</p>
+          <p style="margin:4px 0 0">Para que isso seja eticamente correto:</p>
+          <ul style="margin:4px 0 0;padding-left:20px">
+            <li>Informe ao veículo, na carta ao editor, que o artigo deriva de um Trabalho de Conclusão de Curso;</li>
+            <li>Reelabore o conteúdo no formato de artigo (diferente da monografia) — reestruture, condense, atualize a revisão bibliográfica;</li>
+            <li>Nunca submeta o mesmo artigo, simultaneamente, a mais de um veículo;</li>
+            <li>Nunca reivindique como "inédito" um conteúdo já publicado anteriormente em outro veículo, sem declarar a origem.</li>
+          </ul>
         </div>
         <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
           <li><strong>➡️ Como você chega ao TCC 2</strong><br>Depois de Aprovado(a) em TCC 1, você é migrado(a) automaticamente para a disciplina <strong>TCC 2</strong> quando a Coordenação define um novo período Vigente. Seu histórico de TCC 1 permanece disponível para consulta.</li>
@@ -2378,6 +2436,7 @@ function toggleAcc(btn) {
   <div class="ar-card" style="max-width:560px">
     <h2>🏁 Finalizar o TCC 2</h2>
     <p class="sub">Preencha todos os campos. Após confirmar, o processo é <strong>irreversível</strong>.</p>
+    <button type="button" onclick="abrirVeiculoQualificado()" style="margin-bottom:12px;padding:.5rem .9rem;background:transparent;color:var(--teal);border:1.5px solid var(--teal-light);border-radius:8px;font-family:inherit;font-size:.78rem;font-weight:800;cursor:pointer">🔬 Consultar: Veículo de publicação qualificado</button>
 
     <div class="field" style="margin-bottom:12px">
       <label>Documento que comprova a submissão do Artigo (PDF ou DOCX – máx. 7 MB)</label>
@@ -2452,7 +2511,7 @@ function toggleAcc(btn) {
 
     <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:16px;font-size:.8rem;color:var(--text);background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 12px;cursor:pointer">
       <input type="checkbox" id="tcc2DeclaracaoEtica" style="margin-top:3px"/>
-      <span>Declaro, sob minha responsabilidade como avaliador ou orientador, que o artigo submetido é <strong>inédito</strong>, não constitui <strong>plágio ou autoplágio</strong>, não há <strong>conflitos de interesse</strong> não declarados, e os <strong>direitos autorais</strong> foram devidamente respeitados na sua elaboração e submissão.</span>
+      <span>Declaro, sob minha responsabilidade como avaliador ou orientador, que a origem do artigo no <strong>TCC 1</strong> foi devidamente informada ao veículo de publicação (não configurando republicação indevida do mesmo conteúdo já publicado), que o artigo não constitui <strong>plágio de terceiros</strong>, que não há <strong>conflitos de interesse</strong> não declarados, e que os <strong>direitos autorais</strong> foram devidamente respeitados na sua elaboração e submissão.</span>
     </label>
 
     <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -2460,6 +2519,25 @@ function toggleAcc(btn) {
       <button onclick="closeModal('modalFinalizarTCC2')" style="padding:.75rem 1.4rem;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer">Cancelar</button>
     </div>
     <input type="hidden" id="tcc2AlunoId"/>
+  </div>
+</div>
+
+<!-- ═══ MODAL VEÍCULO DE PUBLICAÇÃO QUALIFICADO (para uso dentro dos ambientes internos) ═══ -->
+<div class="ar-overlay" id="modalVeiculoQualificado" style="z-index:4200">
+  <div class="ar-card" style="max-width:520px">
+    <h2 style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      🔬 Veículo de publicação qualificado (para TCC 2)
+      <span class="badge-pilot" style="background:linear-gradient(90deg,var(--teal),var(--teal-light));box-shadow:0 2px 6px rgba(14,131,136,0.35)">Em Construção</span>
+    </h2>
+    <div class="empty-box" style="margin-top:12px">
+      <div class="emo">🚧</div>
+      <p><strong>Esta seção está em construção.</strong></p>
+      <p style="margin-top:6px;font-size:0.82rem">Em breve, esta área trará ferramentas para consulta e apoio à escolha de veículos de publicação qualificados para o TCC 2 (indicadores, rankings e critérios de qualificação). Volte em breve para conferir as novidades.</p>
+      <p style="margin-top:10px;font-size:0.8rem;color:var(--muted)">Enquanto isso, consulte diretamente: <a href="https://sucupira.capes.gov.br/sucupira/public/consultas/coleta/veiculoPublicacaoQualis/listaConsultaGeralPeriodicos.jsf" target="_blank" rel="noopener" style="color:var(--blue);font-weight:700">Qualis Periódicos/Eventos (Plataforma Sucupira)</a>, <a href="https://www.scimagojr.com/" target="_blank" rel="noopener" style="color:var(--blue);font-weight:700">SCImago Journal & Country Rank</a> ou o <a href="https://doaj.org/" target="_blank" rel="noopener" style="color:var(--blue);font-weight:700">Directory of Open Access Journals (DOAJ)</a>.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button onclick="closeModal('modalVeiculoQualificado')" style="padding:.75rem 1.4rem;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer">Fechar</button>
+    </div>
   </div>
 </div>
 
@@ -7026,6 +7104,7 @@ function fmtDate(ts){
   return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function abrirVeiculoQualificado(){ document.getElementById('modalVeiculoQualificado').classList.add('open'); }
 
 let toastT;
 function toast(msg,type='ok'){
