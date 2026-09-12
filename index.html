@@ -1278,7 +1278,7 @@ footer {
 </main>
 
 <footer>
-  PGTCC &nbsp;·&nbsp; Coordenação de Engenharia de Produção – DEP/FT/UFAM &nbsp;·&nbsp; Versão 4 &nbsp;·&nbsp; 2026
+  PGTCC &nbsp;·&nbsp; Coordenação de Engenharia de Produção – DEP/FT/UFAM &nbsp;·&nbsp; 2026
 </footer>
 
 <!-- ═══ SCRIPTS ═══ -->
@@ -1674,6 +1674,7 @@ function toggleAcc(btn) {
         <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
           <li><strong>➡️ Como um aluno chega ao TCC 2</strong><br>Alunos Aprovados em TCC 1 são migrados automaticamente para a disciplina TCC 2 quando a Coordenação define o novo período Vigente em Configurações.</li>
           <li><strong>🏛️ Diferença fundamental em relação ao TCC 1</strong><br>O TCC 1 tem <strong>banca examinadora</strong> e a versão final é enviada automaticamente à <strong>Biblioteca</strong>. O TCC 2 <strong>não tem banca</strong> — o artigo é submetido diretamente a um veículo de publicação qualificado, e a finalização é enviada diretamente à <strong>Coordenação</strong> (não à Biblioteca).</li>
+          <li><strong>📝 Fluxo até a finalização</strong><br>O aluno envia uma proposta de artigo ao avaliador ou orientador; se estiver adequada, o avaliador ou orientador o <strong>autoriza</strong> a submeter o artigo a um Veículo de Publicação Qualificado (VPQ); o aluno então envia o artigo submetido e o comprovante recebido do veículo, com um questionário — o avaliador ou orientador recebe tudo automaticamente.</li>
           <li><strong>🏁 Finalização pelo Avaliador ou Orientador</strong><br>O avaliador ou orientador, em <strong>Meus Alunos</strong>, seleciona o aluno de TCC 2 e clica em <strong>🏁 Finalizar TCC 2</strong>, preenchendo: o comprovante de submissão do artigo, a data do documento, o tema, o nome/tipo/classificação e modelo de acesso do veículo de publicação qualificado, a declaração de ética e integridade, o status da submissão e a nota do aluno.</li>
           <li><strong>⚠️ Processo irreversível</strong><br>Após a confirmação final do avaliador ou orientador, os dados são enviados automaticamente para esta tela — <strong>🎓 TCC 2</strong> — e não podem ser alterados por ele.</li>
           <li><strong>🎓 Acompanhamento pela Coordenação</strong><br>Nesta aba, a Coordenação acompanha todas as finalizações recebidas: aluno, avaliador/orientador responsável, veículo de publicação, classificação, status da submissão, nota e o documento comprobatório enviado.</li>
@@ -1964,7 +1965,10 @@ function toggleAcc(btn) {
         </div>
         <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
           <li><strong>➡️ Quando um aluno aparece em TCC 2</strong><br>Alunos Aprovados em TCC 1 são migrados automaticamente para a disciplina <strong>TCC 2</strong> assim que a Coordenação define um novo período Vigente. Você pode identificar a disciplina de cada aluno na coluna <strong>Disciplina</strong> da tabela Alunos Vinculados.</li>
-          <li><strong>🏁 Finalizando o TCC 2</strong><br>Selecione o aluno de TCC 2 em <strong>📝 Avaliar</strong>. O botão <strong>🏁 Finalizar TCC 2</strong> só aparece para alunos matriculados nessa disciplina.</li>
+          <li><strong>📝 Passo 1 — Revise a proposta do aluno</strong><br>O aluno envia, em "Arquivo do Artigo", uma proposta de artigo com melhorias a partir do TCC 1. Acompanhe-a em <strong>📝 Avaliar</strong>, na área de arquivo enviado.</li>
+          <li><strong>🔓 Passo 2 — Autorize a submissão ao VPQ</strong><br>Se a proposta estiver adequada, clique em <strong>✅ Autorizar Submissão ao VPQ</strong> (na área "🔬 TCC 2" do painel de avaliação). Só depois disso o aluno consegue enviar o artigo submetido e o comprovante.</li>
+          <li><strong>📤 Passo 3 — Receba os dados de submissão do aluno</strong><br>Depois de autorizado, o aluno envia o artigo submetido, o comprovante e o questionário da submissão — você é notificado automaticamente e pode ver e baixar tudo na mesma área "🔬 TCC 2".</li>
+          <li><strong>🏁 Passo 4 — Finalizando o TCC 2</strong><br>Selecione o aluno de TCC 2 em <strong>📝 Avaliar</strong> e clique em <strong>🏁 Finalizar TCC 2</strong>. Use o botão <strong>"Usar estes dados em Finalizar TCC 2"</strong> para pré-preencher o formulário com o que o aluno já enviou — só falta conferir, anexar o arquivo definitivo e informar a nota.</li>
           <li><strong>📎 Documento comprobatório</strong><br>Anexe o documento (PDF ou DOCX, máx. 7 MB) que comprova a submissão do artigo ao veículo de publicação, nomeado como <code style="background:#f1f5f9;padding:2px 7px;border-radius:5px;font-size:.82rem">TCC2_NomeAluno_VersaoSubmetida.docx</code> (ou .pdf).</li>
           <li><strong>📝 Preencha os dados da submissão</strong><br>Data do documento, tema do artigo, nome e tipo do veículo (Revista, Congresso, Simpósio ou Outros), modelo de acesso e financiamento (Fechado por assinatura, Aberto Diamante, Dourado, Verde ou Híbrido), classificação (A1 a B3), status atual da submissão e a nota do aluno (1 a 10).</li>
           <li><strong>⚖️ Ética e integridade</strong><br>Confirme a declaração de que a origem do artigo no TCC 1 foi informada ao veículo de publicação (evitando republicação indevida do mesmo conteúdo já publicado), que não há plágio de terceiros nem conflitos de interesse não declarados, e que os direitos autorais foram respeitados — essa confirmação é obrigatória para prosseguir.</li>
@@ -2050,7 +2054,7 @@ function toggleAcc(btn) {
       </div>
 
       <!-- Instruções -->
-      <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
+      <div class="panel" id="painelInstrucoesTCC1Aluno" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
         <div class="panel-title" onclick="toggleInstrucoes()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none">
           <span>📋 Instruções para o TCC 1</span>
           <span id="instrutoesArrow" style="font-size:.8rem;color:var(--muted);transition:transform .2s">▼ Mostrar</span>
@@ -2082,7 +2086,7 @@ function toggleAcc(btn) {
       </div>
 
       <!-- Instruções TCC 2 -->
-      <div class="panel" style="display:block;border-top-color:var(--green-light);margin-bottom:16px">
+      <div class="panel" id="painelInstrucoesTCC2Aluno" style="display:block;border-top-color:var(--green-light);margin-bottom:16px">
         <div class="panel-title" onclick="toggleInstrucoesAlunoTCC2()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none">
           <span>📋 Instruções para o TCC 2</span>
           <span id="instrucoesAlunoTCC2Arrow" style="font-size:.8rem;color:var(--muted);transition:transform .2s">▼ Mostrar</span>
@@ -2116,7 +2120,10 @@ function toggleAcc(btn) {
         <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
           <li><strong>➡️ Como você chega ao TCC 2</strong><br>Depois de Aprovado(a) em TCC 1, você é migrado(a) automaticamente para a disciplina <strong>TCC 2</strong> quando a Coordenação define um novo período Vigente. Seu histórico de TCC 1 permanece disponível para consulta.</li>
           <li><strong>🎯 O que é o TCC 2</strong><br>O TCC 2 consiste em submeter o artigo produzido em TCC 1 a um <strong>veículo de publicação qualificado</strong> (revista, congresso ou simpósio). Diferente do TCC 1, o TCC 2 <strong>não tem banca examinadora</strong>, e a finalização é enviada diretamente à <strong>Coordenação</strong> (não à Biblioteca).</li>
-          <li><strong>👨‍🏫 Quem registra a finalização</strong><br>É o seu avaliador ou orientador quem registra a finalização do TCC 2 na plataforma, após você submeter o artigo ao veículo escolhido — anexando o comprovante da submissão, o tema, o veículo, a classificação, o status da submissão e sua nota.</li>
+          <li><strong>📝 Passo 1 — Proposta de Artigo</strong><br>Em "📂 Arquivo do Artigo", envie sua proposta de artigo (com as melhorias feitas a partir do TCC 1) para revisão do seu avaliador ou orientador, <strong>antes</strong> de submeter a qualquer veículo.</li>
+          <li><strong>🔓 Passo 2 — Autorização do avaliador ou orientador</strong><br>Após revisar sua proposta, seu avaliador ou orientador poderá <strong>autorizar</strong> você a submeter o artigo a um Veículo de Publicação Qualificado (VPQ). <strong>Nunca submeta o artigo antes dessa autorização.</strong></li>
+          <li><strong>📤 Passo 3 — Envio do artigo submetido e comprovante</strong><br>Depois de autorizado(a) e de realizar a submissão externamente, volte à plataforma e envie o artigo submetido, o comprovante recebido do veículo, e preencha os dados da submissão (tema, veículo, tipo, modelo de acesso, classificação e status).</li>
+          <li><strong>👨‍🏫 Passo 4 — Finalização pelo avaliador ou orientador</strong><br>Seu avaliador ou orientador recebe automaticamente os dados enviados e registra a finalização do TCC 2 na plataforma, com sua nota.</li>
           <li><strong>🔔 Você será notificado</strong><br>Assim que seu avaliador ou orientador confirmar a finalização, você recebe uma notificação com o resultado — esse processo é <strong>irreversível</strong> e os dados são enviados diretamente à Coordenação.</li>
         </ol>
         </div>
@@ -2125,7 +2132,9 @@ function toggleAcc(btn) {
       <!-- Grid: Baixar / Upload -->
       <div class="panel" style="display:block;border-top-color:var(--blue-light);margin-bottom:16px">
         <div class="panel-title">📂 Arquivo do Artigo</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+        <!-- TCC 1: Baixar Modelo + Enviar/Substituir Arquivo -->
+        <div id="arquivoGridTCC1" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
           <!-- Baixar modelo -->
           <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px">
             <div style="font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">⬇ Baixar Modelo</div>
@@ -2138,6 +2147,101 @@ function toggleAcc(btn) {
             <input type="file" id="artigoFile" accept=".pdf,.doc,.docx" style="border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fff;font-size:.82rem;font-family:inherit"/>
             <div style="font-size:.75rem;color:var(--muted)">PDF ou DOCX · máx. 3 MB · nomeie como <code>TCC1_SeuNome_vN.docx</code></div>
           </div>
+        </div>
+
+        <!-- TCC 2: Proposta de Artigo + Submissão ao VPQ -->
+        <div id="arquivoSecoesTCC2" style="display:none">
+
+          <!-- Seção A: Proposta de Artigo (melhorias, antes da submissão) -->
+          <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px">
+            <div style="font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">📝 Proposta de Artigo (com melhorias) — antes da submissão</div>
+            <p style="font-size:.82rem;color:var(--text);margin-bottom:10px">Envie aqui a versão do artigo com as melhorias feitas a partir do TCC 1, para revisão do seu avaliador ou orientador <strong>antes</strong> de submeter a um Veículo de Publicação Qualificado (VPQ).</p>
+            <input type="file" id="artigoFileTCC2Proposta" accept=".pdf,.doc,.docx" style="width:100%;border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fff;font-size:.82rem;font-family:inherit"/>
+            <div style="font-size:.75rem;color:var(--muted);margin-top:5px">PDF ou DOCX · máx. 3 MB · nomeie como <code>TCC2_SeuNome_Proposta_vN.docx</code></div>
+          </div>
+
+          <!-- Seção B: Artigo Submetido + Comprovante -->
+          <div id="tcc2SubmissaoBloqueado" style="display:none;background:#f8fafc;border:1.5px dashed var(--border);border-radius:10px;padding:16px;text-align:center;color:var(--muted);font-size:.85rem">
+            🔒 <strong>Envio do artigo submetido e comprovante</strong> — disponível somente após seu avaliador ou orientador <strong>autorizar</strong> a submissão do artigo a um Veículo de Publicação Qualificado. Envie sua proposta acima e aguarde a autorização.
+          </div>
+
+          <div id="tcc2SubmissaoLiberado" style="display:none;background:var(--green-pale);border:1.5px solid var(--green-light);border-radius:10px;padding:16px">
+            <div style="font-size:.78rem;font-weight:800;color:#166534;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">✅ Autorizado — Enviar Artigo Submetido e Comprovante</div>
+            <p style="font-size:.82rem;color:var(--text);margin-bottom:12px">Seu avaliador ou orientador autorizou a submissão. Envie o artigo que foi submetido, o comprovante recebido do veículo, e preencha os dados abaixo — as mesmas informações que seu avaliador ou orientador usará para finalizar o TCC 2.</p>
+
+            <div class="grid-2" style="margin-bottom:10px">
+              <div class="field">
+                <label style="font-size:.8rem">Artigo Submetido (PDF ou DOCX – máx. 7 MB)</label>
+                <input type="file" id="tcc2AlunoArquivoSubmetido" accept=".pdf,.doc,.docx" style="width:100%;border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fff;font-size:.82rem;font-family:inherit"/>
+              </div>
+              <div class="field">
+                <label style="font-size:.8rem">Comprovante de Submissão (PDF ou DOCX – máx. 7 MB)</label>
+                <input type="file" id="tcc2AlunoComprovante" accept=".pdf,.doc,.docx" style="width:100%;border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fff;font-size:.82rem;font-family:inherit"/>
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:10px">
+              <label style="font-size:.8rem">Data do Documento (comprovante)</label>
+              <input type="text" id="tcc2AlunoDataDocumento" placeholder="DD/MM/AAAA" maxlength="10" style="max-width:180px" oninput="
+  var v=this.value.replace(/\D/g,'').slice(0,8);
+  if(v.length>=5) v=v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4);
+  else if(v.length>=3) v=v.slice(0,2)+'/'+v.slice(2);
+  this.value=v;
+"/>
+            </div>
+            <div class="field" style="margin-bottom:10px">
+              <label style="font-size:.8rem">Tema do Artigo</label>
+              <input type="text" id="tcc2AlunoTema" placeholder="Descreva o tema principal do artigo"/>
+            </div>
+            <div class="field" style="margin-bottom:10px">
+              <label style="font-size:.8rem">Nome do Veículo de Publicação Qualificado</label>
+              <input type="text" id="tcc2AlunoVeiculo" placeholder="Ex: Revista Brasileira de Engenharia de Produção"/>
+            </div>
+            <div class="grid-2" style="margin-bottom:10px">
+              <div class="field">
+                <label style="font-size:.8rem">Tipo do Veículo</label>
+                <select id="tcc2AlunoTipoVeiculo" style="width:100%;padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.85rem" onchange="document.getElementById('tcc2AlunoTipoVeiculoOutroWrap').style.display=(this.value==='Outros')?'block':'none'">
+                  <option value="">— Selecione —</option>
+                  <option>Revista</option><option>Congresso</option><option>Simpósio</option><option>Outros</option>
+                </select>
+                <div id="tcc2AlunoTipoVeiculoOutroWrap" style="display:none;margin-top:6px">
+                  <input type="text" id="tcc2AlunoTipoVeiculoOutro" placeholder="Especifique o tipo"/>
+                </div>
+              </div>
+              <div class="field">
+                <label style="font-size:.8rem">Modelo de Acesso</label>
+                <select id="tcc2AlunoModeloAcesso" style="width:100%;padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.85rem">
+                  <option value="">— Selecione —</option>
+                  <option>Fechado por assinatura</option><option>Aberto Diamante</option>
+                  <option>Aberto Dourado</option><option>Aberto Verde</option><option>Híbrido</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid-2" style="margin-bottom:10px">
+              <div class="field">
+                <label style="font-size:.8rem">Classificação</label>
+                <select id="tcc2AlunoClassificacao" style="width:100%;padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.85rem">
+                  <option value="">— Selecione —</option>
+                  <option>A1</option><option>A2</option><option>A3</option><option>A4</option>
+                  <option>B1</option><option>B2</option><option>B3</option>
+                </select>
+              </div>
+              <div class="field">
+                <label style="font-size:.8rem">Status da Submissão</label>
+                <select id="tcc2AlunoStatus" style="width:100%;padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.85rem">
+                  <option value="">— Selecione —</option>
+                  <option>Submetido e não enviado para revisão dos pares</option>
+                  <option>Submetido e enviado para revisão dos pares</option>
+                  <option>Submetido e revisado pelos pares</option>
+                  <option>Submetido e em fase de revisão junto ao pares</option>
+                  <option>Submetido e Aceito para Publicação</option>
+                  <option>Submetido, Revisado e Publicado</option>
+                </select>
+              </div>
+            </div>
+            <button onclick="enviarSubmissaoTCC2Aluno()" style="width:100%;padding:.75rem;background:linear-gradient(135deg,#16a34a,#4ade80);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.88rem;font-weight:800;cursor:pointer">📤 Enviar ao Avaliador ou Orientador</button>
+            <div id="tcc2AlunoSubmissaoStatus" style="margin-top:8px;font-size:.82rem"></div>
+          </div>
+
         </div>
 
         <!-- Versão Corrigida do Avaliador ou Orientador — aparece sempre que houver arquivo do avaliador ou orientador -->
@@ -2184,9 +2288,12 @@ function toggleAcc(btn) {
         <div class="panel-title">💬 Observações para o Avaliador ou Orientador</div>
         <div class="field" style="margin-bottom:14px">
           <textarea id="artigoObs" placeholder="Descreva o que foi feito nesta versão, dúvidas ou comentários para o avaliador ou orientador..." style="min-height:110px"></textarea>
+          <div id="artigoObsAjudaTCC2" style="display:none;margin-top:8px;padding:8px 12px;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;font-size:.78rem;color:var(--text)">
+            ℹ️ Descreva claramente o que você está enviando ao seu avaliador ou orientador (ex.: proposta revisada, dúvidas sobre o veículo escolhido). <strong>Você só deve submeter o artigo a um Veículo de Publicação Qualificado (VPQ) depois que seu avaliador ou orientador autorizar</strong> — use a seção "📝 Proposta de Artigo" acima para isso.
+          </div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="act-btn" onclick="enviarVersaoParcial()" id="btnParcial" style="background:linear-gradient(135deg,#27ae60,#52c48a);color:#fff">📨 Enviar Versão Parcial</button>
+          <button class="act-btn" onclick="enviarVersaoOuProposta()" id="btnParcial" style="background:linear-gradient(135deg,#27ae60,#52c48a);color:#fff">📨 Enviar Versão Parcial</button>
           <button class="act-btn sec" onclick="salvarRascunho()">💾 Salvar</button>
         </div>
       </div>
@@ -2599,13 +2706,13 @@ function toggleAcc(btn) {
 
     <!-- GRID 2: Upload versão corrigida -->
     <div class="panel" style="display:block;border-top-color:var(--purple-light);margin-bottom:16px">
-      <div class="panel-title">📤 Enviar Versão Corrigida</div>
+      <div class="panel-title" id="avalPanelTituloUpload">📤 Enviar Versão Corrigida</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:16px">
-          <div style="font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📤 Enviar Versão Corrigida / Versão para Banca</div>
+          <div id="avalTituloUploadCorrigida" style="font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📤 Enviar Versão Corrigida / Versão para Banca</div>
           <input type="file" id="avalArquivoOrient" accept=".pdf,.doc,.docx" style="width:100%;border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fff;font-size:.82rem;font-family:inherit"/>
-          <div style="font-size:.72rem;color:var(--muted);margin-top:5px">⚠️ Se for enviar para a Banca, selecione aqui a versão definitiva antes de clicar em 🏁 Enviar para Banca.</div>
-          <div style="font-size:.73rem;color:var(--muted);margin-top:6px">Nomeie como: <code>TCC1_NomeAluno_v2.docx</code></div>
+          <div id="avalAvisoBanca" style="font-size:.72rem;color:var(--muted);margin-top:5px">⚠️ Se for enviar para a Banca, selecione aqui a versão definitiva antes de clicar em 🏁 Enviar para Banca.</div>
+          <div id="avalNomeacaoArquivo" style="font-size:.73rem;color:var(--muted);margin-top:6px">Nomeie como: <code>TCC1_NomeAluno_v2.docx</code></div>
         </div>
         <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:16px">
           <div style="font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Observações para o Aluno</div>
@@ -2614,13 +2721,21 @@ function toggleAcc(btn) {
       </div>
     </div>
 
+    <!-- TCC 2: Autorização de submissão ao VPQ + dados enviados pelo aluno -->
+    <div id="painelTCC2OrientAcoes" style="display:none;background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:10px;padding:16px;margin-bottom:16px">
+      <div style="font-size:.78rem;font-weight:800;color:#7a5200;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">🔬 TCC 2 — Submissão ao Veículo de Publicação Qualificado</div>
+      <div id="tcc2AutorizacaoStatus" style="font-size:.85rem;margin-bottom:10px"></div>
+      <button id="btnAutorizarVPQ" onclick="alternarAutorizacaoVPQ()" style="padding:.6rem 1rem;border:none;border-radius:8px;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer;margin-bottom:12px">✅ Autorizar Submissão ao VPQ</button>
+      <div id="tcc2DadosSubmissaoAluno" style="display:none;background:#fff;border:1.5px solid var(--gold-light);border-radius:8px;padding:12px 14px;font-size:.83rem;color:var(--text)"></div>
+    </div>
+
     <!-- GRID 3: Decisão do avaliador ou orientador -->
     <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
       <div class="panel-title">⚡ Ação do Avaliador ou Orientador</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
         <button onclick="avalAcao('corrigida')"  style="padding:.8rem;border:2px solid var(--blue-light);border-radius:10px;background:var(--blue-pale);color:var(--blue);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">📩 Enviar Versão Corrigida</button>
-        <button onclick="avalAcao('banca')"      style="padding:.8rem;border:2px solid var(--purple-light);border-radius:10px;background:var(--purple-pale);color:var(--purple);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Enviar para Banca (TCC 1)</button>
-        <button onclick="avalAcao('final')"      style="padding:.8rem;border:2px solid var(--green-light);border-radius:10px;background:var(--green-pale);color:var(--green);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Versão Final (TCC 1)</button>
+        <button id="btnEnviarBancaTCC1" onclick="avalAcao('banca')"      style="padding:.8rem;border:2px solid var(--purple-light);border-radius:10px;background:var(--purple-pale);color:var(--purple);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Enviar para Banca (TCC 1)</button>
+        <button id="btnVersaoFinalTCC1" onclick="avalAcao('final')"      style="padding:.8rem;border:2px solid var(--green-light);border-radius:10px;background:var(--green-pale);color:var(--green);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Versão Final (TCC 1)</button>
         <button onclick="avalAcao('rejeitar')"   style="padding:.8rem;border:2px solid #fca5a5;border-radius:10px;background:#fef2f2;color:#dc2626;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">❌ Rejeitar</button>
         <button onclick="avalAcao('falta')"      style="padding:.8rem;border:2px solid #fca5a5;border-radius:10px;background:#fef2f2;color:#dc2626;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🚫 Reprovar por Falta</button>
         <button onclick="avalAcao('nota')"       style="padding:.8rem;border:2px solid #fca5a5;border-radius:10px;background:#fef2f2;color:#dc2626;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">📉 Reprovar por Nota</button>
@@ -5763,8 +5878,79 @@ async function openAvaliacao(alunoId, nome){
   window._avalArquivoAlunoB64 = null;
 
   // "Finalizar TCC 2" só aparece quando o aluno selecionado está matriculado em TCC 2.
+  const ehTCC2 = aluno.disciplina === 'TCC 2';
   const btnFinTCC2 = document.getElementById('btnFinalizarTCC2');
-  if(btnFinTCC2) btnFinTCC2.style.display = (aluno.disciplina === 'TCC 2') ? 'block' : 'none';
+  if(btnFinTCC2) btnFinTCC2.style.display = ehTCC2 ? 'block' : 'none';
+
+  // Ajusta a seção "Enviar Versão Corrigida" e a lista de ações conforme a disciplina —
+  // o TCC 2 não tem Banca nem Versão Final (TCC 1): usa apenas Enviar Versão Corrigida,
+  // Rejeitar/Reprovar, e o botão dedicado "Finalizar TCC 2".
+  const tituloUpload = document.getElementById('avalPanelTituloUpload');
+  const tituloUpload2 = document.getElementById('avalTituloUploadCorrigida');
+  const avisoBanca = document.getElementById('avalAvisoBanca');
+  const nomeacaoArquivo = document.getElementById('avalNomeacaoArquivo');
+  const btnBanca = document.getElementById('btnEnviarBancaTCC1');
+  const btnFinal = document.getElementById('btnVersaoFinalTCC1');
+
+  if(ehTCC2){
+    if(tituloUpload) tituloUpload.textContent = '📤 Enviar Versão Corrigida pelo orientador';
+    if(tituloUpload2) tituloUpload2.textContent = '📤 Enviar Versão Corrigida pelo orientador';
+    if(avisoBanca) avisoBanca.style.display = 'none';
+    if(nomeacaoArquivo) nomeacaoArquivo.innerHTML = 'Nomeie como: <code>TCC2_NomeAluno_v2.docx</code>';
+    if(btnBanca) btnBanca.style.display = 'none';
+    if(btnFinal) btnFinal.style.display = 'none';
+  } else {
+    if(tituloUpload) tituloUpload.textContent = '📤 Enviar Versão Corrigida';
+    if(tituloUpload2) tituloUpload2.textContent = '📤 Enviar Versão Corrigida / Versão para Banca';
+    if(avisoBanca) avisoBanca.style.display = 'block';
+    if(nomeacaoArquivo) nomeacaoArquivo.innerHTML = 'Nomeie como: <code>TCC1_NomeAluno_v2.docx</code>';
+    if(btnBanca) btnBanca.style.display = 'block';
+    if(btnFinal) btnFinal.style.display = 'block';
+  }
+
+  // Painel de autorização de submissão ao VPQ + dados enviados pelo aluno (só TCC 2).
+  const painelTCC2Orient = document.getElementById('painelTCC2OrientAcoes');
+  if(painelTCC2Orient){
+    painelTCC2Orient.style.display = ehTCC2 ? 'block' : 'none';
+    if(ehTCC2){
+      const autorizado = aluno.autorizadoSubmeterVPQ === true;
+      const statusEl = document.getElementById('tcc2AutorizacaoStatus');
+      const btnAut = document.getElementById('btnAutorizarVPQ');
+      if(statusEl){
+        statusEl.innerHTML = autorizado
+          ? '✅ Este aluno está <strong>autorizado</strong> a enviar o artigo submetido e o comprovante ao VPQ.'
+          : '🔒 Este aluno ainda <strong>não está autorizado</strong> a enviar o artigo submetido ao VPQ. Revise a proposta dele acima antes de autorizar.';
+      }
+      if(btnAut){
+        btnAut.textContent = autorizado ? '↩️ Revogar Autorização' : '✅ Autorizar Submissão ao VPQ';
+        btnAut.style.background = autorizado ? '#fef2f2' : 'linear-gradient(135deg,#16a34a,#4ade80)';
+        btnAut.style.color = autorizado ? '#dc2626' : '#fff';
+        btnAut.style.border = autorizado ? '2px solid #fca5a5' : 'none';
+      }
+
+      const dadosEl = document.getElementById('tcc2DadosSubmissaoAluno');
+      if(dadosEl){
+        if(aluno.submissaoTCC2Aluno){
+          const s = aluno.submissaoTCC2Aluno;
+          dadosEl.style.display = 'block';
+          dadosEl.innerHTML = `
+            <strong>📤 Dados enviados pelo aluno:</strong><br>
+            Tema: ${s.tema||'—'}<br>
+            Veículo: ${s.veiculo||'—'} (${s.tipoVeiculo||'—'})<br>
+            Modelo de acesso: ${s.modeloAcesso||'—'} · Classificação: ${s.classificacao||'—'}<br>
+            Status: ${s.status||'—'} · Data do documento: ${s.dataDocumento||'—'}<br>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <button onclick="baixarArquivoAlunoTCC2('artigoSubmetidoTCC2')" style="padding:.5rem .9rem;background:var(--blue-pale);color:var(--blue);border:1.5px solid var(--blue-light);border-radius:8px;font-family:inherit;font-size:.78rem;font-weight:800;cursor:pointer">⬇ Artigo Submetido</button>
+              <button onclick="baixarArquivoAlunoTCC2('comprovanteSubmissaoTCC2')" style="padding:.5rem .9rem;background:var(--blue-pale);color:var(--blue);border:1.5px solid var(--blue-light);border-radius:8px;font-family:inherit;font-size:.78rem;font-weight:800;cursor:pointer">⬇ Comprovante</button>
+              <button onclick="usarDadosAlunoParaFinalizarTCC2()" style="padding:.5rem .9rem;background:var(--gold-pale);color:#7a5200;border:1.5px solid var(--gold-light);border-radius:8px;font-family:inherit;font-size:.78rem;font-weight:800;cursor:pointer">🏁 Usar estes dados em "Finalizar TCC 2"</button>
+            </div>`;
+        } else {
+          dadosEl.style.display = 'block';
+          dadosEl.innerHTML = '<span style="color:var(--muted);font-style:italic">O aluno ainda não enviou o artigo submetido e o comprovante.</span>';
+        }
+      }
+    }
+  }
 
   const arqEl    = document.getElementById('avalArquivoAluno');
   const btnBaixar = document.getElementById('avalBtnBaixar');
@@ -5820,6 +6006,74 @@ async function openAvaliacao(alunoId, nome){
   cancelarSubPanel();
   _acaoAtual = null;
   document.getElementById('avalPanel').classList.add('open');
+}
+
+// Alterna a autorização do aluno para enviar o artigo submetido + comprovante ao VPQ.
+async function alternarAutorizacaoVPQ(){
+  const id = document.getElementById('avalAlunoId').value;
+  if(!id) return;
+  const snap = await rtdb.ref('alunos/'+id+'/autorizadoSubmeterVPQ').get().catch(()=>null);
+  const atual = snap && snap.exists() ? snap.val()===true : false;
+  const novo = !atual;
+  await rtdb.ref('alunos/'+id).update({ autorizadoSubmeterVPQ: novo, ultimaAtualizacao: Date.now() });
+
+  if(novo){
+    // Notifica o aluno de que já pode enviar a submissão.
+    const snapAl = await rtdb.ref('alunos/'+id).get();
+    const al = snapAl.val() || {};
+    await rtdb.ref('notificacoes/'+id).push({
+      tipo:'Autorização VPQ', mensagem:'✅ Seu avaliador ou orientador autorizou você a enviar o artigo submetido e o comprovante ao Veículo de Publicação Qualificado.',
+      data: Date.now(), lida:false, de: currentUser.nome
+    });
+    await rtdb.ref('historico/'+id).push({
+      tipo:'Autorização VPQ', status:'Autorizado', data: Date.now(), autor: currentUser.nome,
+      comentario:'Avaliador ou orientador autorizou o aluno a submeter o artigo ao Veículo de Publicação Qualificado.'
+    });
+  }
+
+  toast(novo ? '✅ Autorização concedida ao aluno.' : '↩️ Autorização revogada.');
+  window._avalAlunoData.autorizadoSubmeterVPQ = novo;
+  openAvaliacao(id, window._avalAlunoData.nome);
+}
+
+// Baixa um dos arquivos enviados pelo aluno para a submissão do TCC 2 (artigo ou comprovante).
+async function baixarArquivoAlunoTCC2(campo){
+  const id = document.getElementById('avalAlunoId').value;
+  if(!id) return;
+  const snap = await rtdb.ref('alunos/'+id+'/'+campo).get().catch(()=>null);
+  if(!snap || !snap.exists() || !snap.val().base64){ toast('Arquivo não encontrado.','err'); return; }
+  const d = snap.val();
+  const ext = (d.nome||'').split('.').pop().toLowerCase();
+  const mime = ext==='pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  baixarBase64(d.base64, d.nome||'arquivo', mime);
+}
+
+// Pré-preenche o formulário "Finalizar TCC 2" com os dados que o aluno já enviou,
+// evitando que o avaliador ou orientador precise digitar tudo de novo.
+function usarDadosAlunoParaFinalizarTCC2(){
+  const s = window._avalAlunoData && window._avalAlunoData.submissaoTCC2Aluno;
+  if(!s){ toast('O aluno ainda não enviou os dados de submissão.','err'); return; }
+
+  avalAcao('finalizarTCC2');
+  setTimeout(()=>{
+    document.getElementById('tcc2DataDocumento').value = s.dataDocumento || '';
+    document.getElementById('tcc2Tema').value = s.tema || '';
+    document.getElementById('tcc2Veiculo').value = s.veiculo || '';
+    const tipoSelect = document.getElementById('tcc2TipoVeiculo');
+    const tiposPadrao = ['Revista','Congresso','Simpósio'];
+    if(tiposPadrao.includes(s.tipoVeiculo)){
+      tipoSelect.value = s.tipoVeiculo;
+      document.getElementById('tcc2TipoVeiculoOutroWrap').style.display = 'none';
+    } else if(s.tipoVeiculo){
+      tipoSelect.value = 'Outros';
+      document.getElementById('tcc2TipoVeiculoOutro').value = s.tipoVeiculo;
+      document.getElementById('tcc2TipoVeiculoOutroWrap').style.display = 'block';
+    }
+    document.getElementById('tcc2ModeloAcesso').value = s.modeloAcesso || '';
+    document.getElementById('tcc2Classificacao').value = s.classificacao || '';
+    document.getElementById('tcc2Status').value = s.status || '';
+    toast('📋 Dados do aluno carregados. Confira, anexe o arquivo e informe a nota para concluir.');
+  }, 50);
 }
 
 function fecharAvalPanel(){
@@ -6264,6 +6518,11 @@ async function loadAlunoDashboard(){
   const d = await getAlunoById(currentUser.id);
   if(!d) return;
 
+  // Ajusta a interface (Instruções, Arquivo do Artigo, Observações) conforme a disciplina
+  // do aluno — TCC 1 (fluxo tradicional com Banca/Versão Final) ou TCC 2 (proposta +
+  // submissão a Veículo de Publicação Qualificado, sem Banca).
+  ajustarInterfaceParaDisciplina(d);
+
   // Informa o aluno quando o período dele não é o período Vigente atual (não bloqueia nada,
   // é apenas informativo — a Coordenação e o avaliador ou orientador operam por período).
   const periodoVigenteAluno = await getPeriodoVigente();
@@ -6456,6 +6715,173 @@ async function loadAlunoDashboard(){
 
   // Carrega histórico automaticamente
   loadHistorico();
+}
+
+// Ajusta a interface do ambiente do Aluno conforme a disciplina (TCC 1 ou TCC 2):
+// mostra/oculta as Instruções correspondentes, a seção "Arquivo do Artigo" adequada, e o
+// texto de apoio das Observações. Também decide se a seção de envio do artigo submetido +
+// comprovante está liberada (depende de autorização do avaliador ou orientador).
+function ajustarInterfaceParaDisciplina(aluno){
+  const ehTCC2 = aluno.disciplina === 'TCC 2';
+  window._alunoDisciplinaAtual = aluno.disciplina || '';
+
+  const painelTCC1 = document.getElementById('painelInstrucoesTCC1Aluno');
+  const painelTCC2 = document.getElementById('painelInstrucoesTCC2Aluno');
+  if(painelTCC1) painelTCC1.style.display = ehTCC2 ? 'none' : 'block';
+  if(painelTCC2) painelTCC2.style.display = ehTCC2 ? 'block' : 'none';
+
+  const gridTCC1 = document.getElementById('arquivoGridTCC1');
+  const secoesTCC2 = document.getElementById('arquivoSecoesTCC2');
+  if(gridTCC1) gridTCC1.style.display = ehTCC2 ? 'none' : 'grid';
+  if(secoesTCC2) secoesTCC2.style.display = ehTCC2 ? 'block' : 'none';
+
+  const ajudaTCC2 = document.getElementById('artigoObsAjudaTCC2');
+  if(ajudaTCC2) ajudaTCC2.style.display = ehTCC2 ? 'block' : 'none';
+
+  const btnParcial = document.getElementById('btnParcial');
+  if(btnParcial) btnParcial.textContent = ehTCC2 ? '📨 Enviar Proposta ao Orientador' : '📨 Enviar Versão Parcial';
+
+  if(ehTCC2){
+    const bloqueado = document.getElementById('tcc2SubmissaoBloqueado');
+    const liberado   = document.getElementById('tcc2SubmissaoLiberado');
+    const autorizado = aluno.autorizadoSubmeterVPQ === true;
+    if(bloqueado) bloqueado.style.display = autorizado ? 'none' : 'block';
+    if(liberado)   liberado.style.display  = autorizado ? 'block' : 'none';
+  }
+}
+
+// Envia a Proposta de Artigo (TCC 2) para revisão do avaliador ou orientador — reaproveita
+// o mesmo mecanismo de "último arquivo" já usado pelo avaliador ou orientador para ver
+// envios do aluno, sem alterar o status (que é controlado pela disciplina/decisões dele).
+async function enviarPropostaTCC2(){
+  const obs     = document.getElementById('artigoObs').value.trim();
+  const fileInp = document.getElementById('artigoFileTCC2Proposta');
+  const file    = fileInp && fileInp.files[0];
+
+  if(!obs){ toast('Escreva uma observação antes de enviar.','err'); return; }
+  if(!file){ toast('Selecione o arquivo da proposta.','err'); return; }
+  if(file.size > 3*1024*1024){ toast('Arquivo muito grande. Máximo 3 MB.','err'); return; }
+
+  const btn = document.getElementById('btnParcial');
+  btn.textContent='Enviando...'; btn.disabled=true;
+
+  try{
+    const b64  = await fileToBase64(file);
+    const nome = file.name;
+
+    await rtdb.ref('alunos/'+currentUser.id).update({
+      artigoObs:obs, ultimaAtualizacao:Date.now(), ultimoArquivoNome:nome
+    });
+    await rtdb.ref('alunos/'+currentUser.id+'/ultimoArquivo').set({ nome, base64:b64, data:Date.now() });
+
+    await rtdb.ref('historico/'+currentUser.id).push({
+      tipo:'Proposta de Artigo (TCC 2)', status:'Proposta Enviada',
+      data:Date.now(), autor:currentUser.nome, comentario:obs, arquivoNome:nome
+    });
+
+    toast('Proposta enviada ao avaliador ou orientador!');
+    fileInp.value='';
+    loadAlunoDashboard();
+  } catch(e){
+    toast('Erro ao enviar: '+e.message,'err');
+    console.error('Erro enviarPropostaTCC2:', e);
+  } finally {
+    btn.textContent='📨 Enviar Proposta ao Orientador'; btn.disabled=false;
+  }
+}
+
+// Wrapper: decide se o botão "Enviar" da seção Observações envia uma Versão Parcial
+// (TCC 1) ou uma Proposta de Artigo (TCC 2), conforme a disciplina do aluno.
+function enviarVersaoOuProposta(){
+  if(window._alunoDisciplinaAtual === 'TCC 2') enviarPropostaTCC2();
+  else enviarVersaoParcial();
+}
+
+// Envia o Artigo Submetido + Comprovante de Submissão ao VPQ (TCC 2), com o mesmo
+// questionário que o avaliador ou orientador usa para finalizar o TCC 2 — disponível
+// somente após autorização do avaliador ou orientador. Notifica o avaliador ou orientador
+// automaticamente; a finalização em si continua sendo feita por ele, em "Finalizar TCC 2".
+async function enviarSubmissaoTCC2Aluno(){
+  const d = await getAlunoById(currentUser.id);
+  if(!d || d.autorizadoSubmeterVPQ !== true){
+    toast('Você ainda não tem autorização do avaliador ou orientador para enviar a submissão.','err');
+    return;
+  }
+
+  const fileSubmetido = document.getElementById('tcc2AlunoArquivoSubmetido').files[0];
+  const fileComprovante = document.getElementById('tcc2AlunoComprovante').files[0];
+  const dataDocumento = document.getElementById('tcc2AlunoDataDocumento').value.trim();
+  const tema = document.getElementById('tcc2AlunoTema').value.trim();
+  const veiculo = document.getElementById('tcc2AlunoVeiculo').value.trim();
+  const tipoSel = document.getElementById('tcc2AlunoTipoVeiculo').value;
+  const tipoOutro = document.getElementById('tcc2AlunoTipoVeiculoOutro').value.trim();
+  const tipoVeiculo = tipoSel==='Outros' ? tipoOutro : tipoSel;
+  const modeloAcesso = document.getElementById('tcc2AlunoModeloAcesso').value;
+  const classificacao = document.getElementById('tcc2AlunoClassificacao').value;
+  const status = document.getElementById('tcc2AlunoStatus').value;
+
+  if(!fileSubmetido)   { toast('Selecione o artigo que foi submetido.','err'); return; }
+  if(!fileComprovante) { toast('Selecione o comprovante de submissão.','err'); return; }
+  if(fileSubmetido.size>7*1024*1024 || fileComprovante.size>7*1024*1024){ toast('Cada arquivo deve ter no máximo 7 MB.','err'); return; }
+  if(!/^\d{2}\/\d{2}\/\d{4}$/.test(dataDocumento)){ toast('Informe a Data do Documento no formato DD/MM/AAAA.','err'); return; }
+  if(!tema)     { toast('Informe o tema do artigo.','err'); return; }
+  if(!veiculo)  { toast('Informe o nome do veículo de publicação qualificado.','err'); return; }
+  if(!tipoSel)  { toast('Selecione o tipo do veículo.','err'); return; }
+  if(tipoSel==='Outros' && !tipoOutro){ toast('Especifique o tipo do veículo.','err'); return; }
+  if(!modeloAcesso)   { toast('Selecione o modelo de acesso.','err'); return; }
+  if(!classificacao)  { toast('Selecione a classificação do veículo.','err'); return; }
+  if(!status)   { toast('Selecione o status da submissão.','err'); return; }
+
+  const statusEl = document.getElementById('tcc2AlunoSubmissaoStatus');
+  statusEl.textContent = '⏳ Enviando...';
+
+  try{
+    const [b64Submetido, b64Comprovante] = await Promise.all([
+      fileToBase64(fileSubmetido), fileToBase64(fileComprovante)
+    ]);
+    const now = Date.now();
+
+    // 1. Salva os arquivos no registro do aluno.
+    await rtdb.ref('alunos/'+currentUser.id+'/artigoSubmetidoTCC2').set({
+      nome: fileSubmetido.name, base64: b64Submetido, data: now
+    });
+    await rtdb.ref('alunos/'+currentUser.id+'/comprovanteSubmissaoTCC2').set({
+      nome: fileComprovante.name, base64: b64Comprovante, data: now
+    });
+
+    // 2. Salva o questionário de submissão — o avaliador ou orientador usa estes mesmos
+    // dados para preencher "Finalizar TCC 2" (evita digitar tudo de novo).
+    const dadosSubmissao = {
+      tema, veiculo, tipoVeiculo, modeloAcesso, classificacao, status, dataDocumento,
+      arquivoSubmetidoNome: fileSubmetido.name, comprovanteNome: fileComprovante.name,
+      enviadoEm: now
+    };
+    await rtdb.ref('alunos/'+currentUser.id+'/submissaoTCC2Aluno').set(dadosSubmissao);
+
+    // 3. Histórico do aluno.
+    await rtdb.ref('historico/'+currentUser.id).push({
+      tipo:'Submissão ao VPQ (TCC 2)', status:'Aguardando finalização pelo avaliador ou orientador',
+      comentario:`Veículo: ${veiculo} | Tipo: ${tipoVeiculo} | Modelo de acesso: ${modeloAcesso} | Classificação: ${classificacao} | Status: ${status}`,
+      data: now, autor: currentUser.nome
+    });
+
+    // 4. Notifica o avaliador ou orientador automaticamente.
+    if(d.orientadorId){
+      await rtdb.ref('notificacoes/'+d.orientadorId).push({
+        tipo:'Submissão TCC 2 recebida',
+        mensagem: `📤 ${d.nome} enviou o artigo submetido e o comprovante de submissão ao VPQ (${veiculo}). Acesse "Meus Alunos" para revisar e finalizar o TCC 2.`,
+        alunoId: currentUser.id, alunoNome: d.nome,
+        data: now, lida:false
+      });
+    }
+
+    statusEl.textContent = '✅ Enviado ao avaliador ou orientador com sucesso!';
+    toast('Submissão enviada ao avaliador ou orientador!');
+  } catch(e){
+    statusEl.textContent = '';
+    toast('Erro ao enviar: '+e.message,'err');
+    console.error('Erro enviarSubmissaoTCC2Aluno:', e);
+  }
 }
 
 async function salvarRascunho(){
