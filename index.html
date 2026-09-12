@@ -2021,7 +2021,7 @@ function toggleAcc(btn) {
   <div class="dash-wrap" style="padding-top:10px">
     <nav class="coord-nav">
       <button class="cnav-btn active" onclick="showAlunoTab('meuArtigo',this)">📝 Meu Artigo</button>
-      <button class="cnav-btn" onclick="showAlunoTab('ataDefesa',this)">📄 Recebimento da Ata de Defesa</button>
+      <button class="cnav-btn" id="navAtaDefesaAluno" onclick="showAlunoTab('ataDefesa',this)">📄 Recebimento da Ata de Defesa</button>
       <button class="cnav-btn" onclick="showAlunoTab('alunoConcurso',this)">🏆 Concurso Melhor TCC1</button>
       <button class="cnav-btn" onclick="showAlunoTab('alunoPerfil',this)">👤 Meu Perfil</button>
     </nav>
@@ -2037,10 +2037,12 @@ function toggleAcc(btn) {
             <div style="font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px">Avaliador ou Orientador(a)</div>
             <div style="font-weight:800;font-size:.95rem;margin-top:2px" id="alunoOrientadorNome">—</div>
             <div style="font-size:.78rem;color:var(--muted)" id="alunoOrientadorTurma"></div>
+            <div style="font-size:.78rem;color:var(--muted);font-weight:700" id="alunoDisciplinaTexto"></div>
           </div>
           <span class="sb" id="alunoStatusBadge">Pendente</span>
         </div>
-        <!-- Barra de progresso -->
+        <!-- Barra de progresso — TCC 1 -->
+        <div id="progressoTCC1Wrap">
         <div style="font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Progresso do Artigo</div>
         <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">
           <div id="prog-1" style="border-radius:7px;padding:8px 4px;text-align:center;font-size:.65rem;font-weight:800;background:#f1f5f9;color:#94a3b8;transition:all .3s;line-height:1.3">📝<br>Rascunho</div>
@@ -2050,6 +2052,19 @@ function toggleAcc(btn) {
           <div id="prog-5" style="border-radius:7px;padding:8px 4px;text-align:center;font-size:.65rem;font-weight:800;background:#f1f5f9;color:#94a3b8;transition:all .3s;line-height:1.3">⚠️<br>Aj. Banca</div>
           <div id="prog-6" style="border-radius:7px;padding:8px 4px;text-align:center;font-size:.65rem;font-weight:800;background:#f1f5f9;color:#94a3b8;transition:all .3s;line-height:1.3">✍️<br>Ass. ATA</div>
           <div id="prog-7" style="border-radius:7px;padding:8px 4px;text-align:center;font-size:.65rem;font-weight:800;background:#f1f5f9;color:#94a3b8;transition:all .3s;line-height:1.3">✅<br>Aprovado</div>
+        </div>
+        </div>
+
+        <!-- Barra de progresso — TCC 2 (sem Banca/Ata: proposta → autorização → submissão → finalização) -->
+        <div id="progressoTCC2Wrap" style="display:none">
+        <div style="font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Progresso do TCC 2</div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px">
+          <div id="prog2-1" style="border-radius:7px;padding:8px 4px;text-align:center;font-size:.65rem;font-weight:800;background:#f1f5f9;color:#94a3b8;transition:all .3s;line-height:1.3">📝<br>Proposta Enviada</div>
+          <div id="prog2-2" style="border-radius:7px;padding:8px 4px;text-align:center;font-size:.65rem;font-weight:800;background:#f1f5f9;color:#94a3b8;transition:all .3s;line-height:1.3">🔓<br>Autorizado</div>
+          <div id="prog2-3" style="border-radius:7px;padding:8px 4px;text-align:center;font-size:.65rem;font-weight:800;background:#f1f5f9;color:#94a3b8;transition:all .3s;line-height:1.3">📤<br>Submetido ao VPQ</div>
+          <div id="prog2-4" style="border-radius:7px;padding:8px 4px;text-align:center;font-size:.65rem;font-weight:800;background:#f1f5f9;color:#94a3b8;transition:all .3s;line-height:1.3">⏳<br>Aguardando Finalização</div>
+          <div id="prog2-5" style="border-radius:7px;padding:8px 4px;text-align:center;font-size:.65rem;font-weight:800;background:#f1f5f9;color:#94a3b8;transition:all .3s;line-height:1.3">✅<br>Finalizado</div>
+        </div>
         </div>
       </div>
 
@@ -2152,6 +2167,16 @@ function toggleAcc(btn) {
         <!-- TCC 2: Proposta de Artigo + Submissão ao VPQ -->
         <div id="arquivoSecoesTCC2" style="display:none">
 
+          <!-- Confirmação de leitura das Instruções para o TCC 2 — bloqueia as ações abaixo até ser confirmada -->
+          <div id="confirmacaoInstrucoesTCC2Wrap" style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:14px 16px;margin-bottom:16px">
+            <label style="display:flex;align-items:flex-start;gap:8px;font-size:.84rem;color:var(--text);cursor:pointer">
+              <input type="checkbox" id="chkConfirmaInstrucoesTCC2" onchange="confirmarLeituraInstrucoesTCC2()" style="margin-top:3px"/>
+              <span>Li e entendi as <strong>Instruções para o TCC 2</strong> desta plataforma (acima) antes de usar as seções abaixo.</span>
+            </label>
+            <div id="confirmacaoInstrucoesTCC2Bloqueio" style="margin-top:8px;font-size:.78rem;color:#dc2626;display:none">🔒 Marque a confirmação acima para liberar o envio da proposta e da submissão.</div>
+          </div>
+
+          <fieldset id="tcc2SecoesBloqueaveis" style="border:none;padding:0;margin:0">
           <!-- Seção A: Proposta de Artigo (melhorias, antes da submissão) -->
           <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px">
             <div style="font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">📝 Proposta de Artigo (com melhorias) — antes da submissão</div>
@@ -2241,6 +2266,7 @@ function toggleAcc(btn) {
             <button onclick="enviarSubmissaoTCC2Aluno()" style="width:100%;padding:.75rem;background:linear-gradient(135deg,#16a34a,#4ade80);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.88rem;font-weight:800;cursor:pointer">📤 Enviar ao Avaliador ou Orientador</button>
             <div id="tcc2AlunoSubmissaoStatus" style="margin-top:8px;font-size:.82rem"></div>
           </div>
+          </fieldset>
 
         </div>
 
@@ -6741,12 +6767,75 @@ function ajustarInterfaceParaDisciplina(aluno){
   const btnParcial = document.getElementById('btnParcial');
   if(btnParcial) btnParcial.textContent = ehTCC2 ? '📨 Enviar Proposta ao Orientador' : '📨 Enviar Versão Parcial';
 
+  // Nome da disciplina, exibido junto com a turma.
+  const disciplinaEl = document.getElementById('alunoDisciplinaTexto');
+  if(disciplinaEl) disciplinaEl.textContent = aluno.disciplina ? 'Disciplina: '+aluno.disciplina : '';
+
+  // TCC 2 não tem Banca nem Ata de Defesa — oculta essa aba inteira.
+  const navAta = document.getElementById('navAtaDefesaAluno');
+  if(navAta) navAta.style.display = ehTCC2 ? 'none' : '';
+
+  // Barra de progresso: TCC 1 (7 etapas com Banca/Ata) ou TCC 2 (5 etapas, sem Banca/Ata).
+  const progTCC1Wrap = document.getElementById('progressoTCC1Wrap');
+  const progTCC2Wrap = document.getElementById('progressoTCC2Wrap');
+  if(progTCC1Wrap) progTCC1Wrap.style.display = ehTCC2 ? 'none' : 'block';
+  if(progTCC2Wrap) progTCC2Wrap.style.display = ehTCC2 ? 'block' : 'none';
+
   if(ehTCC2){
     const bloqueado = document.getElementById('tcc2SubmissaoBloqueado');
     const liberado   = document.getElementById('tcc2SubmissaoLiberado');
     const autorizado = aluno.autorizadoSubmeterVPQ === true;
     if(bloqueado) bloqueado.style.display = autorizado ? 'none' : 'block';
     if(liberado)   liberado.style.display  = autorizado ? 'block' : 'none';
+
+    atualizarProgressoTCC2(aluno);
+
+    // Mecanismo de confirmação: bloqueia o envio de proposta/submissão até o aluno
+    // confirmar que leu as Instruções para o TCC 2. A confirmação é salva no Firebase e
+    // vale permanentemente (não precisa confirmar de novo a cada acesso).
+    const confirmado = aluno.confirmouInstrucoesTCC2 === true;
+    const chk = document.getElementById('chkConfirmaInstrucoesTCC2');
+    const fieldset = document.getElementById('tcc2SecoesBloqueaveis');
+    const aviso = document.getElementById('confirmacaoInstrucoesTCC2Bloqueio');
+    if(chk) chk.checked = confirmado;
+    if(fieldset) fieldset.disabled = !confirmado;
+    if(aviso) aviso.style.display = confirmado ? 'none' : 'block';
+  }
+}
+
+// Marca (ou desmarca) a confirmação de leitura das Instruções para o TCC 2 — grava no
+// Firebase e libera/bloqueia imediatamente as seções de envio de proposta e submissão.
+async function confirmarLeituraInstrucoesTCC2(){
+  const chk = document.getElementById('chkConfirmaInstrucoesTCC2');
+  const confirmado = !!(chk && chk.checked);
+  const fieldset = document.getElementById('tcc2SecoesBloqueaveis');
+  const aviso = document.getElementById('confirmacaoInstrucoesTCC2Bloqueio');
+  if(fieldset) fieldset.disabled = !confirmado;
+  if(aviso) aviso.style.display = confirmado ? 'none' : 'block';
+  try{
+    await rtdb.ref('alunos/'+currentUser.id).update({ confirmouInstrucoesTCC2: confirmado });
+  }catch(e){ console.error('[confirmarLeituraInstrucoesTCC2] falhou:', e); }
+}
+
+// Calcula e aplica as 5 etapas da barra de progresso do TCC 2, com base nos dados reais do
+// aluno (nunca inventa uma etapa que não tenha realmente acontecido).
+function atualizarProgressoTCC2(aluno){
+  const ativos = [];
+  if(aluno.ultimoArquivoNome) ativos.push(1);           // Proposta enviada
+  if(aluno.autorizadoSubmeterVPQ === true) ativos.push(2); // Autorizado
+  if(aluno.submissaoTCC2Aluno) ativos.push(3);           // Submetido ao VPQ
+  if(aluno.submissaoTCC2Aluno && aluno.status !== 'Aprovado') ativos.push(4); // Aguardando finalização
+  if(aluno.status === 'Aprovado') ativos.push(5);        // Finalizado
+  for(let i=1;i<=5;i++){
+    const el = document.getElementById('prog2-'+i);
+    if(!el) continue;
+    if(ativos.includes(i)){
+      el.style.background = '#16a34a'; el.style.color = '#fff';
+      el.style.boxShadow = '0 2px 6px rgba(0,0,0,.15)';
+    } else {
+      el.style.background = '#f1f5f9'; el.style.color = '#94a3b8';
+      el.style.boxShadow = 'none';
+    }
   }
 }
 
