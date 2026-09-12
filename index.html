@@ -2169,8 +2169,15 @@ function toggleAcc(btn) {
 
           <!-- Confirmação de leitura das Instruções para o TCC 2 — bloqueia as ações abaixo até ser confirmada -->
           <div id="confirmacaoInstrucoesTCC2Wrap" style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:14px 16px;margin-bottom:16px">
+            <div id="confirmacaoInstrucoesTCC2PendenteLeitura" style="margin-bottom:10px;font-size:.82rem;color:var(--text)">
+              🔒 Antes de continuar, você precisa <strong>abrir e ler</strong> as duas partes abaixo (marcadas ✅ quando abertas):
+              <ul style="margin:6px 0 0;padding-left:20px">
+                <li id="leituraItemInstrucoes">⬜ Abrir "📋 Instruções para o TCC 2" (acima)</li>
+                <li id="leituraItemVeiculo">⬜ Abrir "🔬 Veículo de publicação qualificado (para TCC 2)" (dentro das Instruções)</li>
+              </ul>
+            </div>
             <label style="display:flex;align-items:flex-start;gap:8px;font-size:.84rem;color:var(--text);cursor:pointer">
-              <input type="checkbox" id="chkConfirmaInstrucoesTCC2" onchange="confirmarLeituraInstrucoesTCC2()" style="margin-top:3px"/>
+              <input type="checkbox" id="chkConfirmaInstrucoesTCC2" onchange="confirmarLeituraInstrucoesTCC2()" disabled style="margin-top:3px"/>
               <span>Li e entendi as <strong>Instruções para o TCC 2</strong> desta plataforma (acima) antes de usar as seções abaixo.</span>
             </label>
             <div id="confirmacaoInstrucoesTCC2Bloqueio" style="margin-top:8px;font-size:.78rem;color:#dc2626;display:none">🔒 Marque a confirmação acima para liberar o envio da proposta e da submissão.</div>
@@ -3258,7 +3265,48 @@ function toggleInstrucoesCoordTCC1(){ toggleCollapse('instrucoesCoordTCC1Body','
 function toggleInstrucoesCoordTCC2(){ toggleCollapse('instrucoesCoordTCC2Body','instrucoesCoordTCC2Arrow'); }
 function toggleInstrucoesOrientTCC1(){ toggleCollapse('instrucoesOrientTCC1Body','instrucoesOrientTCC1Arrow'); }
 function toggleInstrucoesOrientTCC2(){ toggleCollapse('instrucoesOrientTCC2Body','instrucoesOrientTCC2Arrow'); }
-function toggleInstrucoesAlunoTCC2(){ toggleCollapse('instrucoesAlunoTCC2Body','instrucoesAlunoTCC2Arrow'); }
+function toggleInstrucoesAlunoTCC2(){
+  const body = document.getElementById('instrucoesAlunoTCC2Body');
+  const estavaFechado = body && body.style.display === 'none';
+  toggleCollapse('instrucoesAlunoTCC2Body','instrucoesAlunoTCC2Arrow');
+  // Só conta como "leitura" quando o aluno realmente ABRE a seção (não ao fechar de novo).
+  if(estavaFechado && currentUser && currentUser.role === 'aluno'){
+    registrarLeituraTCC2('abriuInstrucoesTCC2');
+  }
+}
+
+// Grava, no registro do aluno, que ele abriu uma das partes obrigatórias de leitura das
+// Instruções para o TCC 2 — e atualiza a liberação da confirmação em tela, sem precisar
+// recarregar a página.
+async function registrarLeituraTCC2(campo){
+  if(!currentUser || currentUser.role !== 'aluno') return;
+  window._alunoLeituraTCC2 = window._alunoLeituraTCC2 || {};
+  window._alunoLeituraTCC2[campo] = true;
+  atualizarLiberacaoConfirmacaoTCC2();
+  try{ await rtdb.ref('alunos/'+currentUser.id).update({ [campo]: true }); }
+  catch(e){ console.error('[registrarLeituraTCC2] falhou:', e); }
+}
+
+// Habilita (ou mantém desabilitada) a caixa de confirmação de leitura conforme o aluno já
+// tenha aberto as Instruções para o TCC 2 E o modal do Veículo de Publicação Qualificado.
+function atualizarLiberacaoConfirmacaoTCC2(){
+  const chk = document.getElementById('chkConfirmaInstrucoesTCC2');
+  const pendente = document.getElementById('confirmacaoInstrucoesTCC2PendenteLeitura');
+  const itemInstrucoes = document.getElementById('leituraItemInstrucoes');
+  const itemVeiculo = document.getElementById('leituraItemVeiculo');
+  const l = window._alunoLeituraTCC2 || {};
+
+  if(itemInstrucoes) itemInstrucoes.textContent = (l.abriuInstrucoesTCC2 ? '✅' : '⬜') + ' Abrir "📋 Instruções para o TCC 2" (acima)';
+  if(itemVeiculo) itemVeiculo.textContent = (l.abriuVeiculoQualificadoTCC2 ? '✅' : '⬜') + ' Abrir "🔬 Veículo de publicação qualificado (para TCC 2)" (dentro das Instruções)';
+
+  const podeConfirmar = !!(l.abriuInstrucoesTCC2 && l.abriuVeiculoQualificadoTCC2);
+  if(chk){
+    chk.disabled = !podeConfirmar;
+    if(!podeConfirmar) chk.checked = false;
+  }
+  if(pendente) pendente.style.display = podeConfirmar ? 'none' : 'block';
+  if(!podeConfirmar) confirmarLeituraInstrucoesTCC2();
+}
 
 // ── Coordenação: tela de gestão das Finalizações de TCC 2 ──
 async function loadTCC2Coord(){
@@ -6790,10 +6838,18 @@ function ajustarInterfaceParaDisciplina(aluno){
 
     atualizarProgressoTCC2(aluno);
 
-    // Mecanismo de confirmação: bloqueia o envio de proposta/submissão até o aluno
-    // confirmar que leu as Instruções para o TCC 2. A confirmação é salva no Firebase e
-    // vale permanentemente (não precisa confirmar de novo a cada acesso).
-    const confirmado = aluno.confirmouInstrucoesTCC2 === true;
+    // Mecanismo de confirmação: o aluno só pode confirmar (e liberar o envio de proposta e
+    // submissão) depois de realmente ABRIR as Instruções para o TCC 2 e o modal do Veículo
+    // de Publicação Qualificado — não basta marcar a caixa sem ter lido. Tudo é salvo no
+    // Firebase e vale permanentemente (não precisa reabrir a cada acesso).
+    window._alunoLeituraTCC2 = {
+      abriuInstrucoesTCC2: aluno.abriuInstrucoesTCC2 === true,
+      abriuVeiculoQualificadoTCC2: aluno.abriuVeiculoQualificadoTCC2 === true
+    };
+    atualizarLiberacaoConfirmacaoTCC2();
+
+    const confirmado = aluno.confirmouInstrucoesTCC2 === true &&
+      window._alunoLeituraTCC2.abriuInstrucoesTCC2 && window._alunoLeituraTCC2.abriuVeiculoQualificadoTCC2;
     const chk = document.getElementById('chkConfirmaInstrucoesTCC2');
     const fieldset = document.getElementById('tcc2SecoesBloqueaveis');
     const aviso = document.getElementById('confirmacaoInstrucoesTCC2Bloqueio');
@@ -7619,7 +7675,12 @@ function fmtDate(ts){
   return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-function abrirVeiculoQualificado(){ document.getElementById('modalVeiculoQualificado').classList.add('open'); }
+function abrirVeiculoQualificado(){
+  document.getElementById('modalVeiculoQualificado').classList.add('open');
+  if(currentUser && currentUser.role === 'aluno'){
+    registrarLeituraTCC2('abriuVeiculoQualificadoTCC2');
+  }
+}
 
 let toastT;
 function toast(msg,type='ok'){
