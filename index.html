@@ -137,6 +137,18 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 
 /* ═══ MAIN ═══ */
 main { max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; }
+/* Aba "Alunos" da Coordenação: 40% mais larga que as demais abas, para acomodar a
+   coluna "Ações" em "Alunos Cadastrados" sem cortar o conteúdo. Centralizada em relação
+   à janela (não ao <main>, que continua com 1100px), então funciona independente da
+   largura do container pai. */
+#ct-alunos{ width:1540px; max-width:96vw; margin-left:50%; transform:translateX(-50%); }
+@media (max-width:1100px){ #ct-alunos{ width:100%; max-width:100%; margin-left:0; transform:none; } }
+/* Coluna "Ações" sempre visível: fica fixa à direita ao rolar a tabela na horizontal. */
+.tbl-alunos-cad{ min-width:1100px; }
+.tbl-alunos-cad th:last-child, .tbl-alunos-cad td:last-child{
+  position:sticky; right:0; background:#fff; box-shadow:-6px 0 8px -6px rgba(0,0,0,.12);
+}
+.tbl-alunos-cad thead th:last-child{ background:#f8fafc; }
 
 /* ═══ BUTTON GRID ═══ */
 .btn-grid {
@@ -1006,9 +1018,9 @@ footer {
       <div class="hm-line">
         <span class="badge-pilot">TESTE PILOTO</span>
         <span class="hm-sep">·</span>
-        <span class="badge-ver">V5</span>
+        <span class="badge-ver">V6</span>
         <span class="hm-sep">·</span>
-        <span>04/09/26</span>
+        <span>11/09/26</span>
       </div>
     </div>
   </div>
@@ -1413,6 +1425,8 @@ function toggleAcc(btn) {
       <button class="cnav-btn" onclick="showCoordTab('artigos',this)">📄 Artigos</button>
       <button class="cnav-btn" onclick="showCoordTab('bancasCoord',this)">🏛️ Bancas</button>
       <button class="cnav-btn" onclick="showCoordTab('concurso',this)">🏆 Concurso TCC1</button>
+      <button class="cnav-btn" onclick="showCoordTab('tcc2',this)" id="tabTCC2CoordBtn">🎓 TCC 2 <span id="tcc2CoordBadge" style="display:none;background:#dc2626;color:#fff;border-radius:20px;padding:1px 7px;font-size:.7rem;margin-left:4px">!</span></button>
+      <button class="cnav-btn" onclick="showCoordTab('instrucoesCoord',this)">💡 Instruções</button>
       <button class="cnav-btn" onclick="showCoordTab('config',this)">⚙️ Configurações</button>
     </nav>
 
@@ -1585,6 +1599,69 @@ function toggleAcc(btn) {
       <div id="listaBancasCoord"><p class="empty-box"><span class="emo">🔍</span><br>Carregando...</p></div>
     </div>
 
+    <!-- TCC2 TAB -->
+    <div class="ct-content" id="ct-tcc2">
+      <div id="tcc2PeriodoIndicador" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;font-size:.84rem;font-weight:700;color:#1a4a6e"></div>
+      <div class="sec-title">🎓 Finalizações de TCC 2 Recebidas</div>
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">Artigos de TCC 2 finalizados e enviados pelos avaliadores ou orientadores, com o comprovante de submissão ao veículo de publicação qualificado.</p>
+      <div class="table-shell">
+        <table>
+          <thead><tr><th>Aluno</th><th>Matrícula</th><th>Avaliador ou Orientador</th><th>Veículo de Publicação</th><th>Modelo de Acesso</th><th>Classificação</th><th>Status</th><th>Nota</th><th>Data</th><th>Ações</th></tr></thead>
+          <tbody id="tblTCC2Coord"><tr><td colspan="10" style="text-align:center;color:var(--muted)">Carregando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- INSTRUÇÕES TAB (Coordenação) -->
+    <div class="ct-content" id="ct-instrucoesCoord">
+      <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
+        <div class="panel-title" onclick="toggleInstrucoesCoordTCC1()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none">
+          <span>📋 Instruções para o TCC 1</span>
+          <span id="instrucoesCoordTCC1Arrow" style="font-size:.8rem;color:var(--muted);transition:transform .2s">▼ Mostrar</span>
+        </div>
+        <div id="instrucoesCoordTCC1Body" style="display:none">
+<div style="background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:#1a4a6e;line-height:1.6">
+          <strong>📖 Ementa — FTL125 · Trabalho de Conclusão de Curso I</strong><br>
+          <span style="color:var(--muted)">9º Período &nbsp;·&nbsp; Eixo: Trabalho de Conclusão de Curso &nbsp;·&nbsp; Créditos 2.2.0 &nbsp;·&nbsp; CH 30h &nbsp;·&nbsp; Pré-requisito: FTL124</span>
+          <p style="margin:8px 0 4px">Elaboração de um artigo teórico-prático interdisciplinar da área da Engenharia de Produção, envolvendo as etapas de estudo do problema, concepção, simulação e implementação. Elaboração e apresentação de documentação técnica preliminar, orientado por professor familiarizado com o tema.</p>
+          <p style="margin:4px 0 0"><strong>Objetivo geral:</strong> ao final da disciplina, o aluno será capaz de desenvolver e defender artigo científico, elaborado a partir de projetos de TQB, projetos desenvolvidos no Estágio Supervisionado, iniciação científica, projetos de extensão, ou participação em eventos técnico-científicos relacionados às áreas de Engenharia de Produção.</p>
+        </div>
+        <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
+          <li><strong>📅 Defina o período Vigente</strong><br>Em <strong>Configurações → Configuração de Prazo</strong>, defina o ano/período (ex.: 2026/1) e o prazo final de entrega. Essa é a única tela que deve ser usada para isso — ela sincroniza automaticamente o que Avaliadores/Orientadores e Alunos enxergam.</li>
+          <li><strong>🎓 Cadastre Avaliadores ou Orientadores</strong><br>Em <strong>Avaliadores ou Orientadores</strong>, cadastre cada professor, com turma(s) vinculada(s).</li>
+          <li><strong>📚 Cadastre os Alunos</strong><br>Em <strong>Alunos</strong>, cadastre cada aluno com matrícula, turma e avaliador/orientador — a disciplina TCC 1 é definida automaticamente.</li>
+          <li><strong>📊 Acompanhe pelo Dashboard</strong><br>O Dashboard mostra o status de cada aluno (Pendente, Versão Banca, Aprovado, Reprovado) e alertas de alunos sem atualização há mais de 7 dias.</li>
+          <li><strong>🏛️ Bancas</strong><br>A aba <strong>Bancas</strong> mostra as defesas agendadas pelos avaliadores ou orientadores, com os membros convidados e pareceres.</li>
+          <li><strong>📄 Artigos e Biblioteca</strong><br>Artigos aprovados na Versão Final são publicados automaticamente na <strong>Biblioteca</strong>, disponível para consulta pública.</li>
+          <li><strong>🏆 Concurso TCC1</strong><br>Gerencie inscrições e pareceres do concurso de melhores TCCs na aba dedicada.</li>
+          <li><strong>➡️ Avançando para o TCC 2</strong><br>Ao definir um novo período Vigente (ex.: 2026/2), o sistema migra automaticamente os alunos Aprovados em TCC 1 para TCC 2, mantendo o histórico completo de TCC 1 intacto e consultável.</li>
+        </ol>
+        </div>
+      </div>
+
+      <div class="panel" style="display:block;border-top-color:var(--green-light)">
+        <div class="panel-title" onclick="toggleInstrucoesCoordTCC2()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none">
+          <span>📋 Instruções para o TCC 2</span>
+          <span id="instrucoesCoordTCC2Arrow" style="font-size:.8rem;color:var(--muted);transition:transform .2s">▼ Mostrar</span>
+        </div>
+        <div id="instrucoesCoordTCC2Body" style="display:none">
+<div style="background:var(--green-pale);border:1.5px solid var(--green-light);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:#166534;line-height:1.6">
+          <strong>📖 Ementa — FTL129 · Trabalho de Conclusão de Curso II</strong><br>
+          <span style="color:var(--muted)">10º Período &nbsp;·&nbsp; Eixo: Trabalho de Conclusão de Curso &nbsp;·&nbsp; Créditos 2.2.0 &nbsp;·&nbsp; CH 30h &nbsp;·&nbsp; Pré-requisito: FTL125</span>
+          <p style="margin:8px 0 4px">Modelos de acesso e financiamento da publicação científica (fechado por assinatura, aberto diamante, dourado, verde e híbrido). Critérios para seleção de periódico ou evento técnico-científico: escopo, avaliação por pares, corpo editorial, indexação, Qualis, indicadores bibliométricos, idioma, prazo editorial e taxas de publicação. Consulta às bases Qualis Periódicos (Plataforma Sucupira), SCImago Journal & Country Rank (SJR) e Directory of Open Access Journals (DOAJ). Adequação do artigo às instruções aos autores e ao modelo do veículo selecionado. Ética e integridade na publicação científica: autoria, ineditismo, plágio, autoplágio, conflitos de interesse e direitos autorais. Preparação da carta ao editor, dos metadados e dos arquivos necessários à submissão. Submissão e acompanhamento inicial do fluxo editorial.</p>
+          <p style="margin:4px 0 0"><strong>Objetivo geral:</strong> ao final da disciplina, o aluno será capaz de selecionar e submeter artigo científico a Veículo de Publicação Qualificado, em conformidade com as diretrizes editoriais e os princípios de integridade científica, obtendo comprovante de submissão e confirmação de encaminhamento do artigo para avaliação por revisores.</p>
+        </div>
+        <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
+          <li><strong>➡️ Como um aluno chega ao TCC 2</strong><br>Alunos Aprovados em TCC 1 são migrados automaticamente para a disciplina TCC 2 quando a Coordenação define o novo período Vigente em Configurações.</li>
+          <li><strong>🏛️ Diferença fundamental em relação ao TCC 1</strong><br>O TCC 1 tem <strong>banca examinadora</strong> e a versão final é enviada automaticamente à <strong>Biblioteca</strong>. O TCC 2 <strong>não tem banca</strong> — o artigo é submetido diretamente a um veículo de publicação qualificado, e a finalização é enviada diretamente à <strong>Coordenação</strong> (não à Biblioteca).</li>
+          <li><strong>🏁 Finalização pelo Avaliador ou Orientador</strong><br>O avaliador ou orientador, em <strong>Meus Alunos</strong>, seleciona o aluno de TCC 2 e clica em <strong>🏁 Finalizar TCC 2</strong>, preenchendo: o comprovante de submissão do artigo, a data do documento, o tema, o nome/tipo/classificação e modelo de acesso do veículo de publicação qualificado, a declaração de ética e integridade, o status da submissão e a nota do aluno.</li>
+          <li><strong>⚠️ Processo irreversível</strong><br>Após a confirmação final do avaliador ou orientador, os dados são enviados automaticamente para esta tela — <strong>🎓 TCC 2</strong> — e não podem ser alterados por ele.</li>
+          <li><strong>🎓 Acompanhamento pela Coordenação</strong><br>Nesta aba, a Coordenação acompanha todas as finalizações recebidas: aluno, avaliador/orientador responsável, veículo de publicação, classificação, status da submissão, nota e o documento comprobatório enviado.</li>
+        </ol>
+        </div>
+      </div>
+    </div>
+
     <!-- CONFIG TAB -->
     <div class="ct-content" id="ct-config">
       <div class="panel" style="display:block;border-top-color:var(--blue-light)">
@@ -1723,7 +1800,7 @@ function toggleAcc(btn) {
       <div class="sec-title">👨‍🎓 Alunos Vinculados</div>
       <div class="table-shell">
         <table>
-          <thead><tr><th>Aluno</th><th>Matrícula</th><th>Status do Artigo</th><th>Atualizado</th><th>Ações</th></tr></thead>
+          <thead><tr><th>Aluno</th><th>Matrícula</th><th>Disciplina</th><th>Status do Artigo</th><th>Atualizado</th><th>Ações</th></tr></thead>
           <tbody id="tblOrientAlunos"></tbody>
         </table>
       </div>
@@ -1769,9 +1846,15 @@ function toggleAcc(btn) {
     <div class="ct-content" id="ot-orientInstrucoes">
 
       <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
-        <div class="panel-title">💡 Instruções para o Avaliador ou Orientador</div>
+        <div class="panel-title">💡 Instruções para o TCC 1</div>
         <div style="background:var(--gold-pale);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:18px;font-size:.84rem;color:#7a5200;font-weight:700">
           📌 Leia com atenção para garantir o correto fluxo de revisão dos artigos.
+        </div>
+<div style="background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:#1a4a6e;line-height:1.6">
+          <strong>📖 Ementa — FTL125 · Trabalho de Conclusão de Curso I</strong><br>
+          <span style="color:var(--muted)">9º Período &nbsp;·&nbsp; Eixo: Trabalho de Conclusão de Curso &nbsp;·&nbsp; Créditos 2.2.0 &nbsp;·&nbsp; CH 30h &nbsp;·&nbsp; Pré-requisito: FTL124</span>
+          <p style="margin:8px 0 4px">Elaboração de um artigo teórico-prático interdisciplinar da área da Engenharia de Produção, envolvendo as etapas de estudo do problema, concepção, simulação e implementação. Elaboração e apresentação de documentação técnica preliminar, orientado por professor familiarizado com o tema.</p>
+          <p style="margin:4px 0 0"><strong>Objetivo geral:</strong> ao final da disciplina, o aluno será capaz de desenvolver e defender artigo científico, elaborado a partir de projetos de TQB, projetos desenvolvidos no Estágio Supervisionado, iniciação científica, projetos de extensão, ou participação em eventos técnico-científicos relacionados às áreas de Engenharia de Produção.</p>
         </div>
 
         <!-- Recebendo versão parcial -->
@@ -1827,6 +1910,29 @@ function toggleAcc(btn) {
             <span style="background:var(--green-pale);color:var(--green);padding:5px 12px;border-radius:20px;border:1px solid var(--green-light)">🏁 Biblioteca Digital</span>
           </div>
         </div>
+      </div>
+
+      <div class="panel" style="display:block;border-top-color:var(--green-light)">
+        <div class="panel-title">💡 Instruções para o TCC 2</div>
+        <div style="background:var(--green-pale);border-left:4px solid var(--green);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:18px;font-size:.84rem;color:#166534;font-weight:700">
+          📌 O TCC 2 consiste em submeter o artigo a um veículo de publicação qualificado. Leia com atenção antes de finalizar — a ação é irreversível.
+        </div>
+<div style="background:var(--green-pale);border:1.5px solid var(--green-light);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:#166534;line-height:1.6">
+          <strong>📖 Ementa — FTL129 · Trabalho de Conclusão de Curso II</strong><br>
+          <span style="color:var(--muted)">10º Período &nbsp;·&nbsp; Eixo: Trabalho de Conclusão de Curso &nbsp;·&nbsp; Créditos 2.2.0 &nbsp;·&nbsp; CH 30h &nbsp;·&nbsp; Pré-requisito: FTL125</span>
+          <p style="margin:8px 0 4px">Modelos de acesso e financiamento da publicação científica (fechado por assinatura, aberto diamante, dourado, verde e híbrido). Critérios para seleção de periódico ou evento técnico-científico: escopo, avaliação por pares, corpo editorial, indexação, Qualis, indicadores bibliométricos, idioma, prazo editorial e taxas de publicação. Consulta às bases Qualis Periódicos (Plataforma Sucupira), SCImago Journal & Country Rank (SJR) e Directory of Open Access Journals (DOAJ). Adequação do artigo às instruções aos autores e ao modelo do veículo selecionado. Ética e integridade na publicação científica: autoria, ineditismo, plágio, autoplágio, conflitos de interesse e direitos autorais. Preparação da carta ao editor, dos metadados e dos arquivos necessários à submissão. Submissão e acompanhamento inicial do fluxo editorial.</p>
+          <p style="margin:4px 0 0"><strong>Objetivo geral:</strong> ao final da disciplina, o aluno será capaz de selecionar e submeter artigo científico a Veículo de Publicação Qualificado, em conformidade com as diretrizes editoriais e os princípios de integridade científica, obtendo comprovante de submissão e confirmação de encaminhamento do artigo para avaliação por revisores.</p>
+        </div>
+        <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
+          <li><strong>➡️ Quando um aluno aparece em TCC 2</strong><br>Alunos Aprovados em TCC 1 são migrados automaticamente para a disciplina <strong>TCC 2</strong> assim que a Coordenação define um novo período Vigente. Você pode identificar a disciplina de cada aluno na coluna <strong>Disciplina</strong> da tabela Alunos Vinculados.</li>
+          <li><strong>🏁 Finalizando o TCC 2</strong><br>Selecione o aluno de TCC 2 em <strong>📝 Avaliar</strong>. O botão <strong>🏁 Finalizar TCC 2</strong> só aparece para alunos matriculados nessa disciplina.</li>
+          <li><strong>📎 Documento comprobatório</strong><br>Anexe o documento (PDF ou DOCX, máx. 7 MB) que comprova a submissão do artigo ao veículo de publicação, nomeado como <code style="background:#f1f5f9;padding:2px 7px;border-radius:5px;font-size:.82rem">TCC2_NomeAluno_VersaoSubmetida.docx</code> (ou .pdf).</li>
+          <li><strong>📝 Preencha os dados da submissão</strong><br>Data do documento, tema do artigo, nome e tipo do veículo (Revista, Congresso, Simpósio ou Outros), modelo de acesso e financiamento (Fechado por assinatura, Aberto Diamante, Dourado, Verde ou Híbrido), classificação (A1 a B3), status atual da submissão e a nota do aluno (1 a 10).</li>
+          <li><strong>⚖️ Ética e integridade</strong><br>Confirme a declaração de que o artigo é inédito, não constitui plágio/autoplágio, não há conflitos de interesse não declarados e os direitos autorais foram respeitados — essa confirmação é obrigatória para prosseguir.</li>
+          <li><strong>🏛️ Sem banca no TCC 2</strong><br>Diferente do TCC 1, o TCC 2 <strong>não passa por banca examinadora</strong> — a finalização é feita diretamente pelo avaliador ou orientador, com base na comprovação de submissão ao veículo qualificado.</li>
+          <li><strong>✅ Confirmação em duas etapas</strong><br>Ao clicar em <strong>Confirmar e Enviar</strong>, uma segunda tela pedirá a confirmação final, avisando que a ação é <strong>irreversível</strong> e que os dados serão enviados imediatamente à Coordenação.</li>
+          <li><strong>🎓 Envio à Coordenação</strong><br>Após confirmar, os dados ficam registrados no histórico do aluno e são enviados automaticamente para a tela <strong>🎓 TCC 2</strong> da Coordenação — não é mais possível alterar as informações enviadas.</li>
+        </ol>
       </div>
 
     </div>
@@ -1907,10 +2013,16 @@ function toggleAcc(btn) {
       <!-- Instruções -->
       <div class="panel" style="display:block;border-top-color:var(--gold-light);margin-bottom:16px">
         <div class="panel-title" onclick="toggleInstrucoes()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none">
-          <span>📋 Como gerenciar seu arquivo</span>
+          <span>📋 Instruções para o TCC 1</span>
           <span id="instrutoesArrow" style="font-size:.8rem;color:var(--muted);transition:transform .2s">▼ Mostrar</span>
         </div>
         <div id="instrutoesBody" style="display:none">
+<div style="background:#eef4fb;border:1.5px solid #bcd6ee;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:#1a4a6e;line-height:1.6">
+          <strong>📖 Ementa — FTL125 · Trabalho de Conclusão de Curso I</strong><br>
+          <span style="color:var(--muted)">9º Período &nbsp;·&nbsp; Eixo: Trabalho de Conclusão de Curso &nbsp;·&nbsp; Créditos 2.2.0 &nbsp;·&nbsp; CH 30h &nbsp;·&nbsp; Pré-requisito: FTL124</span>
+          <p style="margin:8px 0 4px">Elaboração de um artigo teórico-prático interdisciplinar da área da Engenharia de Produção, envolvendo as etapas de estudo do problema, concepção, simulação e implementação. Elaboração e apresentação de documentação técnica preliminar, orientado por professor familiarizado com o tema.</p>
+          <p style="margin:4px 0 0"><strong>Objetivo geral:</strong> ao final da disciplina, o aluno será capaz de desenvolver e defender artigo científico, elaborado a partir de projetos de TQB, projetos desenvolvidos no Estágio Supervisionado, iniciação científica, projetos de extensão, ou participação em eventos técnico-científicos relacionados às áreas de Engenharia de Produção.</p>
+        </div>
         <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
           <li><strong>📥 Download do modelo de artigo</strong><br>Clique em <strong>⬇ Baixar Modelo de Artigo (.docx)</strong>. O arquivo será baixado automaticamente com o nome: <code>TCC1_SeuNome_v1.docx</code>.</li>
           <li><strong>💻 Edição do arquivo no computador</strong><br>Abra o arquivo, clique em <em>Habilitar edição</em>, realize as modificações necessárias e salve-o em uma pasta no seu computador.</li>
@@ -1928,6 +2040,28 @@ function toggleAcc(btn) {
           <strong>Obs:</strong> Versão parcial = ainda em desenvolvimento &nbsp;|&nbsp; Versão Final = artigo concluído
         </div>
         </div><!-- /instrutoesBody -->
+      </div>
+
+      <!-- Instruções TCC 2 -->
+      <div class="panel" style="display:block;border-top-color:var(--green-light);margin-bottom:16px">
+        <div class="panel-title" onclick="toggleInstrucoesAlunoTCC2()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none">
+          <span>📋 Instruções para o TCC 2</span>
+          <span id="instrucoesAlunoTCC2Arrow" style="font-size:.8rem;color:var(--muted);transition:transform .2s">▼ Mostrar</span>
+        </div>
+        <div id="instrucoesAlunoTCC2Body" style="display:none">
+<div style="background:var(--green-pale);border:1.5px solid var(--green-light);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:#166534;line-height:1.6">
+          <strong>📖 Ementa — FTL129 · Trabalho de Conclusão de Curso II</strong><br>
+          <span style="color:var(--muted)">10º Período &nbsp;·&nbsp; Eixo: Trabalho de Conclusão de Curso &nbsp;·&nbsp; Créditos 2.2.0 &nbsp;·&nbsp; CH 30h &nbsp;·&nbsp; Pré-requisito: FTL125</span>
+          <p style="margin:8px 0 4px">Modelos de acesso e financiamento da publicação científica (fechado por assinatura, aberto diamante, dourado, verde e híbrido). Critérios para seleção de periódico ou evento técnico-científico: escopo, avaliação por pares, corpo editorial, indexação, Qualis, indicadores bibliométricos, idioma, prazo editorial e taxas de publicação. Consulta às bases Qualis Periódicos (Plataforma Sucupira), SCImago Journal & Country Rank (SJR) e Directory of Open Access Journals (DOAJ). Adequação do artigo às instruções aos autores e ao modelo do veículo selecionado. Ética e integridade na publicação científica: autoria, ineditismo, plágio, autoplágio, conflitos de interesse e direitos autorais. Preparação da carta ao editor, dos metadados e dos arquivos necessários à submissão. Submissão e acompanhamento inicial do fluxo editorial.</p>
+          <p style="margin:4px 0 0"><strong>Objetivo geral:</strong> ao final da disciplina, o aluno será capaz de selecionar e submeter artigo científico a Veículo de Publicação Qualificado, em conformidade com as diretrizes editoriais e os princípios de integridade científica, obtendo comprovante de submissão e confirmação de encaminhamento do artigo para avaliação por revisores.</p>
+        </div>
+        <ol style="font-size:.85rem;line-height:2;color:var(--text);padding-left:20px">
+          <li><strong>➡️ Como você chega ao TCC 2</strong><br>Depois de Aprovado(a) em TCC 1, você é migrado(a) automaticamente para a disciplina <strong>TCC 2</strong> quando a Coordenação define um novo período Vigente. Seu histórico de TCC 1 permanece disponível para consulta.</li>
+          <li><strong>🎯 O que é o TCC 2</strong><br>O TCC 2 consiste em submeter o artigo produzido em TCC 1 a um <strong>veículo de publicação qualificado</strong> (revista, congresso ou simpósio). Diferente do TCC 1, o TCC 2 <strong>não tem banca examinadora</strong>, e a finalização é enviada diretamente à <strong>Coordenação</strong> (não à Biblioteca).</li>
+          <li><strong>👨‍🏫 Quem registra a finalização</strong><br>É o seu avaliador ou orientador quem registra a finalização do TCC 2 na plataforma, após você submeter o artigo ao veículo escolhido — anexando o comprovante da submissão, o tema, o veículo, a classificação, o status da submissão e sua nota.</li>
+          <li><strong>🔔 Você será notificado</strong><br>Assim que seu avaliador ou orientador confirmar a finalização, você recebe uma notificação com o resultado — esse processo é <strong>irreversível</strong> e os dados são enviados diretamente à Coordenação.</li>
+        </ol>
+        </div>
       </div>
 
       <!-- Grid: Baixar / Upload -->
@@ -2239,6 +2373,108 @@ function toggleAcc(btn) {
   </div>
 </div>
 
+<!-- ═══ MODAL FINALIZAR TCC 2 ═══ -->
+<div class="ar-overlay" id="modalFinalizarTCC2" style="z-index:4000">
+  <div class="ar-card" style="max-width:560px">
+    <h2>🏁 Finalizar o TCC 2</h2>
+    <p class="sub">Preencha todos os campos. Após confirmar, o processo é <strong>irreversível</strong>.</p>
+
+    <div class="field" style="margin-bottom:12px">
+      <label>Documento que comprova a submissão do Artigo (PDF ou DOCX – máx. 7 MB)</label>
+      <input type="file" id="tcc2File" accept=".pdf,.doc,.docx" style="border:1.5px dashed var(--border);border-radius:8px;padding:8px;background:#fafafa;font-family:inherit;font-size:.85rem"/>
+      <div style="font-size:.73rem;color:var(--muted);margin-top:4px">Nomeie como: <code>TCC2_NomeAluno_VersaoSubmetida.docx ou pdf</code></div>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Data do Documento Anexado</label>
+      <input type="text" id="tcc2DataDocumento" placeholder="DD/MM/AAAA" maxlength="10" style="max-width:180px" oninput="
+  var v=this.value.replace(/\D/g,'').slice(0,8);
+  if(v.length>=5) v=v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4);
+  else if(v.length>=3) v=v.slice(0,2)+'/'+v.slice(2);
+  this.value=v;
+"/>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Tema do Artigo</label>
+      <input type="text" id="tcc2Tema" placeholder="Descreva o tema principal do artigo"/>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Nome do Veículo de Publicação Qualificado</label>
+      <input type="text" id="tcc2Veiculo" placeholder="Ex: Revista Brasileira de Engenharia de Produção"/>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Tipo do Veículo de Publicação Qualificado</label>
+      <select id="tcc2TipoVeiculo" style="width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.88rem" onchange="document.getElementById('tcc2TipoVeiculoOutroWrap').style.display=(this.value==='Outros')?'block':'none'">
+        <option value="">— Selecione —</option>
+        <option>Revista</option>
+        <option>Congresso</option>
+        <option>Simpósio</option>
+        <option>Outros</option>
+      </select>
+      <div id="tcc2TipoVeiculoOutroWrap" style="display:none;margin-top:8px">
+        <input type="text" id="tcc2TipoVeiculoOutro" placeholder="Especifique o tipo do veículo"/>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Modelo de Acesso e Financiamento da Publicação</label>
+      <select id="tcc2ModeloAcesso" style="width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.88rem">
+        <option value="">— Selecione —</option>
+        <option>Fechado por assinatura</option>
+        <option>Aberto Diamante</option>
+        <option>Aberto Dourado</option>
+        <option>Aberto Verde</option>
+        <option>Híbrido</option>
+      </select>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Classificação do Veículo de Publicação Qualificado</label>
+      <select id="tcc2Classificacao" style="width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.88rem">
+        <option value="">— Selecione —</option>
+        <option>A1</option><option>A2</option><option>A3</option><option>A4</option>
+        <option>B1</option><option>B2</option><option>B3</option>
+      </select>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Status</label>
+      <select id="tcc2Status" style="width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:.88rem">
+        <option value="">— Selecione —</option>
+        <option>Submetido e não enviado para revisão dos pares</option>
+        <option>Submetido e enviado para revisão dos pares</option>
+        <option>Submetido e revisado pelos pares</option>
+        <option>Submetido e em fase de revisão junto ao pares</option>
+        <option>Submetido e Aceito para Publicação</option>
+        <option>Submetido, Revisado e Publicado</option>
+      </select>
+    </div>
+    <div class="field" style="margin-bottom:16px">
+      <label>Nota do Aluno (1 a 10)</label>
+      <input type="text" inputmode="decimal" id="tcc2Nota" placeholder="Ex: 8,5 ou 8.5" style="max-width:160px"/>
+    </div>
+
+    <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:16px;font-size:.8rem;color:var(--text);background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 12px;cursor:pointer">
+      <input type="checkbox" id="tcc2DeclaracaoEtica" style="margin-top:3px"/>
+      <span>Declaro, sob minha responsabilidade como avaliador ou orientador, que o artigo submetido é <strong>inédito</strong>, não constitui <strong>plágio ou autoplágio</strong>, não há <strong>conflitos de interesse</strong> não declarados, e os <strong>direitos autorais</strong> foram devidamente respeitados na sua elaboração e submissão.</span>
+    </label>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button onclick="confirmarFinalizarTCC2()" style="padding:.75rem 1.4rem;background:linear-gradient(135deg,#16a34a,#4ade80);color:#fff;border:none;border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer">✅ Confirmar e Enviar</button>
+      <button onclick="closeModal('modalFinalizarTCC2')" style="padding:.75rem 1.4rem;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer">Cancelar</button>
+    </div>
+    <input type="hidden" id="tcc2AlunoId"/>
+  </div>
+</div>
+
+<!-- ═══ MODAL CONFIRMAÇÃO FINAL — FINALIZAR TCC 2 ═══ -->
+<div class="ar-overlay" id="modalConfirmarTCC2" style="z-index:4100">
+  <div class="ar-card" style="max-width:460px">
+    <h2>⚠️ Confirmar Envio à Coordenação</h2>
+    <p class="sub">Ao escolher <strong>Enviar</strong>, o documento e demais informações serão enviados para a Coordenação do Curso e <strong>não será possível reverter</strong>.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button id="btnConfirmarTCC2Definitivo" onclick="enviarFinalizacaoTCC2Definitivo()" style="padding:.75rem 1.4rem;background:linear-gradient(135deg,#16a34a,#4ade80);color:#fff;border:none;border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer">✅ Confirmar</button>
+      <button onclick="closeModal('modalConfirmarTCC2')" style="padding:.75rem 1.4rem;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-weight:800;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ PAINEL DE AVALIAÇÃO (full-screen) ═══ -->
 <div class="dash-overlay" id="avalPanel" style="z-index:3000">
   <div class="dash-topbar">
@@ -2305,11 +2541,12 @@ function toggleAcc(btn) {
       <div class="panel-title">⚡ Ação do Avaliador ou Orientador</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
         <button onclick="avalAcao('corrigida')"  style="padding:.8rem;border:2px solid var(--blue-light);border-radius:10px;background:var(--blue-pale);color:var(--blue);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">📩 Enviar Versão Corrigida</button>
-        <button onclick="avalAcao('banca')"      style="padding:.8rem;border:2px solid var(--purple-light);border-radius:10px;background:var(--purple-pale);color:var(--purple);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Enviar para Banca</button>
-        <button onclick="avalAcao('final')"      style="padding:.8rem;border:2px solid var(--green-light);border-radius:10px;background:var(--green-pale);color:var(--green);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Versão Final</button>
+        <button onclick="avalAcao('banca')"      style="padding:.8rem;border:2px solid var(--purple-light);border-radius:10px;background:var(--purple-pale);color:var(--purple);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Enviar para Banca (TCC 1)</button>
+        <button onclick="avalAcao('final')"      style="padding:.8rem;border:2px solid var(--green-light);border-radius:10px;background:var(--green-pale);color:var(--green);font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Versão Final (TCC 1)</button>
         <button onclick="avalAcao('rejeitar')"   style="padding:.8rem;border:2px solid #fca5a5;border-radius:10px;background:#fef2f2;color:#dc2626;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">❌ Rejeitar</button>
         <button onclick="avalAcao('falta')"      style="padding:.8rem;border:2px solid #fca5a5;border-radius:10px;background:#fef2f2;color:#dc2626;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🚫 Reprovar por Falta</button>
         <button onclick="avalAcao('nota')"       style="padding:.8rem;border:2px solid #fca5a5;border-radius:10px;background:#fef2f2;color:#dc2626;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">📉 Reprovar por Nota</button>
+        <button id="btnFinalizarTCC2" onclick="avalAcao('finalizarTCC2')" style="display:none;grid-column:1/-1;padding:.8rem;border:2px solid var(--gold-light);border-radius:10px;background:var(--gold-pale);color:#92400e;font-family:inherit;font-size:.82rem;font-weight:800;cursor:pointer">🏁 Finalizar TCC 2</button>
       </div>
 
 
@@ -2789,6 +3026,86 @@ function toggleInstrucoes(){
   arrow.style.color  = open ? 'var(--muted)' : 'var(--gold)';
 }
 
+// Toggle genérico usado pelas novas seções de Instruções (Coordenação e Orientador).
+function toggleCollapse(bodyId, arrowId){
+  const body  = document.getElementById(bodyId);
+  const arrow = document.getElementById(arrowId);
+  if(!body) return;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  arrow.textContent  = open ? '▼ Mostrar' : '▲ Fechar';
+}
+function toggleInstrucoesCoordTCC1(){ toggleCollapse('instrucoesCoordTCC1Body','instrucoesCoordTCC1Arrow'); }
+function toggleInstrucoesCoordTCC2(){ toggleCollapse('instrucoesCoordTCC2Body','instrucoesCoordTCC2Arrow'); }
+function toggleInstrucoesOrientTCC1(){ toggleCollapse('instrucoesOrientTCC1Body','instrucoesOrientTCC1Arrow'); }
+function toggleInstrucoesOrientTCC2(){ toggleCollapse('instrucoesOrientTCC2Body','instrucoesOrientTCC2Arrow'); }
+function toggleInstrucoesAlunoTCC2(){ toggleCollapse('instrucoesAlunoTCC2Body','instrucoesAlunoTCC2Arrow'); }
+
+// ── Coordenação: tela de gestão das Finalizações de TCC 2 ──
+async function loadTCC2Coord(){
+  const tbody = document.getElementById('tblTCC2Coord');
+  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--muted)">Carregando...</td></tr>';
+  try{
+    const periodoVig = await getPeriodoVigente();
+    const indicador = document.getElementById('tcc2PeriodoIndicador');
+
+    const snap = await rtdb.ref('finalizacoesTCC2').get();
+    let itens = [];
+    if(snap.exists()){
+      snap.forEach(child=>{ itens.push({ key: child.key, ...child.val() }); });
+    }
+
+    if(indicador){
+      indicador.style.display = 'flex';
+      indicador.innerHTML = periodoVig
+        ? `📅 Mostrando finalizações do período Vigente: <strong>${periodoVig}</strong> (${itens.filter(i=>i.periodoLetivo===periodoVig).length} de ${itens.length} no total).`
+        : `📅 Mostrando todas as finalizações de TCC 2 (${itens.length}).`;
+    }
+
+    if(periodoVig) itens = itens.filter(i=>i.periodoLetivo===periodoVig);
+    itens.sort((a,b)=>(b.data||0)-(a.data||0));
+
+    // Badge de novidades: itens dos últimos 3 dias.
+    const badge = document.getElementById('tcc2CoordBadge');
+    const recentes = itens.filter(i=>i.data && (Date.now()-i.data) < 3*86400000);
+    if(badge) badge.style.display = recentes.length ? 'inline' : 'none';
+
+    if(!itens.length){
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--muted)">Nenhuma finalização de TCC 2 recebida ainda.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = itens.map(i=>`<tr>
+      <td>${i.alunoNome||'—'}</td>
+      <td>${i.matricula||'—'}</td>
+      <td>${i.orientadorNome||'—'}</td>
+      <td>${i.veiculo||'—'}<br><small style="color:var(--muted)">${i.tipoVeiculo||''}</small></td>
+      <td style="font-size:.78rem">${i.modeloAcesso||'—'}</td>
+      <td>${i.classificacao||'—'}</td>
+      <td style="font-size:.78rem">${i.status||'—'}</td>
+      <td><strong>${typeof i.nota==='number' ? i.nota.toFixed(1) : '—'}</strong></td>
+      <td style="font-size:.8rem;color:var(--muted)">${i.data ? fmtDate(i.data) : '—'}</td>
+      <td class="tbl-actions">
+        <button class="tbl-btn tbl-aprova" onclick="baixarArquivoTCC2Coord('${i.alunoId}')">⬇ Documento</button>
+      </td>
+    </tr>`).join('');
+  }catch(e){
+    console.error('[loadTCC2Coord] falhou:', e);
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#dc2626">Erro ao carregar. Tente novamente.</td></tr>';
+  }
+}
+
+async function baixarArquivoTCC2Coord(alunoId){
+  try{
+    const snap = await rtdb.ref('alunos/'+alunoId+'/arquivoTCC2').get();
+    if(!snap.exists() || !snap.val().base64){ toast('Documento não encontrado.','err'); return; }
+    const d = snap.val();
+    const ext = (d.nome||'').split('.').pop().toLowerCase();
+    const mime = ext==='pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    baixarBase64(d.base64, d.nome||'documento_tcc2', mime);
+  }catch(e){ toast('Erro ao baixar documento: '+e.message,'err'); }
+}
+
 function enterDashboard(user){
   if(user.role==='coordenador'){
     // Mostra nome do coordenador logado; dados de gestão serão preenchidos por carregarGestao
@@ -2853,6 +3170,7 @@ function showCoordTab(tab, btn){
   if(tab==='artigos') loadArtigosCoord();
   if(tab==='bancasCoord') loadBancasCoord();
   if(tab==='concurso'){ loadConcursoConfig(); loadConcursoInscricoes(); loadConcursoPendentes(); }
+  if(tab==='tcc2') loadTCC2Coord();
   if(tab==='config'){ loadConfig(); carregarGestao(); }
 }
 function showOrientTab(tab, btn){
@@ -2878,8 +3196,7 @@ async function loadBancas(){
     return;
   }
   // Filtra pelo período Vigente — um novo ano/semestre mostra só as bancas daquele período.
-  const snapVigBancas = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
-  const periodoVigBancas = (snapVigBancas && snapVigBancas.exists()) ? (snapVigBancas.val().periodo||'') : '';
+  const periodoVigBancas = await getPeriodoVigente();
   let periodoPorAluno = {};
   if(periodoVigBancas){
     const todosAlunosB = await getAlunos();
@@ -3339,6 +3656,139 @@ async function confirmarVersaoFinal(){
   }
 }
 
+// ── Finalizar TCC 2 ──
+// Passo 1: valida os campos do formulário e abre o modal de confirmação final.
+function confirmarFinalizarTCC2(){
+  const id     = document.getElementById('tcc2AlunoId').value;
+  const file   = document.getElementById('tcc2File').files[0];
+  const data   = document.getElementById('tcc2DataDocumento').value.trim();
+  const tema   = document.getElementById('tcc2Tema').value.trim();
+  const veiculo = document.getElementById('tcc2Veiculo').value.trim();
+  const tipoSel = document.getElementById('tcc2TipoVeiculo').value;
+  const tipoOutro = document.getElementById('tcc2TipoVeiculoOutro').value.trim();
+  const modeloAcesso = document.getElementById('tcc2ModeloAcesso').value;
+  const classificacao = document.getElementById('tcc2Classificacao').value;
+  const status = document.getElementById('tcc2Status').value;
+  const notaV  = document.getElementById('tcc2Nota').value;
+  const eticaOk = document.getElementById('tcc2DeclaracaoEtica').checked;
+
+  if(!id)      { toast('Erro: aluno não identificado.','err'); return; }
+  if(!file)    { toast('Selecione o documento que comprova a submissão do artigo.','err'); return; }
+  if(file.size>7*1024*1024){ toast('Arquivo muito grande. Máximo 7 MB.','err'); return; }
+  if(!/^\d{2}\/\d{2}\/\d{4}$/.test(data)){ toast('Informe a Data do Documento Anexado no formato DD/MM/AAAA.','err'); return; }
+  if(!tema)    { toast('Informe o tema do artigo.','err'); return; }
+  if(!veiculo) { toast('Informe o nome do veículo de publicação qualificado.','err'); return; }
+  if(!tipoSel) { toast('Selecione o tipo do veículo de publicação qualificado.','err'); return; }
+  if(tipoSel==='Outros' && !tipoOutro){ toast('Especifique o tipo do veículo de publicação.','err'); return; }
+  if(!modeloAcesso){ toast('Selecione o modelo de acesso e financiamento da publicação.','err'); return; }
+  if(!classificacao){ toast('Selecione a classificação do veículo de publicação qualificado.','err'); return; }
+  if(!status)  { toast('Selecione o status.','err'); return; }
+  if(notaV===''){ toast('Informe a nota do aluno.','err'); return; }
+  const nota = parseFloat(String(notaV).replace(',','.'));
+  if(isNaN(nota)||nota<1||nota>10){ toast('Nota deve ser entre 1 e 10.','err'); return; }
+  if(!eticaOk) { toast('Confirme a declaração de ética e integridade na publicação para prosseguir.','err'); return; }
+
+  // Passa para a etapa de confirmação final (irreversível, envia à Coordenação).
+  document.getElementById('modalConfirmarTCC2').classList.add('open');
+}
+
+// Passo 2: confirmação final — grava tudo e envia à Coordenação. Irreversível.
+async function enviarFinalizacaoTCC2Definitivo(){
+  const id     = document.getElementById('tcc2AlunoId').value;
+  const file   = document.getElementById('tcc2File').files[0];
+  const dataDocumento = document.getElementById('tcc2DataDocumento').value.trim();
+  const tema   = document.getElementById('tcc2Tema').value.trim();
+  const veiculo = document.getElementById('tcc2Veiculo').value.trim();
+  const tipoSel = document.getElementById('tcc2TipoVeiculo').value;
+  const tipoOutro = document.getElementById('tcc2TipoVeiculoOutro').value.trim();
+  const tipoVeiculo = tipoSel==='Outros' ? tipoOutro : tipoSel;
+  const modeloAcesso = document.getElementById('tcc2ModeloAcesso').value;
+  const classificacao = document.getElementById('tcc2Classificacao').value;
+  const status = document.getElementById('tcc2Status').value;
+  const nota = parseFloat(String(document.getElementById('tcc2Nota').value).replace(',','.'));
+
+  const btn = document.getElementById('btnConfirmarTCC2Definitivo');
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Enviando...'; }
+
+  try {
+    const b64 = await fileToBase64(file);
+    const now = Date.now();
+
+    const snapAluno = await rtdb.ref('alunos/'+id).get();
+    const al = snapAluno.val() || {};
+    const alunoNomeReal = al.nome || al.nomeAluno || '—';
+
+    // 1. Salva o documento no nó do aluno.
+    const arquivoPayload = { nome:file.name, base64:b64, data:now, autor:currentUser.nome };
+    await rtdb.ref('alunos/'+id+'/arquivoTCC2').set(arquivoPayload);
+
+    // 2. Atualiza o registro do aluno com os dados da finalização do TCC 2.
+    await rtdb.ref('alunos/'+id).update({
+      status: 'Aprovado',
+      nota,
+      tema,
+      tcc2Veiculo: veiculo,
+      tcc2TipoVeiculo: tipoVeiculo,
+      tcc2ModeloAcesso: modeloAcesso,
+      tcc2Classificacao: classificacao,
+      tcc2Status: status,
+      tcc2DataDocumento: dataDocumento,
+      arquivoTCC2Nome: file.name,
+      ultimaAtualizacao: now,
+      comentarioOrientador: `TCC 2 finalizado. Veículo: ${veiculo} (${tipoVeiculo}, ${classificacao}, acesso ${modeloAcesso}). Status: ${status}. Nota: ${nota.toFixed(1)}.`
+    });
+
+    // 3. Histórico do aluno.
+    await rtdb.ref('historico/'+id).push({
+      tipo:'Finalização TCC 2', status:'Aprovado',
+      comentario:`Veículo: ${veiculo} | Tipo: ${tipoVeiculo} | Modelo de acesso: ${modeloAcesso} | Classificação: ${classificacao} | Status: ${status} | Nota: ${nota.toFixed(1)} | Data do documento: ${dataDocumento}`,
+      data: now, autor: currentUser.nome, arquivoNome: file.name
+    });
+
+    // 4. Histórico do avaliador ou orientador.
+    const orientHistId = currentUser.uid || currentUser.id || null;
+    if(orientHistId){
+      await rtdb.ref('historico_orientador/'+orientHistId).push({
+        tipo:'Finalização TCC 2', status:'Aprovado',
+        alunoNome: alunoNomeReal, alunoId: id,
+        comentario:`Veículo: ${veiculo} | Tipo: ${tipoVeiculo} | Classificação: ${classificacao} | Status: ${status} | Nota: ${nota.toFixed(1)}`,
+        data: now, arquivoNome: file.name
+      });
+    }
+
+    // 5. Envia à Coordenação — registro dedicado para a Coordenação acompanhar as
+    // finalizações de TCC 2 recebidas dos avaliadores ou orientadores.
+    await rtdb.ref('finalizacoesTCC2').push({
+      alunoId: id, alunoNome: alunoNomeReal, matricula: al.matricula||'—',
+      orientadorId: orientHistId, orientadorNome: currentUser.nome || '—',
+      periodoLetivo: al.periodoLetivo || '—',
+      tema, veiculo, tipoVeiculo, modeloAcesso, classificacao, status, nota,
+      dataDocumento, arquivoNome: file.name,
+      data: now
+    });
+
+    // 6. Notifica o aluno.
+    await rtdb.ref('notificacoes/'+id).push({
+      tipo:'Finalização TCC 2',
+      mensagem: `✅ Seu TCC 2 foi finalizado! Veículo: ${veiculo}. Status: ${status}. Nota: ${nota.toFixed(1)}.`,
+      arquivoNome: file.name,
+      data: now, lida:false, de: currentUser.nome
+    });
+
+    closeModal('modalConfirmarTCC2');
+    closeModal('modalFinalizarTCC2');
+    toast('✅ TCC 2 finalizado e enviado à Coordenação!');
+    fecharAvalPanel();
+
+  } catch(eGeral){
+    console.error('[enviarFinalizacaoTCC2Definitivo] Erro:', eGeral);
+    toast('❌ Erro ao finalizar TCC 2: '+eGeral.message, 'err');
+    alert('❌ Erro ao processar:\n'+eGeral.message);
+  } finally {
+    if(btn){ btn.disabled=false; btn.textContent='✅ Confirmar'; }
+  }
+}
+
 // ══════════════════════════════════════════════
 // ATA DE DEFESA – ALUNO: baixar e enviar assinada
 // ══════════════════════════════════════════════
@@ -3587,13 +4037,12 @@ async function loadCoordDashboard(){
   _oMap = {};
   orientLista.forEach(o=>{ _oMap[o.id] = o; });
 
-  // Reparo automático (mesma rotina usada na aba Alunos): reconstrói o registro de 2026/1
-  // de qualquer aluno migrado por uma versão anterior deste sistema, usando o histórico
-  // real do orientador como fonte da verdade — garante que o Dashboard sempre mostre o
-  // status correto, nunca um "Pendente" incorreto de uma migração antiga já corrigida.
+  // NOTA: a restauração automática de registros antigos foi DESATIVADA (ver
+  // restaurarPara2026_1) — ela já cumpriu sua função uma única vez e rodar novamente a
+  // cada carregamento de tela apagava, por engano, qualquer trabalho novo salvo em
+  // períodos seguintes (ex.: 2026/2). Se precisar rodá-la de novo por algum motivo
+  // específico, use a opção correspondente em Configurações.
   const gravacoesDash = [];
-  await restaurarPara2026_1(alunosLista, gravacoesDash);
-  if(gravacoesDash.length) Promise.all(gravacoesDash);
 
   // Filtra pelo período ativo (Vigente por padrão, ou o período que a Coordenação estiver
   // visualizando manualmente) — um novo ano/semestre começa o Dashboard do zero, mostrando
@@ -3852,8 +4301,7 @@ function visualizarPeriodo(){
 // Remove o filtro de visualização manual, voltando a seguir o período Vigente por padrão.
 async function limparFiltroPeriodo(){
   _periodoVisualizacao = '';
-  const snap = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
-  const vig = (snap && snap.exists()) ? (snap.val().periodo||'') : '';
+  const vig = await getPeriodoVigente();
   if(vig) document.getElementById('aPeriodo').value = vig;
   atualizarPeriodoFiltroBox();
   if(document.getElementById('listaAlunos')) loadAlunosList();
@@ -3875,7 +4323,10 @@ async function atualizarPeriodoFiltroBox(){
   } else if(_periodoVisualizacao){
     texto = `👁️ Visualizando/editando apenas o período <strong>${_periodoVisualizacao}</strong> (sem alterar o período Vigente).`;
   } else {
-    texto = '👁️ Mostrando <strong>todos os períodos</strong> (padrão). Use "Visualizar/Editar" acima para ver só um período específico.';
+    const vigTxt = await getPeriodoVigente();
+    texto = vigTxt
+      ? `👁️ Mostrando apenas o período <strong>Vigente: ${vigTxt}</strong> (padrão). Use "Visualizar/Editar" acima para ver outro período, ou "Ver todos" para ver todos juntos.`
+      : '👁️ Mostrando <strong>todos os períodos</strong> (nenhum período Vigente definido ainda). Defina um em Configurações.';
   }
 
   // Contagem por período: ajuda a Coordenação a enxergar onde cada aluno está,
@@ -3943,6 +4394,38 @@ function comTimeout(promessa, ms){
   ]);
 }
 
+// Corrige uma possível inconsistência entre "config/prazo" e "config/periodoVigente" — os
+// dois são sempre gravados juntos por salvarConfig(), então se estiverem diferentes é sinal
+// de um dado antigo deixado por uma versão anterior e já corrigida do sistema (algo escreveu
+// em um sem escrever no outro). "config/prazo" reflete a ação mais recente da Coordenação,
+// então ele é usado para corrigir "config/periodoVigente" automaticamente, sempre que a
+// plataforma carregar — garantindo que o Dashboard, Alunos e as demais telas nunca fiquem
+// "presas" mostrando um período Vigente diferente do que a Coordenação realmente definiu.
+async function sincronizarPeriodoVigenteComPrazo(){
+  try{
+    const [snapPrazo, snapVig] = await Promise.all([
+      rtdb.ref('config/prazo').get().catch(()=>null),
+      rtdb.ref('config/periodoVigente').get().catch(()=>null)
+    ]);
+    const periodoPrazo = (snapPrazo && snapPrazo.exists()) ? (snapPrazo.val().periodo||'') : '';
+    const periodoVig   = (snapVig   && snapVig.exists())   ? (snapVig.val().periodo||'')   : '';
+    if(periodoPrazo && periodoPrazo !== periodoVig){
+      await rtdb.ref('config/periodoVigente').set({ periodo: periodoPrazo, atualizadoEm: Date.now() }).catch(()=>{});
+    }
+  }catch(e){ console.error('[sincronizarPeriodoVigenteComPrazo] falhou:', e); }
+}
+
+// Fonte ÚNICA e centralizada do período Vigente — usada por TODAS as telas (Coordenação,
+// Avaliador ou Orientador, Aluno) para garantir que todas elas sempre concordem exatamente
+// sobre qual é o período Vigente da plataforma. Sempre corrige qualquer inconsistência
+// (ver sincronizarPeriodoVigenteComPrazo) antes de responder. Nenhuma tela deve ler
+// "config/periodoVigente" diretamente — todas devem chamar esta função.
+async function getPeriodoVigente(){
+  await sincronizarPeriodoVigenteComPrazo();
+  const snap = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
+  return (snap && snap.exists() && snap.val().periodo) ? snap.val().periodo : '';
+}
+
 // Dispara a migração/matrícula automática em segundo plano quando o período Vigente muda
 // e ainda não foi migrado — nunca bloqueia nenhuma tela (roda em paralelo, "fire-and-forget").
 function dispararMigracaoSeNecessaria(){
@@ -3966,7 +4449,10 @@ async function periodoAtivoParaFiltro(){
   dispararMigracaoSeNecessaria();
   if(_periodoVisualizacao === 'TODOS') return '';
   if(_periodoVisualizacao) return _periodoVisualizacao;
-  return ''; // padrão: mostra todos os dados, de todos os períodos
+  // Padrão: mostra apenas o período Vigente definido em Configurações — a Coordenação
+  // pode trocar para outro período específico ou para "Ver todos" usando os controles da
+  // aba Alunos, mas o padrão nunca deve misturar períodos diferentes na mesma lista.
+  return await getPeriodoVigente();
 }
 
 // Renderiza um indicador compacto de período no topo de uma seção (Dashboard, Artigos,
@@ -3978,7 +4464,8 @@ async function renderIndicadorPeriodo(containerId){
   const periodo = await periodoAtivoParaFiltro();
   const texto = _periodoVisualizacao === 'TODOS'
     ? 'todos os períodos'
-    : (periodo ? `período <strong>${periodo}</strong> (visualização manual)` : 'todos os períodos (padrão)');
+    : (_periodoVisualizacao ? `período <strong>${periodo}</strong> (visualização manual)`
+       : (periodo ? `período Vigente: <strong>${periodo}</strong>` : 'todos os períodos'));
   el.style.display = 'flex';
   el.innerHTML = `<span>📅 Mostrando dados do ${texto}.</span>
     <button onclick="mostrarAbaCoord('alunos')" style="margin-left:auto;padding:.3rem .8rem;background:#fff;border:1.5px solid #bcd6ee;border-radius:7px;font-family:inherit;font-size:.72rem;font-weight:700;cursor:pointer;color:#1a4a6e">🔀 Mudar período</button>`;
@@ -4047,17 +4534,20 @@ async function statusRealDoOrientador(alunoId){
 //      aluno já tem um registro mais novo e ativo, o login por matrícula/e-mail sempre usa
 //      esse registro atual, nunca o antigo (que fica só para consulta histórica, mas com
 //      Editar/Status/Excluir disponíveis normalmente para a Coordenação).
-// RESTAURAÇÃO COMPLETA para o estado real de 2026/1: exclui todos os registros de 2026/2
-// (criados por migrações anteriores) e garante que cada aluno tenha exatamente UM
-// registro, em 2026/1, com o status verificado no histórico do orientador e na Biblioteca
-// — nunca inventado. Roda automaticamente, uma única vez por sessão (idempotente — depois
-// que não houver mais nenhum registro em 2026/2, não faz mais nada).
-let _restauracao2026_1Rodou = false;
+// RESTAURAÇÃO COMPLETA para o estado real de 2026/1 (função de USO MANUAL ÚNICO, já
+// utilizada uma vez para corrigir dados de uma migração antiga com defeito). Exclui TODOS
+// os registros de 2026/2 existentes no momento em que rodar e reverte o período Vigente
+// para 2026/1 — por isso NÃO é mais chamada automaticamente em nenhuma tela (isso causava
+// perda de dados: qualquer trabalho novo salvo em 2026/2 — turmas, orientadores, período
+// Vigente — era apagado sempre que a Coordenação recarregava a página). Uma trava
+// permanente gravada no Firebase (config/restauracao2026_1Concluida) garante que, mesmo
+// se esta função for chamada de novo manualmente por engano, ela não rode duas vezes.
 async function restaurarPara2026_1(lista, gravacoes){
-  if(_restauracao2026_1Rodou) return;
+  const jaRodouSnap = await rtdb.ref('config/restauracao2026_1Concluida').get().catch(()=>null);
+  if(jaRodouSnap && jaRodouSnap.exists() && jaRodouSnap.val()===true) return;
   const de2026_2 = lista.filter(a => a.periodoLetivo === '2026/2');
-  if(!de2026_2.length){ _restauracao2026_1Rodou = true; return; }
-  _restauracao2026_1Rodou = true;
+  if(!de2026_2.length){ return; }
+  await rtdb.ref('config/restauracao2026_1Concluida').set(true).catch(()=>{});
 
   // Biblioteca: matrículas com artigo publicado em 2026/1 (ou sem período gravado, dos
   // registros mais antigos) = prova concreta de aprovação real.
@@ -4202,10 +4692,8 @@ async function migrarAlunosParaNovoPeriodo(novoPeriodo){
 
 async function carregarPeriodoCadastro(){
   // Tenta carregar o período vigente salvo para sugerir nos campos
-  const snap = await rtdb.ref('config/periodoVigente').get();
-  if(snap.exists()){
-    const d = snap.val();
-    const p = d.periodo||'';
+  const p = await getPeriodoVigente();
+  if(p){
     const parts = p.split('/');
     if(parts.length===2){
       document.getElementById('selAno').value     = parts[0];
@@ -4534,13 +5022,9 @@ async function loadAlunosList(){
     }
   }
 
-  // REPARO AUTOMÁTICO: alunos que foram migrados de 2026/1 para 2026/2 por uma versão
-  // anterior deste sistema (que só movia o registro, em vez de criar um novo) ficaram com
-  // o status "Pendente" no único registro deles, perdendo a referência de que já tinham
-  // sido Aprovados/Reprovados em 2026/1 — mesmo essa decisão continuando gravada no
-  // histórico. A função abaixo detecta esses casos e RECONSTRÓI o registro de 2026/1 que
-  // faltava, usando a última decisão real do orientador (histórico) como fonte da verdade.
-  await restaurarPara2026_1(lista, gravacoes);
+  // NOTA: a restauração automática de registros antigos foi DESATIVADA — ver comentário
+  // na função restaurarPara2026_1. Ela era destrutiva quando executada mais de uma vez
+  // (apagava qualquer trabalho novo salvo em 2026/2 e revertia o período Vigente).
 
   if(gravacoes.length) Promise.all(gravacoes);
 
@@ -4557,7 +5041,7 @@ async function loadAlunosList(){
   // Editar/Status/Excluir disponíveis para TODOS, sem nenhuma distinção de "arquivado" —
   // o período Vigente/filtro só decide QUAIS alunos aparecem na lista; nunca restringe as
   // ações disponíveis sobre eles.
-  el.innerHTML=`<div class="table-shell"><table>
+  el.innerHTML=`<div class="table-shell"><table class="tbl-alunos-cad">
     <thead><tr><th>Nome</th><th>Matrícula</th><th>E-mail</th><th>Turma</th><th>Período</th><th>Disciplina</th><th>Avaliador ou Orientador</th><th>Status</th><th>Ações</th></tr></thead>
     <tbody>${listaFiltrada.map(a=>{const d=a; const turmaAtual = d.turma || oTurmaMap[d.orientadorId] || ''; return`<tr>
       <td>${d.nome}</td>
@@ -4847,12 +5331,8 @@ async function loadBancasCoord(){
 }
 
 async function loadConfig(){
-  // Carrega prazo vigente
-  const snap = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
-  if(snap && snap.exists()){
-    const d = snap.val();
-    document.getElementById('cfgPeriodo').value = d.periodo||'';
-  }
+  // Carrega prazo vigente (getPeriodoVigente já corrige qualquer inconsistência antes).
+  document.getElementById('cfgPeriodo').value = await getPeriodoVigente();
   const snapPrazo = await rtdb.ref('config/prazo').get().catch(()=>null);
   if(snapPrazo && snapPrazo.exists()){
     const d = snapPrazo.val();
@@ -5087,8 +5567,7 @@ async function loadOrientDashboard(){
   // Filtra pelos alunos do período Vigente definido pela Coordenação — o orientador só vê
   // os dados do período escolhido, assim como a Coordenação. Se nenhum período Vigente
   // estiver definido ainda, mostra todos os alunos vinculados (estado inicial).
-  const snapVigOrient = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
-  const periodoVigenteOrient = (snapVigOrient && snapVigOrient.exists()) ? (snapVigOrient.val().periodo||'') : '';
+  const periodoVigenteOrient = await getPeriodoVigente();
   const snapDocs = periodoVigenteOrient
     ? todosVinculados.filter(a=>a.periodoLetivo===periodoVigenteOrient)
     : todosVinculados;
@@ -5164,13 +5643,14 @@ function loadOrientAlunosTable(docs){
     return`<tr style="${pendente?'background:#fffbeb':''}">
       <td>${d.nome}${pendente?'<span class="badge-alert" title="Nova versão aguardando avaliação">!</span>':''}</td>
       <td>${d.matricula}</td>
+      <td>${d.disciplina||'—'}</td>
       <td><span class="sb ${statusClass(d.status)}">${d.status||'Pendente'}</span></td>
       <td style="font-size:.8rem;color:var(--muted)">${ult}</td>
       <td class="tbl-actions">
         <button class="tbl-btn tbl-aprova" onclick='openAvaliacao("${doc.id||doc.matricula}","${d.nome}")'>📝 Avaliar</button>
       </td>
     </tr>`;
-  }).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">Nenhum aluno vinculado.</td></tr>';
+  }).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted)">Nenhum aluno vinculado.</td></tr>';
 }
 function loadOrientArtigosTable(docs){
   const tbody = document.getElementById('tblOrientArtigos');
@@ -5203,6 +5683,10 @@ async function openAvaliacao(alunoId, nome){
   // ── Guarda dados do aluno e busca arquivo do nó separado ──
   window._avalAlunoData = aluno;
   window._avalArquivoAlunoB64 = null;
+
+  // "Finalizar TCC 2" só aparece quando o aluno selecionado está matriculado em TCC 2.
+  const btnFinTCC2 = document.getElementById('btnFinalizarTCC2');
+  if(btnFinTCC2) btnFinTCC2.style.display = (aluno.disciplina === 'TCC 2') ? 'block' : 'none';
 
   const arqEl    = document.getElementById('avalArquivoAluno');
   const btnBaixar = document.getElementById('avalBtnBaixar');
@@ -5330,6 +5814,24 @@ function avalAcao(acao){
     }).catch(()=>{});
 
     document.getElementById('modalVersaoFinal').classList.add('open');
+  } else if(acao==='finalizarTCC2'){
+    const alunoIdTCC2 = document.getElementById('avalAlunoId').value;
+    document.getElementById('tcc2AlunoId').value = alunoIdTCC2;
+    document.getElementById('tcc2File').value='';
+    document.getElementById('tcc2DataDocumento').value='';
+    document.getElementById('tcc2Veiculo').value='';
+    document.getElementById('tcc2TipoVeiculo').value='';
+    document.getElementById('tcc2TipoVeiculoOutro').value='';
+    document.getElementById('tcc2TipoVeiculoOutroWrap').style.display='none';
+    document.getElementById('tcc2ModeloAcesso').value='';
+    document.getElementById('tcc2Classificacao').value='';
+    document.getElementById('tcc2Status').value='';
+    document.getElementById('tcc2Nota').value='';
+    document.getElementById('tcc2DeclaracaoEtica').checked=false;
+    // Pré-preenche o tema com o que já está registrado no aluno (TCC1), se houver.
+    const alunoTCC2 = window._avalAlunoData || {};
+    document.getElementById('tcc2Tema').value = alunoTCC2.tema || alunoTCC2.tituloArtigo || '';
+    document.getElementById('modalFinalizarTCC2').classList.add('open');
   }
 }
 
@@ -5686,8 +6188,7 @@ async function loadAlunoDashboard(){
 
   // Informa o aluno quando o período dele não é o período Vigente atual (não bloqueia nada,
   // é apenas informativo — a Coordenação e o avaliador ou orientador operam por período).
-  const snapVigAluno = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
-  const periodoVigenteAluno = (snapVigAluno && snapVigAluno.exists()) ? (snapVigAluno.val().periodo||'') : '';
+  const periodoVigenteAluno = await getPeriodoVigente();
   if(periodoVigenteAluno && d.periodoLetivo && d.periodoLetivo!==periodoVigenteAluno){
     const bannerEl = document.getElementById('alunoAlertaBanner');
     if(bannerEl){
@@ -6231,12 +6732,17 @@ async function loadBiblioteca(){
     }
 
     // Monta Set de todos os identificadores de alunos ATIVOS (chave Firebase + matr\u00edcula)
+    // e também um cache em memória com os dados completos de cada aluno (incluindo os
+    // arquivos aninhados) — usado logo abaixo para verificar/corrigir os artigos da
+    // Biblioteca SEM precisar buscar o banco de dados de novo para cada aluno.
     const idsAtivos = new Set();
+    const todosAlunosCache = [];
     if(alunosSnap.exists()){
       alunosSnap.forEach(child => {
         idsAtivos.add(child.key);
         const v = child.val();
         if(v && v.matricula) idsAtivos.add(String(v.matricula));
+        todosAlunosCache.push({ id: child.key, ...v });
       });
     }
 
@@ -6265,6 +6771,20 @@ async function loadBiblioteca(){
 
     itens.sort((a, b) => (a.alunoNome || '').localeCompare(b.alunoNome || '', 'pt-BR'));
     window._bibCache = itens;
+
+    // Verificação/correção silenciosa em segundo plano: para os artigos Aprovados cujo
+    // arquivo não está embutido no registro da Biblioteca, confirma que o ponteiro
+    // ("alunoMatricula") ainda aponta para um registro que realmente tem o arquivo — e
+    // corrige automaticamente se não tiver (ver localizarArquivoDoAluno). Isso garante que
+    // o botão "Baixar" funcione sempre, sem esperar alguém clicar para descobrir o problema.
+    itens.filter(v => v.status==='Aprovado' && !v.arquivoBase64 && v.alunoMatricula).forEach(async v=>{
+      try{
+        const arq = await localizarArquivoDoAluno(v.alunoMatricula, v.alunoNome, todosAlunosCache);
+        if(arq && arq._idEncontrado && arq._idEncontrado !== v.alunoMatricula){
+          await rtdb.ref('biblioteca/' + v.key + '/alunoMatricula').set(arq._idEncontrado).catch(()=>{});
+        }
+      }catch(e){ console.warn('[Biblioteca] Verificação de arquivo falhou para', v.alunoNome, e); }
+    });
 
     // Popula filtro de per\u00edodo com valores únicos vindos dos dados
     const selPeriodo = document.getElementById('bibFiltroPeriodo');
@@ -6372,6 +6892,75 @@ function renderBiblioteca(itens){
   }).join('');
 }
 
+// Localiza o arquivo (Versão Final) de um aluno para a Biblioteca, com estratégias de
+// reserva para os casos em que uma migração/reparo antigo (já desativado) moveu o arquivo
+// para um registro reconstruído com outro ID, deixando o ID original sem o arquivo:
+//  1) Busca direta pelo ID que a Biblioteca guarda.
+//  2) Se não achar, procura um registro cujo "registroAnteriorDe" aponte para esse ID —
+//     é o registro reconstruído que herdou o arquivo.
+//  3) Se ainda não achar, procura por nome do aluno entre todos os registros que têm
+//     arquivo — último recurso, mas confiável o bastante para recuperar o acesso.
+async function localizarArquivoDoAluno(idAluno, nomeAluno, todosPreFetched){
+  // Quando um cache já carregado é passado (ver loadBiblioteca), tudo roda em memória —
+  // ZERO buscas adicionais ao banco de dados. Sem o cache (ex.: clique avulso em
+  // "Baixar"), faz UMA única busca completa dos alunos (nunca uma por candidato/tentativa,
+  // que foi o que causava a tela travar ao verificar vários artigos de uma vez).
+  const todos = todosPreFetched || await getAlunos().catch(()=>[]);
+  const usandoCache = !!todosPreFetched;
+  const porId = {}; todos.forEach(a=>porId[a.id]=a);
+
+  const temArquivo = (a) => (a && ((a.arquivoFinal && a.arquivoFinal.base64) || (a.arquivoOrientador && a.arquivoOrientador.base64)));
+  const extrairArquivo = (a, id) => {
+    if(a.arquivoFinal && a.arquivoFinal.base64) return { ...a.arquivoFinal, _idEncontrado:id };
+    if(a.arquivoOrientador && a.arquivoOrientador.base64) return { ...a.arquivoOrientador, _idEncontrado:id };
+    return null;
+  };
+  // Sem cache, confirma o candidato direto no banco (o registro pode ter mudado desde a
+  // última leitura de getAlunos em cache, então uma leitura pontual extra é aceitável aqui).
+  const tentar = async (id) => {
+    if(!id) return null;
+    if(usandoCache){
+      const a = porId[id];
+      return a ? extrairArquivo(a, id) : null;
+    }
+    let snapArq = await rtdb.ref('alunos/' + id + '/arquivoFinal').get().catch(()=>null);
+    if(snapArq && snapArq.exists() && snapArq.val().base64) return { ...snapArq.val(), _idEncontrado:id };
+    snapArq = await rtdb.ref('alunos/' + id + '/arquivoOrientador').get().catch(()=>null);
+    if(snapArq && snapArq.exists() && snapArq.val().base64) return { ...snapArq.val(), _idEncontrado:id };
+    return null;
+  };
+
+  // 1) Busca direta pelo ID que a Biblioteca guarda.
+  let arq = await tentar(idAluno);
+  if(arq){ console.log('[Biblioteca]', nomeAluno, '— encontrado direto em', idAluno); return arq; }
+
+  // 2) Segue a ligação entre registros NOS DOIS SENTIDOS — versões diferentes das
+  // migrações/reparos ao longo do tempo gravaram "registroAnteriorDe" em direções opostas.
+  const candidatos = [];
+  const registroAtual = porId[idAluno];
+  if(registroAtual && registroAtual.registroAnteriorDe) candidatos.push(registroAtual.registroAnteriorDe);
+  const sucessor = todos.find(a => a.registroAnteriorDe === idAluno);
+  if(sucessor) candidatos.push(sucessor.id);
+
+  for(const cand of candidatos){
+    arq = await tentar(cand);
+    if(arq){ console.log('[Biblioteca]', nomeAluno, '— encontrado via ligação em', cand); return arq; }
+  }
+
+  // 3) Por nome, entre registros que realmente têm arquivo — último recurso.
+  if(nomeAluno){
+    const comArquivo = todos.find(a =>
+      (a.nome||'').trim().toLowerCase() === nomeAluno.trim().toLowerCase() && temArquivo(a)
+    );
+    if(comArquivo){
+      arq = await tentar(comArquivo.id);
+      if(arq){ console.log('[Biblioteca]', nomeAluno, '— encontrado por nome em', comArquivo.id); return arq; }
+    }
+  }
+
+  console.warn('[Biblioteca]', nomeAluno, '— NÃO encontrado (ID gravado:', idAluno, ')');
+  return null;
+}
 async function baixarBiblioteca(key){
   const btn = event && event.target;
   const origText = btn ? btn.textContent : '';
@@ -6385,23 +6974,28 @@ async function baixarBiblioteca(key){
     let b64  = meta.arquivoBase64 || '';
     let nome = meta.arquivoNome   || 'artigo';
 
-    // Se o base64 não está na biblioteca (arquivo grande), busca no nó do aluno
+    // Se o base64 não está na biblioteca (arquivo grande), busca no nó do aluno. O campo
+    // "alunoMatricula" da Biblioteca guarda, na verdade, o ID do Firebase do aluno (não o
+    // número de matrícula) — ver comentário em salvarVersaoFinal(). Esse ID pode não
+    // apontar mais para um registro com o arquivo se uma migração/reparo antigo (já
+    // desativado) moveu o arquivo para um registro reconstruído com outro ID. Por isso,
+    // além da busca direta, há duas buscas de reserva antes de desistir.
     if(!b64){
-      const matricula = meta.alunoMatricula;
-      if(!matricula){ toast('Identificação do aluno não encontrada.','err'); return; }
+      const idAluno = meta.alunoMatricula;
+      if(!idAluno){ toast('Identificação do aluno não encontrada.','err'); return; }
 
-      // Tenta arquivoFinal primeiro, depois arquivoOrientador
-      let snapArq = await rtdb.ref('alunos/' + matricula + '/arquivoFinal').get();
-      if(!snapArq.exists() || !snapArq.val().base64){
-        snapArq = await rtdb.ref('alunos/' + matricula + '/arquivoOrientador').get();
-      }
-
-      if(!snapArq.exists() || !snapArq.val().base64){
+      const arq = await localizarArquivoDoAluno(idAluno, meta.alunoNome);
+      if(!arq){
         toast('Arquivo do artigo não encontrado. Contate o administrador.','err');
         return;
       }
-      b64  = snapArq.val().base64;
-      nome = snapArq.val().nome || nome;
+      b64  = arq.base64;
+      nome = arq.nome || nome;
+      // Corrige o ponteiro da Biblioteca de uma vez por todas, se o arquivo foi encontrado
+      // num registro diferente do que estava gravado (evita repetir essa busca no futuro).
+      if(arq._idEncontrado && arq._idEncontrado !== idAluno){
+        rtdb.ref('biblioteca/' + key + '/alunoMatricula').set(arq._idEncontrado).catch(()=>{});
+      }
     }
 
     const ext  = nome.split('.').pop().toLowerCase();
@@ -7914,8 +8508,7 @@ async function loadConcursoAvaliacoesOrient(){
   const todas = Object.entries(snap.val()).map(([id,d])=>({id,...d}));
   // Filtra pelo período Vigente da plataforma — um novo ano/semestre mostra só as
   // inscrições do concurso daquele período para o avaliador.
-  const snapVigConcOrient = await rtdb.ref('config/periodoVigente').get().catch(()=>null);
-  const periodoVigConcOrient = (snapVigConcOrient && snapVigConcOrient.exists()) ? (snapVigConcOrient.val().periodo||'') : '';
+  const periodoVigConcOrient = await getPeriodoVigente();
   // Só mostra a inscrição para o avaliador que REALMENTE está atribuído a ela — a
   // comparação exige que tanto o uid do usuário quanto o id do slot sejam valores reais
   // (nunca vazios/indefinidos), evitando qualquer correspondência falsa que revelasse
