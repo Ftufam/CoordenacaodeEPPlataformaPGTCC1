@@ -5047,6 +5047,57 @@ async function salvarAluno(){
       await rtdb.ref('alunos/'+id).update(data);
       toast('Aluno atualizado!');
     } else {
+      // Proteção contra colisão de matrícula: como o ID do aluno no banco é a própria matrícula
+      // (alunos/{matricula}), é preciso distinguir dois casos bem diferentes quando a matrícula
+      // já existe no banco:
+      //  a) MESMO nome → muito provavelmente é o MESMO aluno se matriculando de novo em um novo
+      //     semestre (ex.: repetindo TCC 1 por não ter sido aprovado, ou avançando para TCC 2 sem
+      //     ter passado pela migração automática). Nesse caso, o cadastro antigo é ATUALIZADO
+      //     (não apagado) — preservando todo o histórico, pareceres de banca etc. do período
+      //     anterior, exatamente como a migração automática de período já faz.
+      //  b) Nome DIFERENTE → matrícula reaproveitada por engano ou coincidência (ex.: cadastro de
+      //     teste). Aqui sim é um cadastro de outra pessoa, e os dados antigos órfãos precisam ser
+      //     apagados antes, senão "colam" no aluno novo (histórico, pareceres de banca etc. de
+      //     outra pessoa aparecendo para quem não tem nada a ver com eles).
+      const snapExistente = await rtdb.ref('alunos/'+matricula).get();
+      if(snapExistente.exists()){
+        const antigo = snapExistente.val();
+        const nomeAntigoNorm = (antigo.nome||'').trim().toLowerCase();
+        const nomeNovoNorm   = data.nome.trim().toLowerCase();
+
+        if(nomeAntigoNorm && nomeAntigoNorm === nomeNovoNorm){
+          // Mesmo aluno, novo semestre — confirma e ATUALIZA o cadastro existente (sem apagar nada).
+          const ok = confirm(
+            `A matrícula ${matricula} já pertence a "${antigo.nome}", atualmente no período `+
+            `${antigo.periodoLetivo||'—'} (${antigo.disciplina||'—'}).\n\n`+
+            `Como o nome é o mesmo, isto parece ser uma nova matrícula do MESMO aluno em outro `+
+            `semestre (ex.: repetindo o TCC 1, ou avançando para o TCC 2).\n\n`+
+            `Confirma a ATUALIZAÇÃO do cadastro existente para o período ${periodoAtualForm} `+
+            `(${data.disciplina})? O histórico anterior do aluno será mantido.`
+          );
+          if(!ok){ toast('Cadastro cancelado — nenhum dado foi alterado.','err'); return; }
+          if(!data.senha) delete data.senha; // se a senha não foi preenchida, preserva a atual
+          await rtdb.ref('alunos/'+matricula).update(data);
+          toast('Cadastro existente atualizado para o novo período!');
+          limparAlunoForm();
+          loadAlunosList();
+          return;
+        }
+
+        // Nome diferente: provável matrícula reaproveitada por engano ou coincidência.
+        const ok = confirm(
+          `⚠️ A matrícula ${matricula} já está cadastrada, em uso por "${antigo.nome||'(sem nome)'}" `+
+          `— nome DIFERENTE do que você está cadastrando ("${data.nome}").\n\n`+
+          `Se você continuar, TODOS os dados antigos vinculados a essa matrícula (histórico, arquivos, `+
+          `pareceres de banca, notificações etc.) serão apagados permanentemente antes do novo cadastro `+
+          `— para evitar que se misturem com o aluno novo.\n\n`+
+          `Isso é esperado apenas se "${antigo.nome||'(sem nome)'}" não existe mais ou foi um cadastro de teste. `+
+          `Se for um erro de digitação na matrícula, cancele e corrija.\n\n`+
+          `Deseja apagar os dados antigos e continuar o cadastro?`
+        );
+        if(!ok){ toast('Cadastro cancelado — verifique a matrícula informada.','err'); return; }
+        await limparRegistrosOrfaosAluno(matricula, matricula);
+      }
       await rtdb.ref('alunos/'+matricula).set(data);
       toast('Aluno cadastrado!');
     }
@@ -5104,6 +5155,93 @@ function validarDigitacaoExclusao(input){
 }
 
 // ── Executar exclusão completa ──
+// Remove TODOS os registros de outros nós que referenciam um aluno (por chave Firebase OU por
+// matrícula), deixando o banco limpo. Usada tanto ao excluir um aluno quanto — para evitar o bug de
+// "dados de outro aluno aparecendo para um cadastro novo" — antes de reaproveitar uma matrícula que
+// já foi usada por um cadastro anterior (o ID do aluno no banco é a própria matrícula: alunos/{matricula},
+// então sem esta limpeza, registros antigos de banca/histórico ficam órfãos e "colam" no novo cadastro).
+async function limparRegistrosOrfaosAluno(id, matriculaConhecida){
+  let matricula = matriculaConhecida || id;
+  const snapAluno = await rtdb.ref('alunos/' + id).get().catch(()=>null);
+  if(snapAluno && snapAluno.exists()){
+    const dadosAluno = snapAluno.val();
+    if(dadosAluno.matricula) matricula = dadosAluno.matricula;
+  }
+
+  function pertenceAoAluno(v){
+    if(!v) return false;
+    return v.alunoId        === id || v.alunoId        === matricula ||
+           v.alunoMatricula  === id || v.alunoMatricula  === matricula ||
+           v.aluno           === id || v.aluno           === matricula;
+  }
+
+  // 1. Biblioteca Digital
+  const bibSnap = await rtdb.ref('biblioteca').get().catch(()=>null);
+  if(bibSnap && bibSnap.exists()){
+    const bibWrites = [];
+    bibSnap.forEach(child => { if(pertenceAoAluno(child.val())) bibWrites.push(rtdb.ref('biblioteca/' + child.key).remove()); });
+    if(bibWrites.length) await Promise.all(bibWrites);
+  }
+
+  // 2. Bancas agendadas
+  const bancaSnap = await rtdb.ref('bancasAgendadas').get().catch(()=>null);
+  if(bancaSnap && bancaSnap.exists()){
+    const bWrites = [];
+    bancaSnap.forEach(child => { if(pertenceAoAluno(child.val())) bWrites.push(rtdb.ref('bancasAgendadas/' + child.key).remove()); });
+    if(bWrites.length) await Promise.all(bWrites);
+  }
+
+  // 3. Convites de banca
+  const convSnap = await rtdb.ref('convitesBanca').get().catch(()=>null);
+  if(convSnap && convSnap.exists()){
+    const cWrites = [];
+    convSnap.forEach(membroNode => {
+      membroNode.forEach(convite => { if(pertenceAoAluno(convite.val())) cWrites.push(rtdb.ref('convitesBanca/' + membroNode.key + '/' + convite.key).remove()); });
+    });
+    if(cWrites.length) await Promise.all(cWrites);
+  }
+
+  // 4. Pareceres de banca — nó global por alunoId (não era limpo antes; ficava órfão e "colava"
+  //    em qualquer cadastro futuro que reaproveitasse a mesma matrícula).
+  await rtdb.ref('pareceresBanca/' + id).remove().catch(()=>{});
+  if(matricula !== id) await rtdb.ref('pareceresBanca/' + matricula).remove().catch(()=>{});
+
+  // 5. Finalizações de TCC 2 enviadas à Coordenação (mesmo problema do item 4).
+  const finSnap = await rtdb.ref('finalizacoesTCC2').get().catch(()=>null);
+  if(finSnap && finSnap.exists()){
+    const fWrites = [];
+    finSnap.forEach(child => { if(pertenceAoAluno(child.val())) fWrites.push(rtdb.ref('finalizacoesTCC2/' + child.key).remove()); });
+    if(fWrites.length) await Promise.all(fWrites);
+  }
+
+  // 6. Cadastro principal do aluno
+  await rtdb.ref('alunos/' + id).remove().catch(()=>{});
+
+  // 7. Histórico do aluno
+  await rtdb.ref('historico/' + id).remove().catch(()=>{});
+  if(matricula !== id) await rtdb.ref('historico/' + matricula).remove().catch(()=>{});
+
+  // 8. Notificações do aluno
+  await rtdb.ref('notificacoes/' + id).remove().catch(()=>{});
+  if(matricula !== id) await rtdb.ref('notificacoes/' + matricula).remove().catch(()=>{});
+
+  // 9. Históricos de avaliadores ou orientadores
+  const histOrientSnap = await rtdb.ref('historico_orientador').get().catch(()=>null);
+  if(histOrientSnap && histOrientSnap.exists()){
+    const hoWrites = [];
+    histOrientSnap.forEach(orientNode => {
+      orientNode.forEach(entry => {
+        const v = entry.val();
+        if(v && (v.alunoId === id || v.alunoId === matricula))
+          hoWrites.push(rtdb.ref('historico_orientador/' + orientNode.key + '/' + entry.key).remove());
+      });
+    });
+    if(hoWrites.length) await Promise.all(hoWrites);
+  }
+
+  return matricula;
+}
+
 async function confirmarExclusaoAluno(){
   const id    = document.getElementById('excluirAlunoId').value;
   const nome  = document.getElementById('excluirAlunoNomeHidden').value;
@@ -5130,96 +5268,10 @@ async function confirmarExclusaoAluno(){
   try {
     console.log('[excluirAluno] Iniciando exclusão. id=', id, 'nome=', nome);
 
-    // Busca a matrícula real do aluno ANTES de remover qualquer coisa
-    // pois registros antigos podem ter sido gravados com a matrícula em vez da chave Firebase
-    let matricula = id; // fallback: usa o próprio id
-    const snapAluno = await rtdb.ref('alunos/' + id).get().catch(()=>null);
-    if(snapAluno && snapAluno.exists()){
-      const dadosAluno = snapAluno.val();
-      if(dadosAluno.matricula) matricula = dadosAluno.matricula;
-      console.log('[excluirAluno] Matrícula encontrada:', matricula);
-    }
+    const matricula = await limparRegistrosOrfaosAluno(id);
+    console.log('[excluirAluno] Limpeza completa. id=', id, 'matricula=', matricula);
 
-    // Função auxiliar: verifica se um registro pertence ao aluno
-    // comparando TODOS os possíveis campos e valores
-    function pertenceAoAluno(v){
-      if(!v) return false;
-      return v.alunoId      === id       || v.alunoId      === matricula ||
-             v.alunoMatricula === id      || v.alunoMatricula === matricula ||
-             v.aluno          === id      || v.aluno          === matricula;
-    }
-
-    // 1. Biblioteca Digital — PRIMEIRO e com dupla comparação (chave + matrícula)
-    const bibSnap = await rtdb.ref('biblioteca').get().catch(()=>null);
-    if(bibSnap && bibSnap.exists()){
-      const bibWrites = [];
-      bibSnap.forEach(child => {
-        if(pertenceAoAluno(child.val())){
-          console.log('[excluirAluno] Removendo da Biblioteca: chave=', child.key);
-          bibWrites.push(rtdb.ref('biblioteca/' + child.key).remove());
-        }
-      });
-      if(bibWrites.length){
-        await Promise.all(bibWrites);
-        console.log('[excluirAluno] Biblioteca: removidos', bibWrites.length, 'registro(s)');
-      } else {
-        console.log('[excluirAluno] Biblioteca: nenhum registro para id=', id, 'matricula=', matricula);
-      }
-    }
-
-    // 2. Bancas agendadas — também com dupla comparação
-    const bancaSnap = await rtdb.ref('bancasAgendadas').get().catch(()=>null);
-    if(bancaSnap && bancaSnap.exists()){
-      const bWrites = [];
-      bancaSnap.forEach(child => {
-        if(pertenceAoAluno(child.val()))
-          bWrites.push(rtdb.ref('bancasAgendadas/' + child.key).remove());
-      });
-      if(bWrites.length) await Promise.all(bWrites);
-      console.log('[excluirAluno] bancasAgendadas: removidos', bWrites.length, 'registro(s)');
-    }
-
-    // 3. Convites de banca — dupla comparação
-    const convSnap = await rtdb.ref('convitesBanca').get().catch(()=>null);
-    if(convSnap && convSnap.exists()){
-      const cWrites = [];
-      convSnap.forEach(membroNode => {
-        membroNode.forEach(convite => {
-          if(pertenceAoAluno(convite.val()))
-            cWrites.push(rtdb.ref('convitesBanca/' + membroNode.key + '/' + convite.key).remove());
-        });
-      });
-      if(cWrites.length) await Promise.all(cWrites);
-      console.log('[excluirAluno] convitesBanca: removidos', cWrites.length, 'registro(s)');
-    }
-
-    // 4. Remove o nó principal do aluno
-    await rtdb.ref('alunos/' + id).remove();
-    console.log('[excluirAluno] alunos/' + id + ' removido');
-
-    // 5. Remove histórico do aluno
-    await rtdb.ref('historico/' + id).remove().catch(e => console.warn('[excluirAluno] historico:', e.message));
-
-    // 6. Remove notificações do aluno (pela chave e pela matrícula)
-    await rtdb.ref('notificacoes/' + id).remove().catch(()=>{});
-    if(matricula !== id)
-      await rtdb.ref('notificacoes/' + matricula).remove().catch(()=>{});
-
-    // 7. Históricos de avaliadores ou orientadores
-    const histOrientSnap = await rtdb.ref('historico_orientador').get().catch(()=>null);
-    if(histOrientSnap && histOrientSnap.exists()){
-      const hoWrites = [];
-      histOrientSnap.forEach(orientNode => {
-        orientNode.forEach(entry => {
-          const v = entry.val();
-          if(v && (v.alunoId === id || v.alunoId === matricula))
-            hoWrites.push(rtdb.ref('historico_orientador/' + orientNode.key + '/' + entry.key).remove());
-        });
-      });
-      if(hoWrites.length) await Promise.all(hoWrites);
-    }
-
-    // 8. Registra log de auditoria
+    // Registra log de auditoria
     await rtdb.ref('log_exclusoes').push({
       tipo: 'Exclusão de Aluno',
       alunoId: id,
